@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Day 1: MIS and Information Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f4f2; --surface:#ffffff; --ink:#221a1b; --muted:#5d5657; --line:#d9d6d3;
+  --maroon:#73000a; --maroon-ink:#73000a; --gold:#b59a57; --gold-soft:#efe6cf; --teal:#527b82; --teal-soft:#dde8e9;
+  --good:#2f6b3a; --good-soft:#dcefdf; --bad:#9a3412; --bad-soft:#fbe4d8;
+  --display:'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --body:'Atkinson Hyperlegible', 'Segoe UI', Arial, sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1b1617; --surface:#262021; --ink:#f1ebe8; --muted:#b9afad; --line:#433a3b;
+    --maroon:#8f1a26; --maroon-ink:#e8858e; --gold:#cdb57a; --gold-soft:#3a3222; --teal:#7fa7ad; --teal-soft:#24363a;
+    --good:#8fd19b; --good-soft:#1f3624; --bad:#f4a582; --bad-soft:#3e2519;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1b1617; --surface:#262021; --ink:#f1ebe8; --muted:#b9afad; --line:#433a3b;
+  --maroon:#8f1a26; --maroon-ink:#e8858e; --gold:#cdb57a; --gold-soft:#3a3222; --teal:#7fa7ad; --teal-soft:#24363a;
+  --good:#8fd19b; --good-soft:#1f3624; --bad:#f4a582; --bad-soft:#3e2519;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:clamp(17px,1.35vw,22px);line-height:1.5;display:flex;flex-direction:column}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+
+header.bar{display:flex;align-items:center;justify-content:space-between;padding:12px clamp(16px,4vw,48px);border-bottom:4px solid var(--gold);background:var(--maroon);color:#fff}
+header.bar .course{font-family:var(--display);font-weight:700;letter-spacing:.01em}
+header.bar .tools{display:flex;gap:8px}
+header.bar button{background:transparent;border:1px solid rgba(255,255,255,.5);border-radius:6px;padding:4px 12px;font-size:.8em;color:#fff}
+
+main{flex:1;position:relative;overflow:hidden}
+.slide{position:absolute;inset:0;overflow-y:auto;padding:clamp(20px,4vh,48px) clamp(16px,5vw,72px) 32px;display:none}
+.slide.active{display:block}
+.inner{max-width:1120px;margin:0 auto}
+@media (prefers-reduced-motion:no-preference){.slide.active .inner{animation:in .35s ease-out}}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+h1,h2,h3{font-family:var(--display);line-height:1.1;margin:0 0 .4em}
+h1{font-size:clamp(40px,5.6vw,84px);font-weight:800;letter-spacing:-.02em}
+h2{font-size:clamp(30px,3.6vw,54px);font-weight:800;letter-spacing:-.01em;color:var(--maroon-ink)}
+h3{font-size:1.15em;font-weight:700}
+p{margin:0 0 .8em;max-width:68ch}
+.lede{font-size:1.2em;color:var(--muted)}
+.kicker{font-family:var(--display);font-weight:700;color:var(--teal);margin-bottom:.5em}
+
+/* title slide */
+.title-slide .inner{display:flex;flex-direction:column;justify-content:center;min-height:100%}
+.title-slide h1 span{display:block;color:var(--maroon-ink)}
+.agenda{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:1.5em}
+.agenda div{border-top:4px solid var(--gold);padding-top:8px}
+
+/* chips / poll */
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin:1em 0}
+.chip{border:2px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 18px}
+.chip[aria-pressed="true"]{border-color:var(--teal);background:var(--teal-soft);font-weight:700}
+.bignum{font-family:var(--display);font-weight:800;font-size:clamp(56px,7vw,110px);color:var(--maroon-ink);line-height:1}
+
+/* reveal cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:1em}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;text-align:left;width:100%}
+.card .back{display:none;margin-top:.5em;color:var(--muted)}
+.card[aria-expanded="true"] .back{display:block}
+.card[aria-expanded="true"]{border-color:var(--teal)}
+.card .hint{font-size:.8em;color:var(--teal);margin-top:.4em}
+.card[aria-expanded="true"] .hint{display:none}
+
+/* the framework band: signature visual */
+.band{margin:1.4em 0 .6em}
+.band-row{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.comp{background:var(--surface);border:2px solid var(--line);border-radius:8px;padding:14px 10px;text-align:center;font-family:var(--display);font-weight:700;font-size:1.05em}
+.comp small{display:block;font-family:var(--body);font-weight:400;font-size:.72em;color:var(--muted);margin-top:4px}
+.comp.tech{border-color:var(--teal)}
+.comp.human{border-color:var(--gold)}
+.brackets{display:grid;grid-template-columns:repeat(5,1fr);column-gap:6px;margin-top:10px}
+.brk{border:3px solid;border-top:none;height:22px;border-radius:0 0 8px 8px;position:relative;margin-bottom:34px}
+.brk span{position:absolute;left:50%;top:100%;transform:translateX(-50%);font-family:var(--display);font-weight:800;padding-top:4px}
+.it{grid-column:1 / span 3;grid-row:1;border-color:var(--teal);color:var(--teal)}
+.is{grid-column:1 / span 5;grid-row:2;border-color:var(--maroon-ink);color:var(--maroon-ink)}
+.toggle{display:flex;gap:8px;margin:1em 0}
+.toggle button{border:2px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 18px;font-weight:700}
+.toggle button[aria-pressed="true"]{background:var(--maroon);border-color:var(--maroon);color:#fff}
+.band.show-it .comp.human{opacity:.25}
+.band.show-it .is-l{visibility:hidden}
+.band.show-is .it-l{visibility:hidden}
+.band-detail{background:var(--surface);border-left:6px solid var(--gold);padding:14px 18px;border-radius:0 8px 8px 0;min-height:4em}
+.band-row .comp{cursor:pointer}
+.band-row .comp[aria-pressed="true"]{background:var(--gold-soft)}
+
+/* sort activity */
+.pool{display:flex;flex-wrap:wrap;gap:8px;min-height:56px;padding:12px;border:2px dashed var(--line);border-radius:10px;margin:1em 0}
+.item{background:var(--surface);border:2px solid var(--line);border-radius:8px;padding:8px 14px;font-size:.92em}
+.item[aria-pressed="true"]{border-color:var(--maroon-ink);box-shadow:0 0 0 3px var(--gold)}
+.item.right{border-color:var(--good);background:var(--good-soft)}
+.item.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.bins{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.bin{background:var(--surface);border:2px solid var(--line);border-radius:10px;padding:10px;min-height:170px;display:flex;flex-direction:column;gap:6px;text-align:left}
+.bin-title{font-family:var(--display);font-weight:800;text-align:center;padding-bottom:6px;border-bottom:3px solid var(--teal)}
+.bin.h .bin-title{border-color:var(--gold)}
+.bin.drop{background:var(--teal-soft)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:1em}
+.btn{background:var(--maroon);color:#fff;border:none;border-radius:8px;padding:10px 20px;font-weight:700}
+.btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--line)}
+.feedback{font-weight:700}
+@media (max-width:760px){.bins,.band-row{grid-template-columns:1fr 1fr}.brackets{display:none}}
+
+/* tabs */
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:1em 0 0}
+.tabs button{border:2px solid var(--line);border-bottom:none;background:var(--bg);border-radius:8px 8px 0 0;padding:8px 16px;font-weight:700}
+.tabs button[aria-selected="true"]{background:var(--surface);border-color:var(--teal)}
+.panel{background:var(--surface);border:2px solid var(--teal);border-radius:0 10px 10px 10px;padding:18px 22px}
+.panel dl{display:grid;grid-template-columns:max-content 1fr;gap:8px 20px;margin:0}
+.panel dt{font-family:var(--display);font-weight:700}
+.panel dd{margin:0}
+
+/* quiz + scenario */
+.q{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 22px;margin-bottom:16px}
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:.6em}
+.opt{border:2px solid var(--line);background:var(--bg);border-radius:8px;padding:8px 16px;text-align:left}
+.opt.right{border-color:var(--good);background:var(--good-soft);font-weight:700}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.explain{margin-top:.6em;display:none}
+.explain.on{display:block}
+.clock{font-family:var(--display);font-weight:800;color:var(--teal)}
+.stars{font-size:1.8em;letter-spacing:.1em;color:var(--gold)}
+.scene{background:var(--surface);border-radius:10px;border:1px solid var(--line);padding:22px 26px}
+.meter{height:10px;background:var(--line);border-radius:6px;overflow:hidden;margin:6px 0 16px}
+.meter span{display:block;height:100%;background:var(--gold);width:0;transition:width .3s}
+
+.strat{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:1em}
+.strat div{background:var(--surface);border-top:5px solid var(--teal);padding:16px;border-radius:0 0 8px 8px}
+.warn{background:var(--gold-soft);border-left:6px solid var(--gold);padding:14px 18px;border-radius:0 8px 8px 0;margin-top:1.2em}
+textarea{width:100%;min-height:110px;font:inherit;padding:12px;border-radius:8px;border:2px solid var(--line);background:var(--surface);color:var(--ink)}
+
+.logtop{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:20px;border-bottom:4px solid var(--gold);padding-bottom:16px}
+.logit{color:var(--maroon-ink);margin:0;font-size:clamp(56px,7vw,110px)}
+.logtop .lede{margin:0}
+.entryhead{background:var(--surface);border:2px solid var(--ink);border-radius:4px;padding:12px 18px;display:flex;flex-direction:column;gap:6px;min-width:280px}
+.blank{display:inline-block;width:150px;border-bottom:2px solid var(--muted);height:1.1em;vertical-align:bottom}
+.qstrip{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:18px 0}
+.qstrip div{font-family:var(--display);font-weight:800;text-align:center;padding:10px 6px;border-radius:6px;border:2px solid var(--line);color:var(--muted);opacity:.55}
+.qstrip div.on{border-color:var(--maroon);background:var(--maroon);color:#fff;opacity:1}
+.qstrip small{display:block;font-family:var(--body);font-weight:400;font-size:.7em;margin-top:2px}
+.prompts{display:flex;flex-direction:column;gap:12px}
+.prompts div{display:flex;gap:16px;align-items:baseline;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 18px}
+.prompts p{margin:0}
+.tag{font-family:var(--display);font-weight:800;color:var(--maroon-ink);min-width:5.5em}
+.note{color:var(--muted);margin-top:12px}
+@media (max-width:760px){.qstrip{grid-template-columns:1fr 1fr}.prompts div{flex-direction:column;gap:4px}}
+.weekgoals{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:1em}
+.wg{background:var(--surface);border:1px solid var(--line);border-top:6px solid var(--maroon);border-radius:0 0 10px 10px;padding:18px 22px}
+.wg.excel,.wg.analytics{border-top-color:var(--teal)}
+.wg h3{color:var(--maroon-ink)}
+.wg.excel h3,.wg.analytics h3{color:var(--teal)}
+.wg p{margin:0}
+@media (max-width:760px){.weekgoals{grid-template-columns:1fr}}
+.dilist{display:flex;flex-direction:column;gap:10px;margin-top:1em}
+.di{background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--line);border-radius:0 8px 8px 0;padding:12px 18px;display:grid;grid-template-columns:1fr auto;gap:6px 16px;align-items:center}
+.di p{margin:0}
+.di .diwhy{grid-column:1 / -1;color:var(--muted);display:none;font-size:.92em}
+.di.done .diwhy{display:block}
+.di.ok{border-left-color:var(--good)}
+.di.no{border-left-color:var(--bad)}
+.dibtns{display:flex;gap:6px}
+.dibtns button{border:2px solid var(--line);background:var(--bg);border-radius:6px;padding:6px 14px;font-weight:700}
+.dibtns button.picked{border-color:var(--ink)}
+.chip.right{border-color:var(--good);background:var(--good-soft)}
+.chip.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.chip.missed{border-style:dashed;border-color:var(--good)}
+.steps{display:flex;flex-direction:column;gap:8px}
+.steps label{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 14px;cursor:pointer}
+.steps input{width:22px;height:22px;flex:none;margin-top:3px;accent-color:var(--maroon)}
+.steps label:has(input:checked){opacity:.6}
+code{font-family:Consolas,'Courier New',monospace;background:var(--gold-soft);padding:1px 6px;border-radius:4px}
+.xl{border:2px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface);margin-top:1em;font-size:.85em}
+.xl .hs{background:transparent;border:2px solid transparent;border-radius:4px;cursor:pointer;text-align:left}
+.xl .hs:hover,.xl .hs.on{border-color:var(--gold);background:var(--gold-soft)}
+.xl-title{background:#1f6e43;color:#fff;padding:6px 10px}
+.xl-title .hs{color:#fff;font-weight:700}
+.xl-title .hs.on,.xl-title .hs:hover{color:var(--ink)}
+.xl-tabs{display:flex;gap:18px;width:100%;padding:6px 10px;flex-wrap:wrap}
+.xl-tabs .sel{font-weight:700;border-bottom:3px solid #1f6e43}
+.xl-ribbon{display:flex;gap:10px;width:100%;padding:10px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.xl-ribbon span{border:1px solid var(--line);border-radius:4px;padding:10px 14px;background:var(--bg)}
+.xl-fbar{display:flex;gap:8px;align-items:center;padding:6px 10px;border-bottom:1px solid var(--line)}
+.xl-fbar .nb{width:70px;border:1px solid var(--line)}
+.xl-fbar .fb{flex:1;border:1px solid var(--line);font-family:Consolas,'Courier New',monospace}
+.fx{font-style:italic;color:var(--muted)}
+.xl-grid{display:grid;grid-template-columns:44px repeat(4,1fr)}
+.xl-grid>*{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:4px 8px;min-height:32px}
+.xl-grid .xh{background:var(--bg);text-align:center;color:var(--muted);font-weight:700;border-radius:0}
+.xl-grid .n{text-align:right}
+.xl-grid .active{outline:3px solid #1f6e43;outline-offset:-3px}
+.xl-sheets{display:flex;gap:10px;align-items:center;padding:6px 10px;background:var(--bg)}
+.xl-sheets .hs{font-weight:700;border-bottom:3px solid #1f6e43}
+.xlsplit{display:grid;grid-template-columns:minmax(260px,1fr) 1.4fr;gap:24px;align-items:start}
+.dtab{border-collapse:collapse;background:var(--surface);width:100%}
+.dtab th,.dtab td{border:1px solid var(--line);padding:6px 12px;text-align:left}
+.dtab th{background:var(--teal-soft)}
+.dtab td:nth-child(n+2){text-align:right}
+.check{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:1.2em;background:var(--surface);border:2px solid var(--teal);border-radius:10px;padding:14px 18px}
+.check input{font:inherit;padding:8px 12px;border-radius:6px;border:2px solid var(--line);background:var(--bg);color:var(--ink);width:9em}
+.aibox{background:var(--surface);border:2px solid var(--line);border-radius:10px;padding:16px 20px;display:flex;flex-wrap:wrap;gap:4px;margin-top:1em}
+.ais{background:transparent;border:2px solid transparent;border-radius:6px;padding:4px 6px;text-align:left}
+.ais.flag{background:var(--gold-soft);border-color:var(--gold)}
+.ais.hit{background:var(--good-soft);border-color:var(--good)}
+.ais.miss{border-style:dashed;border-color:var(--bad)}
+.ais.false{background:var(--bad-soft);border-color:var(--bad)}
+#aiWhy p{background:var(--surface);border-left:6px solid var(--gold);padding:10px 16px;border-radius:0 8px 8px 0;margin-top:10px}
+.flow3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:1em}
+.flow3>div{background:var(--surface);border:1px solid var(--line);border-top:6px solid var(--maroon);border-radius:0 0 10px 10px;padding:16px 18px}
+.flow3>div:nth-child(2){border-top-color:var(--teal)}
+.flow3>div:nth-child(3){border-top-color:var(--gold)}
+.flow3 .steps label{font-size:.9em;padding:8px 10px}
+.prompt{font-family:Consolas,'Courier New',monospace;font-size:.85em;background:var(--bg);border:1px dashed var(--muted);border-radius:6px;padding:10px;margin:8px 0}
+@media (max-width:900px){.xlsplit,.flow3{grid-template-columns:1fr}.di{grid-template-columns:1fr}}
+.kbd-out{background:var(--gold-soft);border-left:6px solid var(--gold);border-radius:0 8px 8px 0;padding:12px 16px;margin:0 0 12px}
+kbd{font-family:Consolas,'Courier New',monospace;background:var(--surface);border:1px solid var(--muted);border-bottom-width:3px;border-radius:5px;padding:1px 8px;font-size:.95em}
+footer.nav{display:flex;align-items:center;gap:12px;padding:10px clamp(16px,4vw,48px);border-top:1px solid var(--line);background:var(--surface)}
+footer.nav .navbtn{background:var(--maroon);color:#fff;border:none;border-radius:8px;padding:8px 18px;font-weight:700;min-width:96px}
+footer.nav .navbtn:disabled{opacity:.35;cursor:default}
+.dots{flex:1;display:flex;justify-content:center;gap:6px;flex-wrap:wrap}
+.dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--muted);background:transparent;padding:0}
+.dot[aria-current="true"]{background:var(--maroon-ink);border-color:var(--maroon-ink)}
+.count{font-size:.8em;color:var(--muted);min-width:4em;text-align:right}
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="course">BUS 2110 / Week 1, Day 1</div>
+  <div class="tools">
+    <button id="fsBtn" type="button" title="Full screen (F)">Full screen</button>
+  </div>
+</header>
+
+<main id="deck">
+
+<!-- 1 Title -->
+<section class="slide title-slide" data-title="Welcome">
+  <div class="inner">
+    <div class="kicker">Understand the Business</div>
+    <h1>What is MIS,<span>and why should a business major care?</span></h1>
+    <p class="lede">Today you'll learn what an information system is, take one apart into its five components, and follow one restaurant through a rough opening night using analytics, Excel, and AI.</p>
+    <div class="agenda">
+      <div><h3>Define</h3>MIS, IT, and IS</div>
+      <div><h3>Dissect</h3>The five-component framework</div>
+      <div><h3>Diagnose</h3>A restaurant's rough opening night</div>
+      <div><h3>Analyze</h3>Data vs. information</div>
+      <div><h3>Build</h3>Your first Excel workbook</div>
+      <div><h3>Evaluate</h3>Check what AI tells you</div>
+      <div><h3>Decide</h3>Strategy before technology</div>
+      <div><h3>Log it</h3>Your first Consultant Log entry</div>
+    </div>
+  </div>
+</section>
+
+<!-- 1b This week -->
+<section class="slide" data-title="This week">
+  <div class="inner">
+    <div class="kicker">Week 1: Understand the Business</div>
+    <h2>What you'll work on this week</h2>
+    <div class="weekgoals">
+      <div class="wg mis"><h3>MIS</h3><p>Understand how technology affects organizations, people, processes, and decisions.</p></div>
+      <div class="wg excel"><h3>Excel</h3><p>Begin working in Microsoft Excel and complete material from <i>Exploring Microsoft 365</i> Chapters 1 and 2.</p></div>
+      <div class="wg ai"><h3>AI</h3><p>Use AI as a learning and research tool while learning when AI assistance is appropriate and when you need to work independently.</p></div>
+      <div class="wg analytics"><h3>Analytics</h3><p>Begin asking useful questions of business data and distinguishing between having data and having information that supports a decision.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 2 Warm-up -->
+<section class="slide" data-title="Warm-up">
+  <div class="inner">
+    <div class="kicker">Warm-up</div>
+    <h2>Which of these have you used this week?</h2>
+    <p>Tap everything that applies.</p>
+    <div class="chips" id="poll">
+      <button class="chip" aria-pressed="false">An online calendar</button>
+      <button class="chip" aria-pressed="false">Excel or Google Sheets</button>
+      <button class="chip" aria-pressed="false">Google Drive or OneDrive</button>
+      <button class="chip" aria-pressed="false">Spotify or Apple Music</button>
+      <button class="chip" aria-pressed="false">A fitness tracker or Apple Health</button>
+      <button class="chip" aria-pressed="false">Canvas</button>
+      <button class="chip" aria-pressed="false">A mobile order app</button>
+      <button class="chip" aria-pressed="false">A store loyalty card</button>
+    </div>
+    <div class="bignum" id="pollCount">0</div>
+    <p id="pollMsg">information systems you've already used this week.</p>
+  </div>
+</section>
+
+<!-- 3 What is MIS -->
+<section class="slide" data-title="What is MIS?">
+  <div class="inner">
+    <div class="kicker">Define</div>
+    <h2>MIS: managing information systems to help a business achieve its strategies</h2>
+    <p>MIS has three parts. Tap each one to see what it means for you.</p>
+    <div class="cards reveal">
+      <button class="card" aria-expanded="false"><h3>Management and use</h3><div class="hint">Tap to reveal</div><div class="back">Developing, maintaining, and supporting technology that solves business problems. You're involved because you know the business needs better than IT does.</div></button>
+      <button class="card" aria-expanded="false"><h3>Information systems</h3><div class="hint">Tap to reveal</div><div class="back">A group of components that interact to produce information: hardware, software, data, procedures, and people.</div></button>
+      <button class="card" aria-expanded="false"><h3>Strategies</h3><div class="hint">Tap to reveal</div><div class="back">Technology should support the organization's goals, like cutting costs or improving service. It isn't adopted for its own sake.</div></button>
+    </div>
+  </div>
+</section>
+
+<!-- 4 Why you -->
+<section class="slide" data-title="Your role">
+  <div class="inner">
+    <div class="kicker">Define</div>
+    <h2>You won't build the system. You'll decide whether it fits.</h2>
+    <p class="lede">Business professionals are closest to daily operations, so IT teams depend on them to describe what a system needs to do.</p>
+    <div class="cards reveal">
+      <button class="card" aria-expanded="false"><h3>Understand the need</h3><div class="hint">Tap to reveal</div><div class="back">You know the workflow, the customers, and the pain points firsthand.</div></button>
+      <button class="card" aria-expanded="false"><h3>Define requirements</h3><div class="hint">Tap to reveal</div><div class="back">You tell IT what the system must do, in business terms they can build to.</div></button>
+      <button class="card" aria-expanded="false"><h3>Prevent misalignment</h3><div class="hint">Tap to reveal</div><div class="back">Without your input, IT may build a tool that doesn't match how your team actually works.</div></button>
+    </div>
+  </div>
+</section>
+
+<!-- 5 IT vs IS framework -->
+<section class="slide" data-title="IT vs. IS">
+  <div class="inner">
+    <div class="kicker">Dissect</div>
+    <h2>IT is the engine. IS is the whole trip.</h2>
+    <p>Information technology is the hardware, software, and data. An information system adds the procedures and people that turn technology into results. Tap a component for its definition.</p>
+    <div class="toggle" role="group" aria-label="Highlight">
+      <button type="button" data-view="it" aria-pressed="false">Show IT</button>
+      <button type="button" data-view="is" aria-pressed="false">Show IS</button>
+      <button type="button" data-view="all" aria-pressed="true">Show both</button>
+    </div>
+    <div class="band" id="band">
+      <div class="band-row">
+        <button class="comp tech" aria-pressed="false" data-def="Physical machines: computers, servers, scanners, phones, routers.">Hardware<small>the machines</small></button>
+        <button class="comp tech" aria-pressed="false" data-def="Instructions the machines carry out: apps, operating systems, databases.">Software<small>the instructions</small></button>
+        <button class="comp tech" aria-pressed="false" data-def="Raw facts the system stores and uses: prices, transactions, customer records.">Data<small>the raw facts</small></button>
+        <button class="comp human" aria-pressed="false" data-def="The methods for using the system: policies, steps, rules for who does what.">Procedures<small>the methods</small></button>
+        <button class="comp human" aria-pressed="false" data-def="Everyone who uses or supports the system: cashiers, managers, analysts, IT staff.">People<small>the users</small></button>
+      </div>
+      <div class="brackets">
+        <div class="brk it it-l"><span>IT</span></div>
+        <div class="brk is is-l"><span>IS</span></div>
+      </div>
+    </div>
+    <div class="band-detail" id="bandDetail" aria-live="polite">Car analogy: IT is the engine and transmission. IS is the car plus the driver, the traffic rules, and the navigation that get you somewhere.</div>
+  </div>
+</section>
+
+<!-- 6 Sort activity -->
+<section class="slide" data-title="Sort it">
+  <div class="inner">
+    <div class="kicker">Build it</div>
+    <h2>Sort a coffee shop's system into its five components</h2>
+    <p>Select an item, then select the component it belongs to. On a computer you can also drag.</p>
+    <div class="pool" id="pool" aria-label="Items to sort">
+      <button class="item" draggable="true" data-ans="Hardware" aria-pressed="false">Barcode scanner</button>
+      <button class="item" draggable="true" data-ans="Software" aria-pressed="false">Mobile ordering app</button>
+      <button class="item" draggable="true" data-ans="Data" aria-pressed="false">Menu prices</button>
+      <button class="item" draggable="true" data-ans="Procedures" aria-pressed="false">Refund policy</button>
+      <button class="item" draggable="true" data-ans="People" aria-pressed="false">Barista</button>
+      <button class="item" draggable="true" data-ans="Hardware" aria-pressed="false">Receipt printer</button>
+      <button class="item" draggable="true" data-ans="Software" aria-pressed="false">Loyalty rewards platform</button>
+      <button class="item" draggable="true" data-ans="Data" aria-pressed="false">A customer's order history</button>
+      <button class="item" draggable="true" data-ans="Procedures" aria-pressed="false">"Scan the reward code before payment"</button>
+      <button class="item" draggable="true" data-ans="People" aria-pressed="false">Shift manager</button>
+    </div>
+    <div class="bins" id="bins">
+      <div class="bin" data-bin="Hardware" role="button" tabindex="0"><div class="bin-title">Hardware</div></div>
+      <div class="bin" data-bin="Software" role="button" tabindex="0"><div class="bin-title">Software</div></div>
+      <div class="bin" data-bin="Data" role="button" tabindex="0"><div class="bin-title">Data</div></div>
+      <div class="bin h" data-bin="Procedures" role="button" tabindex="0"><div class="bin-title">Procedures</div></div>
+      <div class="bin h" data-bin="People" role="button" tabindex="0"><div class="bin-title">People</div></div>
+    </div>
+    <div class="actions">
+      <button class="btn" id="sortCheck" type="button">Check my sort</button>
+      <button class="btn ghost" id="sortReset" type="button">Start over</button>
+      <span class="feedback" id="sortFb" aria-live="polite"></span>
+    </div>
+  </div>
+</section>
+
+<!-- 7 Examples tabs -->
+<section class="slide" data-title="Examples">
+  <div class="inner">
+    <div class="kicker">Dissect</div>
+    <h2>Every system has all five</h2>
+    <p>Pick an example and look for the component that's easiest to forget.</p>
+    <div class="tabs" role="tablist" id="exTabs">
+      <button role="tab" aria-selected="true" data-ex="0">Point of sale</button>
+      <button role="tab" aria-selected="false" data-ex="1">Amazon recommendations</button>
+      <button role="tab" aria-selected="false" data-ex="2">CRM</button>
+      <button role="tab" aria-selected="false" data-ex="3">Social media marketing</button>
+    </div>
+    <div class="panel" role="tabpanel" id="exPanel"></div>
+  </div>
+</section>
+
+<!-- 8 Quick check -->
+<section class="slide" data-title="Quick check">
+  <div class="inner">
+    <div class="kicker">Quick check</div>
+    <h2>Three questions before we move on</h2>
+    <div class="q" data-quiz>
+      <p><b>1.</b> Which components make up information technology (IT)?</p>
+      <div class="opts">
+        <button class="opt">Hardware, software, and people</button>
+        <button class="opt" data-right>Hardware, software, and data</button>
+        <button class="opt">All five components</button>
+      </div>
+      <p class="explain">IT is only the technology. Procedures and people are what make it an information system.</p>
+    </div>
+    <div class="q" data-quiz>
+      <p><b>2.</b> A company buys Tableau licenses for everyone, but nobody is trained and there's no rule for who builds reports. Which components are missing?</p>
+      <div class="opts">
+        <button class="opt">Hardware and software</button>
+        <button class="opt">Data</button>
+        <button class="opt" data-right>Procedures and people</button>
+      </div>
+      <p class="explain">The technology is there. Without trained people and clear procedures, it won't produce useful information.</p>
+    </div>
+    <div class="q" data-quiz>
+      <p><b>3.</b> What is the main purpose of an information system?</p>
+      <div class="opts">
+        <button class="opt">To store as much data as possible</button>
+        <button class="opt" data-right>To turn data into information that supports decisions</button>
+        <button class="opt">To replace employees with software</button>
+      </div>
+      <p class="explain">Data is raw facts. An information system turns it into meaningful information that improves decisions and processes.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 9 Scenario -->
+<section class="slide" data-title="Opening night">
+  <div class="inner">
+    <div class="kicker">Diagnose</div>
+    <h2>Opening night at The Copper Table</h2>
+    <p>The investor is here. Two food critics are seated. Social media is watching. Four things go wrong. For each one, find the failing component.</p>
+    <div class="meter" aria-hidden="true"><span id="scMeter"></span></div>
+    <div class="scene" id="scene" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- A1 Data vs information -->
+<section class="slide" data-title="Data or information?">
+  <div class="inner">
+    <div class="kicker">Analytics</div>
+    <h2>The Copper Table has plenty of data. Does it have information?</h2>
+    <p>Data is raw facts. Information is data organized so it can support a decision. Tap each statement to label it.</p>
+    <div class="dilist" id="dilist">
+      <div class="di" data-ans="data"><p>Table 12 ordered two Copper Burgers at 7:05 p.m.</p><div class="dibtns"><button type="button" data-pick="data">Data</button><button type="button" data-pick="info">Information</button></div><p class="diwhy">A single raw fact. On its own, it doesn't point to a decision.</p></div>
+      <div class="di" data-ans="info"><p>The Copper Burger was the best-selling dish of the night.</p><div class="dibtns"><button type="button" data-pick="data">Data</button><button type="button" data-pick="info">Information</button></div><p class="diwhy">Many orders summarized into one finding. It could shape how much to prep tomorrow.</p></div>
+      <div class="di" data-ans="data"><p>The kitchen printer printed 143 tickets.</p><div class="dibtns"><button type="button" data-pick="data">Data</button><button type="button" data-pick="info">Information</button></div><p class="diwhy">A count with no comparison or context. Is 143 a lot? We can't tell yet.</p></div>
+      <div class="di" data-ans="info"><p>Tables seated after 8 p.m. waited twice as long for food as tables seated before 7 p.m.</p><div class="dibtns"><button type="button" data-pick="data">Data</button><button type="button" data-pick="info">Information</button></div><p class="diwhy">A comparison that reveals a problem. It could support a staffing decision.</p></div>
+      <div class="di" data-ans="data"><p>A guest's reservation was for 4 people at 8:15 p.m.</p><div class="dibtns"><button type="button" data-pick="data">Data</button><button type="button" data-pick="info">Information</button></div><p class="diwhy">One record in the reservation system. Useful to store, but not a finding.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- A2 Useful questions -->
+<section class="slide" data-title="Useful questions">
+  <div class="inner">
+    <div class="kicker">Analytics</div>
+    <h2>Good analysts start with a useful question</h2>
+    <p>The owner wants to fix what went wrong before Saturday. Which questions would actually help her decide something? Tap every one you think is useful, then check.</p>
+    <div class="chips" id="uq">
+      <button class="chip" aria-pressed="false" data-useful="1">Which dishes took the longest to reach the table?</button>
+      <button class="chip" aria-pressed="false" data-useful="0">How many forks does the restaurant own?</button>
+      <button class="chip" aria-pressed="false" data-useful="1">At what time did orders start backing up?</button>
+      <button class="chip" aria-pressed="false" data-useful="0">What color are the menus?</button>
+      <button class="chip" aria-pressed="false" data-useful="1">Which menu items are missing prices in the system?</button>
+      <button class="chip" aria-pressed="false" data-useful="0">How many people follow us on Instagram?</button>
+      <button class="chip" aria-pressed="false" data-useful="1">How many servers were on the floor each hour?</button>
+    </div>
+    <div class="actions"><button class="btn" id="uqCheck" type="button">Check</button><span class="feedback" id="uqFb" aria-live="polite"></span></div>
+    <p class="note">A useful question points to a decision the business can make. Instagram followers might matter for marketing, but they won't fix Saturday's kitchen.</p>
+  </div>
+</section>
+
+<!-- X1 Excel setup -->
+<section class="slide" data-title="Excel setup">
+  <div class="inner">
+    <div class="kicker">Excel</div>
+    <h2>Set up your first workbook</h2>
+    <p>You'll turn the Copper Table's orders into information. First, a place to keep your work. Check off each step as you go.</p>
+    <div class="steps">
+      <label><input type="checkbox"> Sign in to Office 365 with your elon.edu account and open <b>OneDrive</b>.</label>
+      <label><input type="checkbox"> Create a folder named <b>BUS2110</b>. Files here are backed up and reachable from any device.</label>
+      <label><input type="checkbox"> Inside it, create a new blank Excel workbook.</label>
+      <label><input type="checkbox"> Rename it <b>CopperTable_OpeningNight</b>. Notice the <b>.xlsx</b> extension: that's what makes it an Excel workbook.</label>
+    </div>
+    <div class="cards" style="margin-top:1.2em">
+      <div class="card"><h3>Workbook</h3>The whole Excel file. One workbook can hold many worksheets.</div>
+      <div class="card"><h3>Worksheet</h3>A single sheet inside the workbook, shown as a tab at the bottom.</div>
+      <div class="card"><h3>Local vs. cloud</h3>Local files live on one computer. Cloud files in OneDrive follow you to any device.</div>
+    </div>
+  </div>
+</section>
+
+<!-- X2 Excel interface -->
+<section class="slide" data-title="Excel tour">
+  <div class="inner">
+    <div class="kicker">Excel</div>
+    <h2>Take a tour of the Excel window</h2>
+    <p>Tap any part of the window below to learn what it does.</p>
+    <div class="xl" id="xl">
+      <div class="xl-title"><button type="button" class="hs" data-k="file">CopperTable_OpeningNight.xlsx</button></div>
+      <button type="button" class="hs xl-tabs" data-k="tabs"><span>File</span><span class="sel">Home</span><span>Insert</span><span>Page Layout</span><span>Formulas</span><span>Data</span><span>View</span></button>
+      <button type="button" class="hs xl-ribbon" data-k="ribbon"><span>Clipboard</span><span>Font</span><span>Alignment</span><span>Number</span><span>Styles</span></button>
+      <div class="xl-fbar"><button type="button" class="hs nb" data-k="namebox">D2</button><span class="fx">fx</span><button type="button" class="hs fb" data-k="fbar">=B2*C2</button></div>
+      <div class="xl-grid">
+        <span class="xh"></span><button type="button" class="hs xh" data-k="col">A</button><button type="button" class="hs xh" data-k="col">B</button><button type="button" class="hs xh" data-k="col">C</button><button type="button" class="hs xh" data-k="col">D</button>
+        <button type="button" class="hs xh" data-k="row">1</button><span>Item</span><span>Qty</span><span>Price</span><span>Total</span>
+        <button type="button" class="hs xh" data-k="row">2</button><span>Copper Burger</span><span class="n">12</span><span class="n">16</span><button type="button" class="hs n active" data-k="cell">192</button>
+        <button type="button" class="hs xh" data-k="row">3</button><span>Chef's Special</span><span class="n">8</span><span class="n">24</span><span></span>
+        <button type="button" class="hs xh" data-k="row">4</button><span></span><span></span><span></span><span></span>
+      </div>
+      <div class="xl-sheets"><button type="button" class="hs" data-k="sheet">Sheet1</button><span>+</span></div>
+    </div>
+    <div class="band-detail" id="xlDetail" aria-live="polite">Tap a part of the window.</div>
+  </div>
+</section>
+
+<!-- X3 Excel build -->
+<section class="slide" data-title="Build it in Excel">
+  <div class="inner">
+    <div class="kicker">Excel</div>
+    <h2>Turn opening-night orders into information</h2>
+    <div class="xlsplit">
+      <div>
+        <p>Enter this data starting in cell A1:</p>
+        <table class="dtab">
+          <tr><th>Item</th><th>Qty</th><th>Price</th><th>Total</th></tr>
+          <tr><td>Copper Burger</td><td>12</td><td>16</td><td></td></tr>
+          <tr><td>Chef's Special</td><td>8</td><td>24</td><td></td></tr>
+          <tr><td>Truffle Fries</td><td>15</td><td>9</td><td></td></tr>
+          <tr><td>House Salad</td><td>6</td><td>11</td><td></td></tr>
+          <tr><td>Lemonade</td><td>20</td><td>4</td><td></td></tr>
+          <tr><td>Grilled Salmon</td><td>7</td><td>22</td><td></td></tr>
+        </table>
+      </div>
+      <div class="steps">
+        <label><input type="checkbox"> Type the headers and six rows. Press <b>Enter</b> to move down, <b>Tab</b> to move right.</label>
+        <label><input type="checkbox"> In <b>D2</b>, type <code>=B2*C2</code> and press Enter. Every formula starts with <b>=</b>.</label>
+        <label><input type="checkbox"> Select D2 and drag the small square in its corner (the <b>fill handle</b>) down to D7. That's <b>AutoFill</b>: Excel adjusts the formula for each row.</label>
+        <label><input type="checkbox"> Click D5 and read the formula bar. Why does it say <code>=B5*C5</code>?</label>
+        <label><input type="checkbox"> In C8 type <b>Total</b>. In D8, add up D2 through D7 with a formula. (A faster way, SUM, comes in Chapter 2.)</label>
+      </div>
+    </div>
+    <div class="check">
+      <label for="xlTotal"><b>What's your grand total in D8?</b></label>
+      <input id="xlTotal" type="text" inputmode="decimal" placeholder="e.g. 500">
+      <button class="btn" id="xlCheck" type="button">Check</button>
+      <span class="feedback" id="xlFb" aria-live="polite"></span>
+    </div>
+    <p class="note">Now the analyst's question: what does this total tell the owner, and what does it <i>not</i> tell her?</p>
+  </div>
+</section>
+
+<!-- I1 AI evaluate sample -->
+<section class="slide" data-title="Evaluate AI">
+  <div class="inner">
+    <div class="kicker">AI</div>
+    <h2>AI can explain a concept. Your job is to check it.</h2>
+    <p>Here's a sample explanation of data vs. information, written for this class to resemble a typical chatbot answer. Tap any sentence you think is wrong or overstated, then reveal.</p>
+    <div class="aibox" id="aibox">
+      <button type="button" class="ais" data-bad="0">Data is raw facts, like "Table 12 ordered two burgers at 7:05 p.m."</button>
+      <button type="button" class="ais" data-bad="0">Information is data that has been processed so it's useful for a decision, like "Burgers were the best seller tonight."</button>
+      <button type="button" class="ais" data-bad="1" data-why="Storing data doesn't make it useful. Someone still has to organize and interpret it.">Once data is stored in a database, it automatically becomes information.</button>
+      <button type="button" class="ais" data-bad="1" data-why="More data can mean more noise. Better decisions come from the right data and good questions.">More data always leads to better decisions.</button>
+      <button type="button" class="ais" data-bad="0">A manager could use information about slow dishes to adjust the kitchen's prep schedule.</button>
+    </div>
+    <div class="actions"><button class="btn" id="aiReveal" type="button">Reveal</button><button class="btn ghost" id="aiReset" type="button">Start over</button><span class="feedback" id="aiFb" aria-live="polite"></span></div>
+    <div id="aiWhy"></div>
+  </div>
+</section>
+
+<!-- I1b Gemini sign-in -->
+<section class="slide" data-title="Sign in to Gemini">
+  <div class="inner">
+    <div class="kicker">AI</div>
+    <h2>Open Gemini with your Elon account, not your personal one</h2>
+    <p>For this course, use Gemini signed in with your <b>elon.edu</b> address. If your browser is already signed in to a personal Google account, Gemini will usually open as that account instead.</p>
+    <div class="tabs" role="tablist" id="gmTabs">
+      <button role="tab" aria-selected="true" data-gm="0">Option A: Incognito window (easiest)</button>
+      <button role="tab" aria-selected="false" data-gm="1">Option B: Switch accounts</button>
+    </div>
+    <div class="panel" role="tabpanel">
+      <div class="gm" data-gmp="0">
+        <p>A private window starts signed out of everything, so you can sign in with just your Elon account. Pick your setup:</p>
+        <div class="toggle" role="group" aria-label="Computer" id="gmOs">
+          <button type="button" data-os="win" aria-pressed="true">Windows</button>
+          <button type="button" data-os="mac" aria-pressed="false">Mac</button>
+        </div>
+        <div class="toggle" role="group" aria-label="Browser" id="gmBr">
+          <button type="button" data-br="chrome" aria-pressed="true">Chrome</button>
+          <button type="button" data-br="edge" aria-pressed="false">Edge</button>
+          <button type="button" data-br="safari" aria-pressed="false">Safari</button>
+          <button type="button" data-br="firefox" aria-pressed="false">Firefox</button>
+        </div>
+        <div class="kbd-out" id="gmOut" aria-live="polite"></div>
+        <div class="steps">
+          <label><input type="checkbox"> Open the private window using the shortcut above.</label>
+          <label><input type="checkbox"> Go to <b>gemini.google.com</b> and sign in with your <b>elon.edu</b> address.</label>
+          <label><input type="checkbox"> When you close the window, you're signed out automatically.</label>
+        </div>
+      </div>
+      <div class="gm" data-gmp="1" hidden>
+        <div class="steps">
+          <label><input type="checkbox"> Go to <b>gemini.google.com</b>.</label>
+          <label><input type="checkbox"> Click your <b>profile picture</b> in the top-right corner.</label>
+          <label><input type="checkbox"> If your Elon account is listed, select it. If not, choose <b>Add another account</b> and sign in with your elon.edu address.</label>
+          <label><input type="checkbox"> Or choose <b>Sign out</b> to sign out of all accounts, then sign back in with only your Elon account.</label>
+        </div>
+      </div>
+    </div>
+    <div class="warn"><b>Before you type anything:</b> click the profile picture in Gemini and confirm it shows your elon.edu address.</div>
+  </div>
+</section>
+
+<!-- I2 AI try it -->
+<section class="slide" data-title="Try it with AI">
+  <div class="inner">
+    <div class="kicker">AI</div>
+    <h2>Your turn: my thinking, AI's thinking, my evaluation</h2>
+    <div class="flow3">
+      <div><span class="tag">1. My thinking</span><p><b>Laptop closed.</b> In your Consultant Log, explain the difference between IT and IS in your own words, with an example.</p></div>
+      <div><span class="tag">2. AI's thinking</span><p>Open Gemini, signed in with your elon.edu account, and paste this prompt:</p>
+        <div class="prompt" id="aiPrompt">Explain the difference between information technology (IT) and an information system (IS) for a first-year business student. Use a restaurant example. Keep it under 120 words.</div>
+        <button class="btn ghost" id="copyPrompt" type="button">Copy prompt</button> <span class="feedback" id="copyFb" aria-live="polite"></span></div>
+      <div><span class="tag">3. My evaluation</span><p>Check the answer against class:</p>
+        <div class="steps">
+          <label><input type="checkbox"> Does it name all five components, or does it leave out procedures and people?</label>
+          <label><input type="checkbox"> Is anything wrong or overstated?</label>
+          <label><input type="checkbox"> What did AI explain better than I did?</label>
+          <label><input type="checkbox"> What did I notice that AI missed?</label>
+        </div>
+      </div>
+    </div>
+    <p class="note">Why this order? Your thinking gets captured before another tool influences it. On the timed Excel work and the certification exam, you'll work without AI entirely.</p>
+  </div>
+</section>
+
+<!-- 10 Strategy -->
+<section class="slide" data-title="Strategy first">
+  <div class="inner">
+    <div class="kicker">Decide</div>
+    <h2>Before adopting any system, ask what it does for the strategy</h2>
+    <div class="strat">
+      <div><h3>Costs or revenue</h3>Would it reduce costs or increase revenue?</div>
+      <div><h3>Satisfaction</h3>Would it improve customer or employee satisfaction?</div>
+      <div><h3>Efficiency or effectiveness</h3>Would it help us do things faster, or do the right things better?</div>
+      <div><h3>Competitive advantage</h3>Would it set us apart from competitors?</div>
+    </div>
+    <div class="warn"><b>Watch for the bandwagon effect.</b> "Everyone else is using it" is not a reason. If a system doesn't support at least one of these goals, it's a cost without a payoff.</div>
+  </div>
+</section>
+
+<!-- 11 Strategy decision -->
+<section class="slide" data-title="Your call">
+  <div class="inner">
+    <div class="kicker">Decide</div>
+    <h2>Should The Copper Table buy self-order kiosks?</h2>
+    <p>After opening night, a vendor pitches touchscreen kiosks. The owner says, "Every new restaurant downtown has them." Which argument best justifies the purchase?</p>
+    <div class="q" data-quiz>
+      <div class="opts">
+        <button class="opt">Competitors have them, so customers will expect them.</button>
+        <button class="opt" data-right>Kiosks send orders straight to the kitchen screen and would free one host to serve during the rush, and we can measure whether wait times drop.</button>
+        <button class="opt">The kiosks use AI, so they're the most modern option.</button>
+        <button class="opt">The vendor is offering a discount this month.</button>
+      </div>
+      <p class="explain">That answer ties the system to efficiency and service quality with a concrete reason. "Everyone has them" is the bandwagon effect, and "it uses AI" or "it's on sale" says nothing about the strategy.</p>
+    </div>
+    <p class="lede">Discuss: what data would you want before signing the contract?</p>
+  </div>
+</section>
+
+<!-- 12 Log it -->
+<section class="slide" data-title="Log it">
+  <div class="inner">
+    <div class="logtop">
+      <div>
+        <div class="kicker">Consultant Log</div>
+        <h1 class="logit">LOG IT</h1>
+        <p class="lede">Laptops closed. Notebook only.</p>
+      </div>
+      <div class="entryhead" aria-label="Entry heading">
+        <div><b>Date:</b> <span class="blank"></span></div>
+        <div><b>Log #:</b> <span class="blank"></span></div>
+        <div><b>Topic:</b> MIS and Information Systems</div>
+      </div>
+    </div>
+    <div class="qstrip" aria-label="Today's questions">
+      <div class="on">KNOW<small>What do I understand?</small></div>
+      <div class="on">DO<small>What can I do?</small></div>
+      <div class="on">DECIDE<small>What decision could this support?</small></div>
+      <div>VERIFY<small>How do I know?</small></div>
+      <div>DEFEND<small>Could I explain and defend this?</small></div>
+    </div>
+    <div class="prompts">
+      <div><span class="tag">KNOW</span><p>In one sentence, what is the difference between IT and an IS?</p></div>
+      <div><span class="tag">DO</span><p>Pick an app you used today. Sketch or list its five components: hardware, software, data, procedures, and people.</p></div>
+      <div><span class="tag">DECIDE</span><p>Would you tell The Copper Table to buy the kiosks? Name the strategy question behind your answer and one piece of data you'd want first.</p></div>
+    </div>
+    <p class="note">Sentences, bullets, or a diagram are all fine. Unsure? Write the question you still have.</p>
+    <div class="warn"><b>Coming up tomorrow: business processes.</b> Every system supports a process. We'll map inputs, activities, and outputs for a pizza delivery business, so think about what happens between "I'd like to order" and a pizza at your door.</div>
+  </div>
+</section>
+
+</main>
+
+<footer class="nav">
+  <button class="navbtn" id="prev" type="button">Back</button>
+  <div class="dots" id="dots" role="tablist" aria-label="Slides"></div>
+  <span class="count" id="count"></span>
+  <button class="navbtn" id="next" type="button">Next</button>
+</footer>
+
+<script>
+(function(){
+  const slides=[...document.querySelectorAll('.slide')];
+  const dots=document.getElementById('dots');
+  let cur=0;
+  slides.forEach((s,i)=>{
+    const d=document.createElement('button');
+    d.className='dot';d.type='button';d.setAttribute('aria-label',(i+1)+': '+s.dataset.title);d.title=s.dataset.title;
+    d.onclick=()=>go(i);dots.appendChild(d);
+  });
+  function go(i){
+    cur=Math.max(0,Math.min(slides.length-1,i));
+    slides.forEach((s,j)=>s.classList.toggle('active',j===cur));
+    [...dots.children].forEach((d,j)=>d.setAttribute('aria-current',j===cur?'true':'false'));
+    document.getElementById('prev').disabled=cur===0;
+    document.getElementById('next').disabled=cur===slides.length-1;
+    document.getElementById('count').textContent=(cur+1)+' / '+slides.length;
+    slides[cur].scrollTop=0;
+    history.replaceState(null,'','#'+(cur+1));
+  }
+  document.getElementById('prev').onclick=()=>go(cur-1);
+  document.getElementById('next').onclick=()=>go(cur+1);
+  document.addEventListener('keydown',e=>{
+    if(e.target.matches('textarea,input'))return;
+    if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();go(cur+1)}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur-1)}
+    else if(e.key==='f'||e.key==='F'){toggleFs()}
+  });
+  let tx=null;
+  document.getElementById('deck').addEventListener('touchstart',e=>{tx=e.touches[0].clientX},{passive:true});
+  document.getElementById('deck').addEventListener('touchend',e=>{
+    if(tx===null||e.target.closest('.item,.bin,.pool'))return;
+    const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>70)go(cur+(dx<0?1:-1));tx=null;
+  });
+  function toggleFs(){
+    try{if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen();}catch(e){}
+  }
+  document.getElementById('fsBtn').onclick=toggleFs;
+  const start=parseInt(location.hash.slice(1),10);
+  go(isNaN(start)?0:start-1);
+
+  // poll
+  const poll=document.getElementById('poll');
+  poll.addEventListener('click',e=>{
+    const c=e.target.closest('.chip');if(!c)return;
+    c.setAttribute('aria-pressed',c.getAttribute('aria-pressed')==='true'?'false':'true');
+    const n=poll.querySelectorAll('[aria-pressed="true"]').length;
+    document.getElementById('pollCount').textContent=n;
+    document.getElementById('pollMsg').textContent=n===1?'information system you\u2019ve already used this week.':'information systems you\u2019ve already used this week.'+(n>=3?' You\u2019re already an MIS user.':'');
+  });
+
+  // reveal cards
+  document.querySelectorAll('.reveal .card').forEach(c=>c.onclick=()=>c.setAttribute('aria-expanded',c.getAttribute('aria-expanded')==='true'?'false':'true'));
+
+  // band
+  const band=document.getElementById('band'),detail=document.getElementById('bandDetail');
+  document.querySelectorAll('.toggle button').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.toggle button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));
+    band.classList.remove('show-it','show-is');
+    if(b.dataset.view==='it'){band.classList.add('show-it');detail.textContent='IT: hardware, software, and data. The technology alone.'}
+    else if(b.dataset.view==='is'){band.classList.add('show-is');detail.textContent='IS: all five components. The technology plus the procedures and people that make it produce information.'}
+  });
+  band.querySelectorAll('.comp').forEach(c=>c.onclick=()=>{
+    band.querySelectorAll('.comp').forEach(x=>x.setAttribute('aria-pressed',x===c?'true':'false'));
+    detail.innerHTML='<b>'+c.firstChild.textContent+':</b> '+c.dataset.def;
+  });
+
+  // sort
+  const pool=document.getElementById('pool'),bins=document.getElementById('bins'),fb=document.getElementById('sortFb');
+  const original=[...pool.children];
+  let sel=null;
+  function select(it){
+    if(sel)sel.setAttribute('aria-pressed','false');
+    sel=(sel===it)?null:it;
+    if(sel)sel.setAttribute('aria-pressed','true');
+  }
+  function place(it,bin){it.classList.remove('right','wrong');bin.appendChild(it);it.setAttribute('aria-pressed','false');sel=null;fb.textContent=''}
+  pool.addEventListener('click',e=>{const it=e.target.closest('.item');if(it)select(it)});
+  bins.addEventListener('click',e=>{
+    const it=e.target.closest('.item');
+    if(it){select(it);return}
+    const bin=e.target.closest('.bin');if(bin&&sel)place(sel,bin);
+  });
+  bins.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.classList.contains('bin')&&sel){e.preventDefault();place(sel,e.target)}});
+  document.querySelectorAll('.item').forEach(it=>it.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain','x');sel=it}));
+  bins.querySelectorAll('.bin').forEach(b=>{
+    b.addEventListener('dragover',e=>{e.preventDefault();b.classList.add('drop')});
+    b.addEventListener('dragleave',()=>b.classList.remove('drop'));
+    b.addEventListener('drop',e=>{e.preventDefault();b.classList.remove('drop');if(sel)place(sel,b)});
+  });
+  pool.addEventListener('dragover',e=>e.preventDefault());
+  pool.addEventListener('drop',e=>{e.preventDefault();if(sel)place(sel,pool)});
+  document.getElementById('sortCheck').onclick=()=>{
+    let right=0,placed=0;
+    bins.querySelectorAll('.item').forEach(it=>{placed++;const ok=it.dataset.ans===it.parentElement.dataset.bin;it.classList.toggle('right',ok);it.classList.toggle('wrong',!ok);if(ok)right++});
+    const left=pool.querySelectorAll('.item').length;
+    fb.textContent=right+' of 10 correct'+(left?' ('+left+' still to sort)':'')+(right===10?'. Nice work.':'. Orange items are in the wrong place; move them and check again.');
+  };
+  document.getElementById('sortReset').onclick=()=>{original.forEach(it=>{it.classList.remove('right','wrong');it.setAttribute('aria-pressed','false');pool.appendChild(it)});sel=null;fb.textContent=''};
+
+  // example tabs
+  const ex=[
+    {Hardware:'Barcode scanner, receipt printer',Software:'Sales-tracking application',Data:'Product prices, transaction details',Procedures:'Scanning items, generating receipts',People:'Cashiers and managers'},
+    {Hardware:'Cloud servers',Software:'Recommendation system',Data:'Product details, purchase and browsing history',Procedures:'Collecting and analyzing customer behavior',People:'Data scientists and developers'},
+    {Hardware:'Cloud servers',Software:'Salesforce or HubSpot',Data:'Customer interactions, sales history',Procedures:'Logging customer details, tracking interactions',People:'Sales and marketing teams'},
+    {Hardware:'Cloud servers, phones',Software:'The social media platform',Data:'Likes, comments, shares, product sales',Procedures:'Content creation, campaign management, performance analysis',People:'Marketing teams and managers'}
+  ];
+  const panel=document.getElementById('exPanel');
+  function showEx(i){
+    panel.innerHTML='<dl>'+Object.entries(ex[i]).map(([k,v])=>'<dt>'+k+'</dt><dd>'+v+'</dd>').join('')+'</dl>';
+    document.querySelectorAll('#exTabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.ex==i?'true':'false'));
+  }
+  document.querySelectorAll('#exTabs button').forEach(b=>b.onclick=()=>showEx(+b.dataset.ex));
+  showEx(0);
+
+  // quizzes
+  document.querySelectorAll('[data-quiz]').forEach(q=>{
+    q.querySelectorAll('.opt').forEach(o=>o.onclick=()=>{
+      if(o.hasAttribute('data-right')){o.classList.add('right');q.querySelector('.explain').classList.add('on')}
+      else o.classList.add('wrong');
+    });
+  });
+
+
+  // data vs info
+  document.querySelectorAll('.di').forEach(d=>d.querySelectorAll('[data-pick]').forEach(b=>b.onclick=()=>{
+    d.querySelectorAll('[data-pick]').forEach(x=>x.classList.toggle('picked',x===b));
+    const ok=b.dataset.pick===d.dataset.ans;d.classList.add('done');d.classList.toggle('ok',ok);d.classList.toggle('no',!ok);
+  }));
+  // useful questions
+  const uq=document.getElementById('uq');
+  uq.addEventListener('click',e=>{const c=e.target.closest('.chip');if(!c)return;c.classList.remove('right','wrong','missed');c.setAttribute('aria-pressed',c.getAttribute('aria-pressed')==='true'?'false':'true');document.getElementById('uqFb').textContent=''});
+  document.getElementById('uqCheck').onclick=()=>{
+    let r=0;uq.querySelectorAll('.chip').forEach(c=>{const on=c.getAttribute('aria-pressed')==='true',u=c.dataset.useful==='1';c.classList.remove('right','wrong','missed');if(on&&u){c.classList.add('right');r++}else if(on&&!u)c.classList.add('wrong');else if(!on&&u)c.classList.add('missed')});
+    document.getElementById('uqFb').textContent=r+' of 4 useful questions found. Green = useful, orange = not useful for this decision, dashed = useful ones you missed.';
+  };
+  // excel tour
+  const xlDefs={file:'<b>File name:</b> your workbook. The .xlsx extension marks it as an Excel workbook.',tabs:'<b>Ribbon tabs:</b> Home, Insert, Formulas, and more. Each tab opens a different set of tools.',ribbon:'<b>Ribbon:</b> the tools for the selected tab, organized into groups like Font and Alignment.',namebox:'<b>Name Box:</b> shows the address of the selected cell, here D2.',fbar:'<b>Formula bar:</b> shows what is really in the cell. The cell displays 192, but it holds the formula =B2*C2.',col:'<b>Columns</b> are labeled with letters.',row:'<b>Rows</b> are labeled with numbers.',cell:'<b>Cell:</b> where a column and row meet, named by its reference. This one is D2. The first cell in every sheet is A1.',sheet:'<b>Sheet tab:</b> one worksheet in the workbook. Use + to add another, or right-click to rename it.'};
+  const xl=document.getElementById('xl');
+  xl.querySelectorAll('.hs').forEach(h=>h.onclick=()=>{xl.querySelectorAll('.hs').forEach(x=>x.classList.toggle('on',x.dataset.k===h.dataset.k));document.getElementById('xlDetail').innerHTML=xlDefs[h.dataset.k]});
+  // excel check
+  document.getElementById('xlCheck').onclick=()=>{
+    const v=parseFloat(document.getElementById('xlTotal').value.replace(/[$,\s]/g,''));const fb=document.getElementById('xlFb');
+    if(isNaN(v))fb.textContent='Type a number first.';
+    else if(v===819)fb.textContent='Correct: $819. Your formulas and AutoFill worked.';
+    else fb.textContent='Not quite. Check that D2 through D7 each multiply Qty by Price, and that D8 adds all six.';
+  };
+  // ai sample
+  const aibox=document.getElementById('aibox'),aiWhy=document.getElementById('aiWhy');
+  aibox.querySelectorAll('.ais').forEach(a=>a.onclick=()=>{if(!aibox.classList.contains('revealed'))a.classList.toggle('flag')});
+  document.getElementById('aiReveal').onclick=()=>{
+    aibox.classList.add('revealed');let hit=0;aiWhy.innerHTML='';
+    aibox.querySelectorAll('.ais').forEach(a=>{const f=a.classList.contains('flag'),b=a.dataset.bad==='1';a.classList.remove('flag');
+      if(b){a.classList.add(f?'hit':'miss');if(f)hit++;aiWhy.insertAdjacentHTML('beforeend','<p><b>"'+a.textContent+'"</b> '+a.dataset.why+'</p>')}else if(f)a.classList.add('false')});
+    document.getElementById('aiFb').textContent='You caught '+hit+' of 2 problems.';
+  };
+  document.getElementById('aiReset').onclick=()=>{aibox.classList.remove('revealed');aibox.querySelectorAll('.ais').forEach(a=>a.classList.remove('flag','hit','miss','false'));aiWhy.innerHTML='';document.getElementById('aiFb').textContent=''};
+  document.getElementById('copyPrompt').onclick=()=>{
+    const t=document.getElementById('aiPrompt').textContent,fb=document.getElementById('copyFb');
+    const done=()=>fb.textContent='Copied.';
+    const fallback=()=>{const r=document.createRange();r.selectNodeContents(document.getElementById('aiPrompt'));const sel=getSelection();sel.removeAllRanges();sel.addRange(r);fb.textContent='Selected. Press Ctrl+C (or Cmd+C) to copy.'};
+    try{navigator.clipboard.writeText(t).then(done,fallback)}catch(e){fallback()}
+  };
+
+
+  // gemini sign-in
+  const gmTabs=document.querySelectorAll('#gmTabs button');
+  gmTabs.forEach(b=>b.onclick=()=>{gmTabs.forEach(x=>x.setAttribute('aria-selected',x===b?'true':'false'));document.querySelectorAll('.gm').forEach(p=>p.hidden=p.dataset.gmp!==b.dataset.gm)});
+  const k=a=>a.map(x=>'<kbd>'+x+'</kbd>').join(' + ');
+  const gm={
+    chrome:{name:'an Incognito window',win:['Ctrl','Shift','N'],mac:['Cmd','Shift','N']},
+    edge:{name:'an InPrivate window',win:['Ctrl','Shift','N'],mac:['Cmd','Shift','N']},
+    safari:{name:'a Private window',win:null,mac:['Cmd','Shift','N']},
+    firefox:{name:'a Private window',win:['Ctrl','Shift','P'],mac:['Cmd','Shift','P']}
+  };
+  let gOs='win',gBr='chrome';
+  function gmShow(){
+    const e=gm[gBr],keys=e[gOs],out=document.getElementById('gmOut');
+    out.innerHTML=keys?'<b>To open '+e.name+':</b> press '+k(keys)+'. You can also use the browser menu (\u22EE or \u2026 in the corner, or File on a Mac).':'Safari only runs on Macs. On Windows, use Chrome or Edge instead.';
+  }
+  document.querySelectorAll('#gmOs button').forEach(b=>b.onclick=()=>{gOs=b.dataset.os;document.querySelectorAll('#gmOs button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));gmShow()});
+  document.querySelectorAll('#gmBr button').forEach(b=>b.onclick=()=>{gBr=b.dataset.br;document.querySelectorAll('#gmBr button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));gmShow()});
+  gmShow();
+
+  // scenario
+  const comps=['Hardware','Software','Data','Procedures','People'];
+  const events=[
+    {t:'6:45 p.m.',s:'Servers are entering orders on their tablets, and the tablets say "sent." But nothing is coming out of the kitchen. The Wi-Fi is working fine, and the kitchen printer\u2019s light is blinking red.',a:'Hardware',why:'The kitchen printer, a physical device, has failed. The software and network did their jobs, but the orders had nowhere to print.'},
+    {t:'7:20 p.m.',s:'A critic orders the chef\u2019s special. The server rings it up and the bill shows $0.00. The special was never added to the menu in the ordering system.',a:'Data',why:'The software works, but the data inside it is missing. Bad or incomplete data produces bad information, like a $0 bill.'},
+    {t:'7:50 p.m.',s:'Two servers each think the other is covering table 8. The investor waits twenty minutes without a drink. There was never a rule for how tables get assigned.',a:'Procedures',why:'No one defined the method for assigning tables. A missing procedure breaks a system even when every piece of technology works.'},
+    {t:'8:30 p.m.',s:'The host never learned the reservation system, so walk-ins get seated at tables that were booked. A guest posts about the wait on social media.',a:'People',why:'The system is fine; the person using it wasn\u2019t trained. People are a component, so training is part of implementing any system.'}
+  ];
+  let step=0,score=0,tried=false;
+  const scene=document.getElementById('scene'),meter=document.getElementById('scMeter');
+  function renderScene(){
+    meter.style.width=(step/events.length*100)+'%';
+    if(step>=events.length){
+      const stars='\u2605'.repeat(score+1)+'\u2606'.repeat(4-score);
+      scene.innerHTML='<h3>The review is in</h3><div class="stars" aria-label="'+(score+1)+' of 5 stars">'+stars+'</div><p>You found '+score+' of 4 failures on your first try.</p><p>Notice that only one of the four problems was the technology itself. The other three were data, procedures, and people.</p><button class="btn ghost" id="scAgain" type="button">Run the night again</button>';
+      document.getElementById('scAgain').onclick=()=>{step=0;score=0;renderScene()};
+      return;
+    }
+    tried=false;
+    const ev=events[step];
+    scene.innerHTML='<div class="clock">'+ev.t+'</div><p>'+ev.s+'</p><p><b>Which component failed?</b></p><div class="opts">'+comps.map(c=>'<button class="opt" type="button">'+c+'</button>').join('')+'</div><p class="explain"></p>';
+    scene.querySelectorAll('.opt').forEach(o=>o.onclick=()=>{
+      const ex=scene.querySelector('.explain');
+      if(o.textContent===ev.a){
+        if(!tried)score++;
+        o.classList.add('right');
+        ex.innerHTML=ev.why+' <button class="btn" type="button" id="scNext">'+(step===events.length-1?'See the review':'Next problem')+'</button>';
+        ex.classList.add('on');
+        scene.querySelectorAll('.opt').forEach(x=>x.disabled=true);
+        document.getElementById('scNext').onclick=()=>{step++;renderScene()};
+      }else{tried=true;o.classList.add('wrong');o.disabled=true}
+    });
+  }
+  renderScene();
+})();
+</script>
+</body>
+</html>
