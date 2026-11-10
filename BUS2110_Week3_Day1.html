@@ -597,17 +597,18 @@ button.fbx:disabled{cursor:default}
 
 <section class="slide title-slide" data-title="Welcome">
   <div class="inner">
-    <div class="kicker">Week 3 &middot; Analytics &amp; Decisions</div>
+    <div class="kicker">Week 3 &middot; Certification Day and Analytics</div>
     <h1>Analytics exists to support a decision.<span>This week the Copper Table asks you for a recommendation.</span></h1>
-    <p class="lede">Today you will see what business analytics is, measure performance with business metrics, make a decision with weighted criteria, compare what Excel does well with what AI does well, and meet your team for the final consulting engagement.</p>
+    <p class="lede">Today you take the Excel certification exam first. Then you will see what business analytics is, measure performance with business metrics, make a decision with weighted criteria, compare what Excel does well with what AI does well, and meet your team for the final consulting engagement.</p>
     <div class="agenda">
+      <div><h3>Certification exam</h3>Your Excel skills, AI-free</div>
       <div><h3>Business analytics</h3>Questions, data, decisions</div>
       <div><h3>Three types</h3>Descriptive, predictive, prescriptive</div>
       <div><h3>Business metrics</h3>KPIs, ROI, churn, market share</div>
       <div><h3>Decision-making</h3>A process and a weighted matrix</div>
       <div><h3>Excel practice</h3>Shares, growth, and business metrics</div>
       <div><h3>Excel vs. AI</h3>Who should do which task</div>
-      <div><h3>AI at work</h3>Prompts, checked claims, measured bias</div>
+      <div><h3>Verify</h3>Check an AI claim in Excel</div>
       <div><h3>Log it</h3>Consultant Log entry #11</div>
     </div>
   </div>
@@ -633,6 +634,16 @@ button.fbx:disabled{cursor:default}
 <div class="opts"><button class="opt">Missing value</button><button class="opt" data-right>Duplicate</button><button class="opt">Outlier</button></div>
 <p class="explain">Duplicates inflate totals, so you remove the extra row.</p>
 </div>
+  </div>
+</section>
+
+<section class="slide" data-title="Certification exam">
+  <div class="inner">
+    <div class="kicker">Excel certification</div>
+    <h2>Excel certification exam</h2>
+    <p>Same skills, same format as Friday&#39;s practice exam. You have practiced every one of them on Copper Table files and in the Pearson simulations.</p>
+    <div class="steps"><label><input type="checkbox"><span>Sign in exactly as the exam instructions in Canvas describe. Raise your hand if the launch fails.</span></label><label><input type="checkbox"><span>Read each task twice before you touch the keyboard.</span></label><label><input type="checkbox"><span>Watch the clock, but do not rush the reading.</span></label><label><input type="checkbox"><span>Before you submit, return to any task you flagged.</span></label><label><input type="checkbox"><span>When you are done, close your laptop quietly. After a short break we start business analytics and meet your teams.</span></label></div>
+    <div class="warn">If something technical goes wrong, stop and raise your hand right away. Do not try to fix it yourself.</div>
   </div>
 </section>
 
@@ -841,59 +852,6 @@ button.fbx:disabled{cursor:default}
   </div>
 </section>
 
-<section class="slide" data-title="Prompting, deeper">
-  <div class="inner">
-    <div class="kicker">Prompting</div>
-    <h2>A strong prompt has parts</h2>
-    <p>On Day 3 you improved a weak prompt and on Day 4 you built a study prompt. The same pieces work for business tasks, including your project this week. The more of them you give, the less the model has to guess.</p>
-    <div class="strat">
-      <div><h3>Role</h3>Whose perspective to take.</div>
-      <div><h3>Context</h3>Who the audience is and what matters.</div>
-      <div><h3>Task</h3>The clear, specific job to do.</div>
-      <div><h3>Format</h3>How the answer should be organized.</div>
-      <div><h3>Constraints</h3>Length, tone, and what to avoid.</div>
-      <div><h3>Example</h3>A sample of the style you want.</div>
-    </div>
-  </div>
-</section>
-
-<section class="slide" data-title="Build a prompt">
-  <div class="inner">
-    <div class="kicker">Interactive</div>
-    <h2>Add parts and watch the prompt improve</h2>
-    <p>The task is always included. Switch the other parts on or off and compare.</p>
-    <div class="chips" id="pbChips">
-      <button class="btn ghost" type="button" data-p="role" aria-pressed="false">Role</button>
-      <button class="btn ghost" type="button" data-p="context" aria-pressed="false">Context</button>
-      <button class="btn ghost" type="button" data-p="format" aria-pressed="false">Format</button>
-      <button class="btn ghost" type="button" data-p="constraint" aria-pressed="false">Constraints</button>
-      <button class="btn ghost" type="button" data-p="example" aria-pressed="false">Example</button>
-    </div>
-    <div class="pbuild" id="pbOut" aria-live="polite"></div>
-    <div class="warn" id="pbMsg" aria-live="polite"></div>
-  </div>
-</section>
-
-<section class="slide" data-title="Which technique?">
-  <div class="inner">
-    <div class="kicker">Sort</div>
-    <h2>Which prompting technique is it?</h2>
-    <p>Select a prompt, then select the technique it uses.</p>
-    <div class="pool" id="poolT" aria-label="Items to sort">
-<button class="item" draggable="true" data-ans="Role" aria-pressed="false">You are a customer service representative replying to a late-delivery complaint.</button>
-<button class="item" draggable="true" data-ans="Role" aria-pressed="false">Act as a food-cost analyst reviewing this week&#39;s purchases.</button>
-<button class="item" draggable="true" data-ans="Examples" aria-pressed="false">Here is a sample tone: &quot;We&#39;re thrilled to share this!&quot; Write the announcement in the same tone.</button>
-<button class="item" draggable="true" data-ans="Examples" aria-pressed="false">Here are two past replies. Write a third in the same style.</button>
-<button class="item" draggable="true" data-ans="Steps" aria-pressed="false">First define the problem, then give two solutions, then list the expected benefits.</button>
-<button class="item" draggable="true" data-ans="Steps" aria-pressed="false">Explain the process in five numbered steps.</button>
-<button class="item" draggable="true" data-ans="Constraints" aria-pressed="false">Answer in 100 words or fewer.</button>
-<button class="item" draggable="true" data-ans="Constraints" aria-pressed="false">List three ideas and do not mention prices.</button>
-    </div>
-    <div class="bins b4" id="binsT"><div class="bin" data-bin="Role" role="button" tabindex="0"><div class="bin-title">Role</div></div><div class="bin" data-bin="Examples" role="button" tabindex="0"><div class="bin-title">Examples</div></div><div class="bin" data-bin="Steps" role="button" tabindex="0"><div class="bin-title">Steps</div></div><div class="bin" data-bin="Constraints" role="button" tabindex="0"><div class="bin-title">Constraints</div></div></div>
-    <div class="actions"><button class="btn" id="sortCheckT" type="button">Check my sort</button><button class="btn ghost" id="sortResetT" type="button">Start over</button><span class="feedback" id="sortFbT" aria-live="polite"></span></div>
-  </div>
-</section>
-
 <section class="slide" data-title="Check the AI claim">
   <div class="inner">
     <div class="kicker">Excel vs. AI</div>
@@ -913,28 +871,6 @@ button.fbx:disabled{cursor:default}
       <span class="feedback" id="vc2Fb" aria-live="polite"></span>
     </div>
 <div class="warn">One claim was badly wrong and one was close. You cannot know which until you check each one.</div>
-  </div>
-</section>
-
-<section class="slide" data-title="Measure a screener">
-  <div class="inner">
-    <div class="kicker">AI and Excel</div>
-    <h2>Measure a screener for bias</h2>
-    <p>On Friday you named four sources of AI bias. Excel can measure one. An AI tool screens applicants for server jobs. Enter its results in A1:C4 and find each group&#39;s selection rate.</p>
-    <div class="xlsplit"><div><table class="dtab xlike"><tr><th>A</th><th>B</th><th>C</th></tr><tr><td>Group</td><td>Applied</td><td>Selected</td></tr><tr><td>A</td><td class="n">120</td><td class="n">48</td></tr><tr><td>B</td><td class="n">80</td><td class="n">20</td></tr><tr><td>C</td><td class="n">50</td><td class="n">20</td></tr></table></div><div class="steps"><label><input type="checkbox"><span>In <b>D1</b> type Rate. In <b>D2</b> enter <code>=C2/B2</code> and fill down. Format as <b>Percent</b>.</span></label><label><input type="checkbox"><span>In <b>F1</b> type Ratio. In <b>F2</b> enter <code>=MIN(D2:D4)/MAX(D2:D4)</code> and format as a percent.</span></label><label><input type="checkbox"><span>Insert a <b>Clustered Column</b> chart of the Group and Rate columns. Start the axis at zero.</span></label></div></div>
-    <div class="check" data-num="25" data-ok="Correct: 25%. Group B: 20 selected out of 80 applied." data-bad="Not quite. Selection rate is Selected divided by Applied, so 20 / 80 for Group B.">
-      <label for="bi1"><b>What is Group B&#39;s selection rate? (Type the number only.)</b></label>
-      <input id="bi1" type="text" inputmode="decimal" placeholder="a percent">
-      <button class="btn" type="button">Check</button>
-      <span class="feedback" aria-live="polite"></span>
-    </div>
-    <div class="check" data-num="62.5" data-ok="Correct: 62.5%. The lowest rate (25%) divided by the highest (40%)." data-bad="Not quite. The rates are 40%, 25%, and 40%. Divide the lowest by the highest.">
-      <label for="bi2"><b>What is the ratio of the lowest rate to the highest? (One decimal place.)</b></label>
-      <input id="bi2" type="text" inputmode="decimal" placeholder="a percent">
-      <button class="btn" type="button">Check</button>
-      <span class="feedback" aria-live="polite"></span>
-    </div>
-    <div class="warn">In hiring, a common rule of thumb flags a ratio below 80% for a closer look. A low ratio does not prove unfairness, but it tells you where to ask questions.</div>
   </div>
 </section>
 
@@ -1142,22 +1078,6 @@ button.fbx:disabled{cursor:default}
       msg.innerHTML='<b>'+O[best][0]+'</b> scores highest. The scores did not change, only the priorities did. A matrix does not remove judgment. It shows you exactly where your judgment is.';
     }
     ids.forEach(i=>document.getElementById(i).oninput=r);r();
-  })();
-
-  makeSort('poolT','binsT','sortCheckT','sortResetT','sortFbT',8);
-
-  // prompt builder
-  (function(){
-    const P={role:'You are a social media manager for a family-owned restaurant.',context:'The audience is local families. Brunch runs 10 am to 2 pm, and the signature dish is lemon ricotta pancakes.',task:'Write a Facebook post announcing The Copper Table&#39;s new Sunday brunch.',format:'Write one short paragraph followed by three hashtags.',constraint:'Keep it under 60 words and do not mention prices.',example:'Match this tone: &quot;We&#39;re thrilled to share this with you!&quot;'};
-    const order=['role','context','task','format','constraint','example'];
-    const on={task:true};const btns=[...document.querySelectorAll('#pbChips button')],out=document.getElementById('pbOut'),msg=document.getElementById('pbMsg');
-    function render(){
-      out.innerHTML=order.filter(k=>on[k]).map(k=>'<p><span class="tag">'+k+'</span> '+P[k]+'</p>').join('');
-      const n=Object.keys(on).filter(k=>on[k]).length;
-      msg.innerHTML=n<=1?'<b>Task only.</b> The AI must guess the audience, voice, length, and layout. Expect a generic result.':(n<6?'<b>'+n+' of 6 parts.</b> Each part you add removes a guess. Compare what the AI would have to assume now.':'<b>All 6 parts.</b> A detailed prompt gives the AI little room to guess. You still need to verify the facts it writes.');
-    }
-    btns.forEach(b=>b.onclick=()=>{const k=b.dataset.p;on[k]=!on[k];b.setAttribute('aria-pressed',!!on[k]);b.classList.toggle('ghost',!on[k]);render()});
-    render();
   })();
 
 })();
