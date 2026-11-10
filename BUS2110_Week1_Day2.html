@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Day 2: Business Processes and Information</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f4f2; --surface:#ffffff; --ink:#221a1b; --muted:#5d5657; --line:#d9d6d3;
+  --maroon:#73000a; --maroon-ink:#73000a; --gold:#b59a57; --gold-soft:#efe6cf; --teal:#527b82; --teal-soft:#dde8e9;
+  --good:#2f6b3a; --good-soft:#dcefdf; --bad:#9a3412; --bad-soft:#fbe4d8;
+  --display:'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --body:'Atkinson Hyperlegible', 'Segoe UI', Arial, sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1b1617; --surface:#262021; --ink:#f1ebe8; --muted:#b9afad; --line:#433a3b;
+    --maroon:#8f1a26; --maroon-ink:#e8858e; --gold:#cdb57a; --gold-soft:#3a3222; --teal:#7fa7ad; --teal-soft:#24363a;
+    --good:#8fd19b; --good-soft:#1f3624; --bad:#f4a582; --bad-soft:#3e2519;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1b1617; --surface:#262021; --ink:#f1ebe8; --muted:#b9afad; --line:#433a3b;
+  --maroon:#8f1a26; --maroon-ink:#e8858e; --gold:#cdb57a; --gold-soft:#3a3222; --teal:#7fa7ad; --teal-soft:#24363a;
+  --good:#8fd19b; --good-soft:#1f3624; --bad:#f4a582; --bad-soft:#3e2519;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:clamp(17px,1.35vw,22px);line-height:1.5;display:flex;flex-direction:column}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+
+header.bar{display:flex;align-items:center;justify-content:space-between;padding:12px clamp(16px,4vw,48px);border-bottom:4px solid var(--gold);background:var(--maroon);color:#fff}
+header.bar .course{font-family:var(--display);font-weight:700;letter-spacing:.01em}
+header.bar .tools{display:flex;gap:8px}
+header.bar button{background:transparent;border:1px solid rgba(255,255,255,.5);border-radius:6px;padding:4px 12px;font-size:.8em;color:#fff}
+
+main{flex:1;position:relative;overflow:hidden}
+.slide{position:absolute;inset:0;overflow-y:auto;padding:clamp(20px,4vh,48px) clamp(16px,5vw,72px) 32px;display:none}
+.slide.active{display:block}
+.inner{max-width:1120px;margin:0 auto}
+@media (prefers-reduced-motion:no-preference){.slide.active .inner{animation:in .35s ease-out}}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+h1,h2,h3{font-family:var(--display);line-height:1.1;margin:0 0 .4em}
+h1{font-size:clamp(40px,5.6vw,84px);font-weight:800;letter-spacing:-.02em}
+h2{font-size:clamp(30px,3.6vw,54px);font-weight:800;letter-spacing:-.01em;color:var(--maroon-ink)}
+h3{font-size:1.15em;font-weight:700}
+p{margin:0 0 .8em;max-width:68ch}
+.lede{font-size:1.2em;color:var(--muted)}
+.kicker{font-family:var(--display);font-weight:700;color:var(--teal);margin-bottom:.5em}
+
+/* title slide */
+.title-slide .inner{display:flex;flex-direction:column;justify-content:center;min-height:100%}
+.title-slide h1 span{display:block;color:var(--maroon-ink)}
+.agenda{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:1.5em}
+.agenda div{border-top:4px solid var(--gold);padding-top:8px}
+
+/* chips / poll */
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin:1em 0}
+.chip{border:2px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 18px}
+.chip[aria-pressed="true"]{border-color:var(--teal);background:var(--teal-soft);font-weight:700}
+.bignum{font-family:var(--display);font-weight:800;font-size:clamp(56px,7vw,110px);color:var(--maroon-ink);line-height:1}
+
+/* reveal cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:1em}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;text-align:left;width:100%}
+.card .back{display:none;margin-top:.5em;color:var(--muted)}
+.card[aria-expanded="true"] .back{display:block}
+.card[aria-expanded="true"]{border-color:var(--teal)}
+.card .hint{font-size:.8em;color:var(--teal);margin-top:.4em}
+.card[aria-expanded="true"] .hint{display:none}
+
+/* the framework band: signature visual */
+.band{margin:1.4em 0 .6em}
+.band-row{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.comp{background:var(--surface);border:2px solid var(--line);border-radius:8px;padding:14px 10px;text-align:center;font-family:var(--display);font-weight:700;font-size:1.05em}
+.comp small{display:block;font-family:var(--body);font-weight:400;font-size:.72em;color:var(--muted);margin-top:4px}
+.comp.tech{border-color:var(--teal)}
+.comp.human{border-color:var(--gold)}
+.brackets{display:grid;grid-template-columns:repeat(5,1fr);column-gap:6px;margin-top:10px}
+.brk{border:3px solid;border-top:none;height:22px;border-radius:0 0 8px 8px;position:relative;margin-bottom:34px}
+.brk span{position:absolute;left:50%;top:100%;transform:translateX(-50%);font-family:var(--display);font-weight:800;padding-top:4px}
+.it{grid-column:1 / span 3;grid-row:1;border-color:var(--teal);color:var(--teal)}
+.is{grid-column:1 / span 5;grid-row:2;border-color:var(--maroon-ink);color:var(--maroon-ink)}
+.toggle{display:flex;gap:8px;margin:1em 0}
+.toggle button{border:2px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 18px;font-weight:700}
+.toggle button[aria-pressed="true"]{background:var(--maroon);border-color:var(--maroon);color:#fff}
+.band.show-it .comp.human{opacity:.25}
+.band.show-it .is-l{visibility:hidden}
+.band.show-is .it-l{visibility:hidden}
+.band-detail{background:var(--surface);border-left:6px solid var(--gold);padding:14px 18px;border-radius:0 8px 8px 0;min-height:4em}
+.band-row .comp{cursor:pointer}
+.band-row .comp[aria-pressed="true"]{background:var(--gold-soft)}
+
+/* sort activity */
+.pool{display:flex;flex-wrap:wrap;gap:8px;min-height:56px;padding:12px;border:2px dashed var(--line);border-radius:10px;margin:1em 0}
+.item{background:var(--surface);border:2px solid var(--line);border-radius:8px;padding:8px 14px;font-size:.92em}
+.item[aria-pressed="true"]{border-color:var(--maroon-ink);box-shadow:0 0 0 3px var(--gold)}
+.item.right{border-color:var(--good);background:var(--good-soft)}
+.item.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.bins{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.bin{background:var(--surface);border:2px solid var(--line);border-radius:10px;padding:10px;min-height:170px;display:flex;flex-direction:column;gap:6px;text-align:left}
+.bin-title{font-family:var(--display);font-weight:800;text-align:center;padding-bottom:6px;border-bottom:3px solid var(--teal)}
+.bin.h .bin-title{border-color:var(--gold)}
+.bin.drop{background:var(--teal-soft)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:1em}
+.btn{background:var(--maroon);color:#fff;border:none;border-radius:8px;padding:10px 20px;font-weight:700}
+.btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--line)}
+.feedback{font-weight:700}
+@media (max-width:760px){.bins,.band-row{grid-template-columns:1fr 1fr}.brackets{display:none}}
+
+/* tabs */
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:1em 0 0}
+.tabs button{border:2px solid var(--line);border-bottom:none;background:var(--bg);border-radius:8px 8px 0 0;padding:8px 16px;font-weight:700}
+.tabs button[aria-selected="true"]{background:var(--surface);border-color:var(--teal)}
+.panel{background:var(--surface);border:2px solid var(--teal);border-radius:0 10px 10px 10px;padding:18px 22px}
+.panel dl{display:grid;grid-template-columns:max-content 1fr;gap:8px 20px;margin:0}
+.panel dt{font-family:var(--display);font-weight:700}
+.panel dd{margin:0}
+
+/* quiz + scenario */
+.q{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 22px;margin-bottom:16px}
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:.6em}
+.opt{border:2px solid var(--line);background:var(--bg);border-radius:8px;padding:8px 16px;text-align:left}
+.opt.right{border-color:var(--good);background:var(--good-soft);font-weight:700}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.explain{margin-top:.6em;display:none}
+.explain.on{display:block}
+.clock{font-family:var(--display);font-weight:800;color:var(--teal)}
+.stars{font-size:1.8em;letter-spacing:.1em;color:var(--gold)}
+.scene{background:var(--surface);border-radius:10px;border:1px solid var(--line);padding:22px 26px}
+.meter{height:10px;background:var(--line);border-radius:6px;overflow:hidden;margin:6px 0 16px}
+.meter span{display:block;height:100%;background:var(--gold);width:0;transition:width .3s}
+
+.strat{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:1em}
+.strat div{background:var(--surface);border-top:5px solid var(--teal);padding:16px;border-radius:0 0 8px 8px}
+.warn{background:var(--gold-soft);border-left:6px solid var(--gold);padding:14px 18px;border-radius:0 8px 8px 0;margin-top:1.2em}
+textarea{width:100%;min-height:110px;font:inherit;padding:12px;border-radius:8px;border:2px solid var(--line);background:var(--surface);color:var(--ink)}
+
+.logtop{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:20px;border-bottom:4px solid var(--gold);padding-bottom:16px}
+.logit{color:var(--maroon-ink);margin:0;font-size:clamp(56px,7vw,110px)}
+.logtop .lede{margin:0}
+.entryhead{background:var(--surface);border:2px solid var(--ink);border-radius:4px;padding:12px 18px;display:flex;flex-direction:column;gap:6px;min-width:280px}
+.blank{display:inline-block;width:150px;border-bottom:2px solid var(--muted);height:1.1em;vertical-align:bottom}
+.qstrip{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:18px 0}
+.qstrip div{font-family:var(--display);font-weight:800;text-align:center;padding:10px 6px;border-radius:6px;border:2px solid var(--line);color:var(--muted);opacity:.55}
+.qstrip div.on{border-color:var(--maroon);background:var(--maroon);color:#fff;opacity:1}
+.qstrip small{display:block;font-family:var(--body);font-weight:400;font-size:.7em;margin-top:2px}
+.prompts{display:flex;flex-direction:column;gap:12px}
+.prompts div{display:flex;gap:16px;align-items:baseline;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 18px}
+.prompts p{margin:0}
+.tag{font-family:var(--display);font-weight:800;color:var(--maroon-ink);min-width:5.5em}
+.note{color:var(--muted);margin-top:12px}
+@media (max-width:760px){.qstrip{grid-template-columns:1fr 1fr}.prompts div{flex-direction:column;gap:4px}}
+.weekgoals{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:1em}
+.wg{background:var(--surface);border:1px solid var(--line);border-top:6px solid var(--maroon);border-radius:0 0 10px 10px;padding:18px 22px}
+.wg.excel,.wg.analytics{border-top-color:var(--teal)}
+.wg h3{color:var(--maroon-ink)}
+.wg.excel h3,.wg.analytics h3{color:var(--teal)}
+.wg p{margin:0}
+@media (max-width:760px){.weekgoals{grid-template-columns:1fr}}
+.dilist{display:flex;flex-direction:column;gap:10px;margin-top:1em}
+.di{background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--line);border-radius:0 8px 8px 0;padding:12px 18px;display:grid;grid-template-columns:1fr auto;gap:6px 16px;align-items:center}
+.di p{margin:0}
+.di .diwhy{grid-column:1 / -1;color:var(--muted);display:none;font-size:.92em}
+.di.done .diwhy{display:block}
+.di.ok{border-left-color:var(--good)}
+.di.no{border-left-color:var(--bad)}
+.dibtns{display:flex;gap:6px}
+.dibtns button{border:2px solid var(--line);background:var(--bg);border-radius:6px;padding:6px 14px;font-weight:700}
+.dibtns button.picked{border-color:var(--ink)}
+.chip.right{border-color:var(--good);background:var(--good-soft)}
+.chip.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.chip.missed{border-style:dashed;border-color:var(--good)}
+.steps{display:flex;flex-direction:column;gap:8px}
+.steps label{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 14px;cursor:pointer}
+.steps input{width:22px;height:22px;flex:none;margin-top:3px;accent-color:var(--maroon)}
+.steps label:has(input:checked){opacity:.6}
+code{font-family:Consolas,'Courier New',monospace;background:var(--gold-soft);padding:1px 6px;border-radius:4px}
+.xl{border:2px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface);margin-top:1em;font-size:.85em}
+.xl .hs{background:transparent;border:2px solid transparent;border-radius:4px;cursor:pointer;text-align:left}
+.xl .hs:hover,.xl .hs.on{border-color:var(--gold);background:var(--gold-soft)}
+.xl-title{background:#1f6e43;color:#fff;padding:6px 10px}
+.xl-title .hs{color:#fff;font-weight:700}
+.xl-title .hs.on,.xl-title .hs:hover{color:var(--ink)}
+.xl-tabs{display:flex;gap:18px;width:100%;padding:6px 10px;flex-wrap:wrap}
+.xl-tabs .sel{font-weight:700;border-bottom:3px solid #1f6e43}
+.xl-ribbon{display:flex;gap:10px;width:100%;padding:10px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.xl-ribbon span{border:1px solid var(--line);border-radius:4px;padding:10px 14px;background:var(--bg)}
+.xl-fbar{display:flex;gap:8px;align-items:center;padding:6px 10px;border-bottom:1px solid var(--line)}
+.xl-fbar .nb{width:70px;border:1px solid var(--line)}
+.xl-fbar .fb{flex:1;border:1px solid var(--line);font-family:Consolas,'Courier New',monospace}
+.fx{font-style:italic;color:var(--muted)}
+.xl-grid{display:grid;grid-template-columns:44px repeat(4,1fr)}
+.xl-grid>*{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:4px 8px;min-height:32px}
+.xl-grid .xh{background:var(--bg);text-align:center;color:var(--muted);font-weight:700;border-radius:0}
+.xl-grid .n{text-align:right}
+.xl-grid .active{outline:3px solid #1f6e43;outline-offset:-3px}
+.xl-sheets{display:flex;gap:10px;align-items:center;padding:6px 10px;background:var(--bg)}
+.xl-sheets .hs{font-weight:700;border-bottom:3px solid #1f6e43}
+.xlsplit{display:grid;grid-template-columns:minmax(260px,1fr) 1.4fr;gap:24px;align-items:start}
+.dtab{border-collapse:collapse;background:var(--surface);width:100%}
+.dtab th,.dtab td{border:1px solid var(--line);padding:6px 12px;text-align:left}
+.dtab th{background:var(--teal-soft)}
+.dtab td:nth-child(n+2){text-align:right}
+.check{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:1.2em;background:var(--surface);border:2px solid var(--teal);border-radius:10px;padding:14px 18px}
+.check input{font:inherit;padding:8px 12px;border-radius:6px;border:2px solid var(--line);background:var(--bg);color:var(--ink);width:9em}
+.aibox{background:var(--surface);border:2px solid var(--line);border-radius:10px;padding:16px 20px;display:flex;flex-wrap:wrap;gap:4px;margin-top:1em}
+.ais{background:transparent;border:2px solid transparent;border-radius:6px;padding:4px 6px;text-align:left}
+.ais.flag{background:var(--gold-soft);border-color:var(--gold)}
+.ais.hit{background:var(--good-soft);border-color:var(--good)}
+.ais.miss{border-style:dashed;border-color:var(--bad)}
+.ais.false{background:var(--bad-soft);border-color:var(--bad)}
+#aiWhy p{background:var(--surface);border-left:6px solid var(--gold);padding:10px 16px;border-radius:0 8px 8px 0;margin-top:10px}
+.flow3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:1em}
+.flow3>div{background:var(--surface);border:1px solid var(--line);border-top:6px solid var(--maroon);border-radius:0 0 10px 10px;padding:16px 18px}
+.flow3>div:nth-child(2){border-top-color:var(--teal)}
+.flow3>div:nth-child(3){border-top-color:var(--gold)}
+.flow3 .steps label{font-size:.9em;padding:8px 10px}
+.prompt{font-family:Consolas,'Courier New',monospace;font-size:.85em;background:var(--bg);border:1px dashed var(--muted);border-radius:6px;padding:10px;margin:8px 0}
+@media (max-width:900px){.xlsplit,.flow3{grid-template-columns:1fr}.di{grid-template-columns:1fr}}
+.kbd-out{background:var(--gold-soft);border-left:6px solid var(--gold);border-radius:0 8px 8px 0;padding:12px 16px;margin:0 0 12px}
+kbd{font-family:Consolas,'Courier New',monospace;background:var(--surface);border:1px solid var(--muted);border-bottom-width:3px;border-radius:5px;padding:1px 8px;font-size:.95em}
+footer.nav{display:flex;align-items:center;gap:12px;padding:10px clamp(16px,4vw,48px);border-top:1px solid var(--line);background:var(--surface)}
+footer.nav .navbtn{background:var(--maroon);color:#fff;border:none;border-radius:8px;padding:8px 18px;font-weight:700;min-width:96px}
+footer.nav .navbtn:disabled{opacity:.35;cursor:default}
+.dots{flex:1;display:flex;justify-content:center;gap:6px;flex-wrap:wrap}
+.dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--muted);background:transparent;padding:0}
+.dot[aria-current="true"]{background:var(--maroon-ink);border-color:var(--maroon-ink)}
+.count{font-size:.8em;color:var(--muted);min-width:4em;text-align:right}
+
+/* ---- Day 2 additions ---- */
+.strat.three{grid-template-columns:repeat(3,1fr)}
+.bins.b3{grid-template-columns:repeat(3,1fr)}
+.di.five{grid-template-columns:1fr}
+.di.five .dibtns{flex-wrap:wrap}
+.stages{display:flex;flex-direction:column;gap:10px;margin-top:1em}
+.stage{background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--teal);border-radius:0 8px 8px 0;padding:12px 18px;display:none}
+.stage.on{display:block}
+.stage .tag{display:block;margin-bottom:4px}
+.stage p{margin:0 0 4px}
+.seq{display:flex;flex-wrap:wrap;gap:8px;margin:1em 0}
+.seq .item{text-align:left}
+.seq .item b{color:var(--maroon-ink);margin-right:6px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:1em}
+.stat{background:var(--surface);border:1px solid var(--line);border-top:6px solid var(--teal);border-radius:0 0 10px 10px;padding:16px 18px}
+.stat h3{font-size:1em}
+.stat .bignum{font-size:clamp(34px,4.2vw,60px)}
+.stat p{margin:.4em 0 0;color:var(--muted)}
+.stats.sys .stat{border-top-color:var(--maroon)}
+.pk{background:transparent;border:2px solid transparent;border-radius:4px;font:inherit;padding:2px 6px;text-align:left}
+.pk:hover,.pk.on{border-color:var(--gold);background:var(--gold-soft)}
+.dtab.xlike td:nth-child(n+2){text-align:left}
+.dtab.xlike td.n{text-align:right}
+.dtab.xlike td.n .ais,.dtab.xlike td.n .pk{text-align:right}
+#dtWhy p{background:var(--surface);border-left:6px solid var(--gold);padding:10px 16px;border-radius:0 8px 8px 0;margin-top:10px}
+@media (max-width:900px){.stats,.strat.three{grid-template-columns:1fr}}
+.steps label>span{flex:1}
+.xlsplit{grid-template-columns:auto 1fr}
+.xlsplit .dtab td,.xlsplit .dtab th{white-space:nowrap;padding:4px 10px}
+@media (max-width:900px){.xlsplit{grid-template-columns:1fr}}
+
+
+/* ---- Day 2 visual additions ---- */
+.flowrow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:stretch;margin-top:1em}
+.fcol{background:var(--surface);border-top:5px solid var(--teal);border-radius:0 0 10px 10px;padding:14px 18px}
+.fcol h3{margin:0 0 6px;color:var(--maroon-ink)}
+.fcol ul{margin:0;padding-left:1.1em}
+.farrow{display:flex;align-items:center;font-size:2em;color:var(--maroon);font-weight:700}
+.floop{margin-top:10px;border:2px dashed var(--gold);border-radius:10px;padding:10px 16px;background:var(--gold-soft);text-align:center}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:1em}
+.kpi{background:var(--surface);border-top:6px solid var(--line);border-radius:0 0 10px 10px;padding:14px 16px}
+.kpi.ok{border-top-color:var(--teal)}.kpi.warn{border-top-color:var(--gold)}.kpi.bad{border-top-color:var(--maroon)}
+.kpi h3{margin:0}
+.kpi .kv{font-size:2.2em;font-weight:800;color:var(--maroon-ink);line-height:1.1;margin:6px 0}
+.kpi input[type=range]{width:100%;accent-color:var(--maroon)}
+.kpi .ks{font-weight:700;margin:6px 0 0}
+.kpi.ok .ks{color:var(--teal)}.kpi.bad .ks{color:var(--maroon)}
+.kpi small{display:block;color:var(--muted)}
+.chevs4{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:1em}
+.chv{background:var(--maroon);color:#fff;font-weight:700;text-align:center;padding:16px 10px 16px 22px;clip-path:polygon(0 0,92% 0,100% 50%,92% 100%,0 100%,6% 50%)}
+.chv:first-child{clip-path:polygon(0 0,92% 0,100% 50%,92% 100%,0 100%)}
+.chvd{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.chvd div{background:var(--surface);border-top:4px solid var(--teal);padding:10px 12px;border-radius:0 0 8px 8px;font-size:.95em}
+.pyr{margin-top:1em;display:grid;grid-template-columns:1fr 1.3fr;gap:6px 18px;align-items:center}
+.pyslice{margin:0 auto;padding:14px 8px;text-align:center;color:#fff;font-weight:700}
+.pyslice.s1{width:46%;background:var(--maroon);clip-path:polygon(25% 0,75% 0,100% 100%,0 100%)}
+.pyslice.s2{width:73%;background:#8a2f35;clip-path:polygon(15% 0,85% 0,100% 100%,0 100%)}
+.pyslice.s3{width:100%;background:var(--teal);clip-path:polygon(7% 0,93% 0,100% 100%,0 100%)}
+.pydesc{background:var(--surface);border-left:6px solid var(--gold);padding:10px 16px;border-radius:0 8px 8px 0}
+.pydesc p{margin:2px 0}
+.hub{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:1em}
+.hn{background:var(--surface);border:2px solid var(--line);border-radius:10px;padding:10px 14px;font-size:.95em}
+.hn h3{margin:0;color:var(--maroon-ink)}
+.hn small{display:block;color:var(--muted);margin-bottom:4px}
+.hn p{margin:3px 0}
+.hn.mis{grid-column:2;grid-row:1}.hn.tps{grid-column:1;grid-row:2}.hn.erp{grid-column:2;grid-row:2;border:3px solid var(--maroon)}
+.hn.crm{grid-column:3;grid-row:2}.hn.scm{grid-column:2;grid-row:3}
+.bins.b4{grid-template-columns:repeat(4,1fr)}
+.bins.b5{grid-template-columns:repeat(5,1fr)}
+.stpgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:1em}
+.stp{background:var(--surface);border:2px solid var(--teal);border-radius:10px;padding:10px 12px;text-align:left;font:inherit;cursor:pointer;min-height:84px}
+.stp b{display:block;color:var(--maroon-ink)}
+.stp.broken{background:var(--maroon);border-color:var(--maroon);color:#fff}.stp.broken b{color:#fff}
+.stp.blocked{background:#e9d5d6;border-color:var(--maroon)}
+.stp.slow{background:var(--gold-soft);border-color:var(--gold)}
+.qrows{display:grid;gap:8px;margin-top:.8em}
+.qrow{display:grid;grid-template-columns:200px 220px 1fr;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 14px}
+.qrow b{color:var(--maroon-ink)}
+.qrow small{display:block;color:var(--muted)}
+.qrow .qc{color:var(--maroon);font-weight:600;min-height:1.2em}
+.seg{display:flex}
+.seg button{flex:1;padding:6px 0;border:2px solid var(--maroon);background:#fff;font:inherit;font-weight:600;cursor:pointer}
+.seg button:first-child{border-radius:8px 0 0 8px}.seg button:last-child{border-radius:0 8px 8px 0}
+.seg button+button{border-left:0}
+.seg button[aria-pressed="true"]{background:var(--maroon);color:#fff}
+.qmeter{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-top:10px}
+.pm2{height:18px;background:var(--line);border-radius:9px;overflow:hidden}
+.pm2 i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--maroon),var(--gold),var(--teal));transition:width .3s}
+@media (max-width:860px){.flowrow,.kpis,.chevs4,.chvd,.hub,.pyr,.stpgrid,.bins.b4,.bins.b5{grid-template-columns:1fr}.farrow{justify-content:center;transform:rotate(90deg)}.hn.mis,.hn.tps,.hn.erp,.hn.crm,.hn.scm{grid-column:1;grid-row:auto}.qrow{grid-template-columns:1fr}.chv{clip-path:none;border-radius:8px}}
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="course">BUS 2110 / Week 1, Day 2</div>
+  <div class="tools">
+    <button id="fsBtn" type="button" title="Full screen (F)">Full screen</button>
+  </div>
+</header>
+
+<main id="deck">
+
+<!-- 1 Title -->
+<section class="slide title-slide" data-title="Welcome">
+  <div class="inner">
+    <div class="kicker">How Businesses Use Information</div>
+    <h1>Every business runs on processes,<span>and every process runs on information.</span></h1>
+    <p class="lede">The owner of The Copper Table calls on Friday morning: "Saturday is coming. Help me make sure Thursday never happens again." Today you'll map how an order should travel, judge the information that travels with it, and build the order log in Excel.</p>
+    <div class="agenda">
+      <div><h3>Define</h3>Business processes</div>
+      <div><h3>Map</h3>Inputs, activities, outputs</div>
+      <div><h3>Trace</h3>How information flows</div>
+      <div><h3>Judge</h3>Good information vs. messy data</div>
+      <div><h3>Build</h3>The order log in Excel</div>
+      <div><h3>Verify</h3>How do you know it's right?</div>
+      <div><h3>Decide</h3>Fix the process, not just the symptom</div>
+      <div><h3>Log it</h3>Consultant Log entry #2</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-title="Warm-up">
+  <div class="inner">
+    <div class="kicker">Warm-up</div>
+    <h2>Yesterday in three questions</h2>
+    <p>Before the owner's call, a quick check on Day 1. Tap an answer.</p>
+    <div class="q" data-quiz>
+      <p><b>1.</b> Which of these is <i>not</i> one of the five components of an information system?</p>
+      <div class="opts">
+        <button class="opt">Procedures</button>
+        <button class="opt" data-right>Strategy</button>
+        <button class="opt">Data</button>
+        <button class="opt">People</button>
+      </div>
+      <p class="explain">The five are hardware, software, data, procedures, and people. Strategy is what the system is supposed to support.</p>
+    </div>
+    <div class="q" data-quiz>
+      <p><b>2.</b> "Table 12 ordered two Copper Burgers at 7:05 p.m." is an example of&hellip;</p>
+      <div class="opts">
+        <button class="opt" data-right>Data</button>
+        <button class="opt">Information</button>
+      </div>
+      <p class="explain">One raw fact. It becomes information when it's combined with other facts to support a decision.</p>
+    </div>
+    <div class="q" data-quiz>
+      <p><b>3.</b> Every Excel formula starts with&hellip;</p>
+      <div class="opts">
+        <button class="opt">A dollar sign</button>
+        <button class="opt">A plus sign</button>
+        <button class="opt" data-right>An equals sign</button>
+      </div>
+      <p class="explain">Without the <code>=</code>, Excel treats what you typed as text.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-title="Business process">
+  <div class="inner">
+    <div class="kicker">Define</div>
+    <h2>A business process turns inputs into outputs through a set of activities</h2>
+    <p>Think about one thing The Copper Table does hundreds of times: serving a burger.</p>
+    <div class="flowrow">
+      <div class="fcol"><h3>Inputs</h3><p>What goes in.</p><ul><li>The guest's order</li><li>Fresh ingredients</li><li>Menu prices</li><li>An open table</li></ul></div>
+      <div class="farrow">&rarr;</div>
+      <div class="fcol"><h3>Activities</h3><p>What happens.</p><ul><li>The order is entered</li><li>The burger is cooked and checked</li><li>The plate is delivered</li><li>The guest is charged</li></ul></div>
+      <div class="farrow">&rarr;</div>
+      <div class="fcol"><h3>Outputs</h3><p>What comes out.</p><ul><li>A served meal</li><li>A paid receipt</li><li>A record of the sale</li></ul></div>
+    </div>
+    <div class="floop"><b>Information is produced the whole way through.</b> Every step creates data. That is where information systems come in.</div>
+    <div class="warn"><b>Coming up:</b> you will sort inputs, activities, and outputs for this process, then put its steps in order.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Why processes matter">
+  <div class="inner">
+    <div class="kicker">Define</div>
+    <h2>Why should a business care about its processes?</h2>
+    <p>Well-run processes pay off in four ways.</p>
+    <div class="strat">
+<div><h3>Efficiency</h3>Fewer wasted steps means plates leave the kitchen sooner.</div>
+<div><h3>Customer satisfaction</h3>Guests get hot food, the right order, and a short wait.</div>
+<div><h3>Reduced costs</h3>Fewer remade dishes and less wasted food.</div>
+<div><h3>Better decision-making</h3>A defined process produces data you can measure and compare from night to night.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-title="Measuring processes">
+  <div class="inner">
+    <div class="kicker">Define</div>
+    <h2>A good process is measurable</h2>
+    <p>Processes have <b>KPIs</b>, key performance indicators that show whether the process is working. Most fall into three groups: time, cost, and quality. Move each slider, or load a scenario, and watch the status change.</p>
+    <div class="actions" id="kScen"><button class="btn ghost" type="button" data-s="tue">A normal Tuesday</button><button class="btn ghost" type="button" data-s="thu">Thursday's printer failure</button><button class="btn ghost" type="button" data-s="fix">After new training</button></div>
+    <div class="kpis">
+      <div class="kpi" id="kTime"><h3>Time</h3><small>Minutes from order entered to plate on the table. Target: 15 or less.</small><div class="kv"></div><input type="range" min="5" max="40" step="1" value="13" aria-label="Minutes"><div class="ks"></div></div>
+      <div class="kpi" id="kCost"><h3>Cost</h3><small>Food cost per plate served. Target: $8 or less.</small><div class="kv"></div><input type="range" min="4" max="14" step="0.5" value="7" aria-label="Dollars per plate"><div class="ks"></div></div>
+      <div class="kpi" id="kQual"><h3>Quality</h3><small>Percent of plates sent back. Target: 3% or less.</small><div class="kv"></div><input type="range" min="0" max="20" step="1" value="2" aria-label="Percent sent back"><div class="ks"></div></div>
+    </div>
+    <div class="warn" id="kSum"></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Is it a process?">
+  <div class="inner">
+    <div class="kicker">Define</div>
+    <h2>Not every task is a process</h2>
+    <div class="strat three">
+      <div><h3>Structured</h3>The steps happen in a specific order.</div>
+      <div><h3>Repeatable</h3>The steps happen again and again.</div>
+      <div><h3>Goal-oriented</h3>The steps are designed to deliver an outcome.</div>
+    </div>
+    <p style="margin-top:1.2em">Tap a label for each statement.</p>
+    <div class="dilist" id="procList">
+      <div class="di" data-ans="process"><p>Every night, the kitchen follows the same steps to receive, check, and store food deliveries.</p><div class="dibtns"><button type="button" data-pick="process">Process</button><button type="button" data-pick="one">One-off task</button></div><p class="diwhy">Structured, repeatable, and aimed at a goal: stocked, safe food.</p></div>
+      <div class="di" data-ans="one"><p>The owner decides to repaint the dining room this summer.</p><div class="dibtns"><button type="button" data-pick="process">Process</button><button type="button" data-pick="one">One-off task</button></div><p class="diwhy">It happens once. It's a project, not something the business repeats.</p></div>
+      <div class="di" data-ans="process"><p>Each payday, payroll is calculated, approved, and deposited in the same sequence.</p><div class="dibtns"><button type="button" data-pick="process">Process</button><button type="button" data-pick="one">One-off task</button></div><p class="diwhy">A fixed order of steps, repeated every pay period, with a clear goal.</p></div>
+      <div class="di" data-ans="one"><p>A cook invents a new special on a whim.</p><div class="dibtns"><button type="button" data-pick="process">Process</button><button type="button" data-pick="one">One-off task</button></div><p class="diwhy">No set steps and no repetition. Creativity isn't a process until the business decides how it will happen every time.</p></div>
+      <div class="di" data-ans="process"><p>Every reservation is logged, confirmed by text, and checked off when the guests arrive.</p><div class="dibtns"><button type="button" data-pick="process">Process</button><button type="button" data-pick="one">One-off task</button></div><p class="diwhy">The same steps, in order, for every booking, with the goal of a seated guest.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-title="Inputs, activities, outputs">
+  <div class="inner">
+    <div class="kicker">Map</div>
+    <h2>Map the "serve a meal" process</h2>
+    <p>Select an item, then select where it belongs. On a computer you can also drag.</p>
+    <div class="pool" id="pool2" aria-label="Items to sort">
+      <button class="item" draggable="true" data-ans="Inputs" aria-pressed="false">The guest's order</button>
+      <button class="item" draggable="true" data-ans="Activities" aria-pressed="false">Cooking the dish</button>
+      <button class="item" draggable="true" data-ans="Outputs" aria-pressed="false">A served meal</button>
+      <button class="item" draggable="true" data-ans="Inputs" aria-pressed="false">Fresh ingredients</button>
+      <button class="item" draggable="true" data-ans="Activities" aria-pressed="false">Delivering the plate</button>
+      <button class="item" draggable="true" data-ans="Outputs" aria-pressed="false">A paid receipt</button>
+      <button class="item" draggable="true" data-ans="Inputs" aria-pressed="false">Menu prices</button>
+      <button class="item" draggable="true" data-ans="Activities" aria-pressed="false">Charging the card</button>
+      <button class="item" draggable="true" data-ans="Outputs" aria-pressed="false">A sales record for tonight</button>
+    </div>
+    <div class="bins b3" id="bins2">
+      <div class="bin" data-bin="Inputs" role="button" tabindex="0"><div class="bin-title">Inputs</div></div>
+      <div class="bin" data-bin="Activities" role="button" tabindex="0"><div class="bin-title">Activities</div></div>
+      <div class="bin h" data-bin="Outputs" role="button" tabindex="0"><div class="bin-title">Outputs</div></div>
+    </div>
+    <div class="actions">
+      <button class="btn" id="sortCheck2" type="button">Check my map</button>
+      <button class="btn ghost" id="sortReset2" type="button">Start over</button>
+      <span class="feedback" id="sortFb2" aria-live="polite"></span>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-title="Order the steps">
+  <div class="inner">
+    <div class="kicker">Map</div>
+    <h2>Put the order process in sequence</h2>
+    <p>Tap the steps in the order they should happen. A correct tap locks in with its number.</p>
+    <div class="seq" id="seq">
+      <button class="item" type="button" data-n="5">The kitchen checks the plate against the ticket</button>
+      <button class="item" type="button" data-n="2">Server enters the order on the tablet</button>
+      <button class="item" type="button" data-n="8">The sale appears in tonight's sales report</button>
+      <button class="item" type="button" data-n="1">Guest is seated and tells the server what they want</button>
+      <button class="item" type="button" data-n="6">Server delivers the food to the table</button>
+      <button class="item" type="button" data-n="3">The ticket prints in the kitchen</button>
+      <button class="item" type="button" data-n="7">Guest pays and the sale is recorded</button>
+      <button class="item" type="button" data-n="4">A cook prepares the food</button>
+    </div>
+    <div class="actions"><button class="btn ghost" id="seqReset" type="button">Start over</button><span class="feedback" id="seqFb" aria-live="polite"></span></div>
+    <p class="note">Now look back at Thursday's 6:45 p.m. problem. Which step broke, and what did every step after it depend on?</p>
+  </div>
+</section>
+
+<section class="slide" data-title="What breaks?">
+  <div class="inner">
+    <div class="kicker">Map</div>
+    <h2>What breaks when one step fails?</h2>
+    <p>A process is a chain, so a failed step affects every step after it. Select a step to break it, then switch on a backup plan to see the difference.</p>
+    <div class="stpgrid" id="stpGrid">
+      <button class="stp" type="button" data-n="1"><b>1</b>Guest is seated and orders</button>
+      <button class="stp" type="button" data-n="2"><b>2</b>Server enters the order on the tablet</button>
+      <button class="stp" type="button" data-n="3"><b>3</b>The ticket prints in the kitchen</button>
+      <button class="stp" type="button" data-n="4"><b>4</b>A cook prepares the food</button>
+      <button class="stp" type="button" data-n="5"><b>5</b>The kitchen checks the plate</button>
+      <button class="stp" type="button" data-n="6"><b>6</b>Server delivers the food</button>
+      <button class="stp" type="button" data-n="7"><b>7</b>Guest pays, sale is recorded</button>
+      <button class="stp" type="button" data-n="8"><b>8</b>Sale appears in tonight's report</button>
+    </div>
+    <div class="actions"><button class="btn ghost" id="bkBtn" type="button" aria-pressed="false">Backup plan: off</button><button class="btn ghost" id="stpReset" type="button">Clear</button><span class="feedback" id="stpFb" aria-live="polite">Select a step to break it.</span></div>
+    <p class="note">Dark red is the broken step, pink steps are blocked until it is fixed, and gold steps are slowed down but still happening.</p>
+  </div>
+</section>
+
+<section class="slide" data-title="Follow the information">
+  <div class="inner">
+    <div class="kicker">Trace</div>
+    <h2>One order, many uses</h2>
+    <p>Follow table 12's burger order through The Copper Table. Tap the button to send it to the next step.</p>
+    <div class="stages" id="stages">
+      <div class="stage on"><span class="tag">1. Server enters the order</span><p><b>Data created:</b> Table 12, two Copper Burgers, 7:05 p.m.</p><p><b>Who needs it:</b> the kitchen, right now.</p></div>
+      <div class="stage"><span class="tag">2. The ticket prints</span><p><b>Information:</b> what to cook, and in what order.</p><p><b>Who needs it:</b> the cooks.</p></div>
+      <div class="stage"><span class="tag">3. Inventory updates</span><p><b>Information:</b> burger buns left: 31.</p><p><b>Who needs it:</b> the kitchen manager, who decides what to order.</p></div>
+      <div class="stage"><span class="tag">4. The guest pays</span><p><b>Information:</b> a $32 sale, paid by card.</p><p><b>Who needs it:</b> the owner, tracking revenue.</p></div>
+      <div class="stage"><span class="tag">5. Tonight's report</span><p><b>Information:</b> the Copper Burger was the best seller, and tables seated after 8 p.m. waited longest.</p><p><b>Who needs it:</b> the owner, deciding Saturday's prep and staffing.</p></div>
+    </div>
+    <div class="actions"><button class="btn" id="stBtn" type="button">Send it to the next step</button></div>
+    <div class="warn" id="stDone" hidden><b>One order, five uses.</b> The same data became different information for each person. Each use only works if the information is good, which is next.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Information flow">
+  <div class="inner">
+    <div class="kicker">Trace</div>
+    <h2>Information moves through four stages</h2>
+    <p>Whether it is a restaurant or a retailer, data follows the same path.</p>
+    <div class="chevs4"><div class="chv">1. Collection</div><div class="chv">2. Processing</div><div class="chv">3. Storage</div><div class="chv">4. Distribution</div></div>
+    <div class="chvd">
+      <div><b>Gathering raw data</b> from internal and external sources.<br><br><b>At The Copper Table:</b> the point of sale, the reservation system, and guest feedback cards.</div>
+      <div><b>Turning raw data into usable formats.</b><br><br><b>At The Copper Table:</b> the system totals each bill and tallies the night's sales into reports and charts.</div>
+      <div><b>Saving data for future use.</b><br><br><b>At The Copper Table:</b> cloud storage and databases keep every order so Saturday can be compared with last Saturday.</div>
+      <div><b>Sharing information</b> with the stakeholders who need it.<br><br><b>At The Copper Table:</b> the owner gets a nightly emailed report, and the kitchen manager sees a prep dashboard.</div>
+    </div>
+    <div class="warn"><b>Next slide:</b> you will sort real Copper Table activities into the stage they belong to.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Which stage?">
+  <div class="inner">
+    <div class="kicker">Trace</div>
+    <h2>Which stage of the information flow is it?</h2>
+    <p>Select an activity, then select the stage where it belongs. On a computer you can also drag.</p>
+    <div class="pool" id="poolS" aria-label="Activities to sort">
+<button class="item" draggable="true" data-ans="Collection" aria-pressed="false">The server taps in the order for table 12</button>
+<button class="item" draggable="true" data-ans="Processing" aria-pressed="false">The system totals the bill with tax</button>
+<button class="item" draggable="true" data-ans="Storage" aria-pressed="false">Every order is saved to the cloud database</button>
+<button class="item" draggable="true" data-ans="Distribution" aria-pressed="false">The owner gets the nightly sales email</button>
+<button class="item" draggable="true" data-ans="Collection" aria-pressed="false">A guest fills out a feedback card</button>
+<button class="item" draggable="true" data-ans="Processing" aria-pressed="false">Orders are tallied into a chart of best sellers</button>
+<button class="item" draggable="true" data-ans="Storage" aria-pressed="false">Last Saturday&#39;s sales stay on file for comparison</button>
+<button class="item" draggable="true" data-ans="Distribution" aria-pressed="false">The kitchen manager sees the prep dashboard</button>
+    </div>
+    <div class="bins b4" id="binsS">
+      <div class="bin" data-bin="Collection" role="button" tabindex="0"><div class="bin-title">1. Collection</div></div>
+      <div class="bin" data-bin="Processing" role="button" tabindex="0"><div class="bin-title">2. Processing</div></div>
+      <div class="bin" data-bin="Storage" role="button" tabindex="0"><div class="bin-title">3. Storage</div></div>
+      <div class="bin" data-bin="Distribution" role="button" tabindex="0"><div class="bin-title">4. Distribution</div></div>
+    </div>
+    <div class="actions"><button class="btn" id="sortCheckS" type="button">Check my sort</button><button class="btn ghost" id="sortResetS" type="button">Start over</button><span class="feedback" id="sortFbS" aria-live="polite"></span></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Information levels">
+  <div class="inner">
+    <div class="kicker">Judge</div>
+    <h2>Different decisions need different types of information</h2>
+    <p>Managers work at three levels. The higher the level, the longer the time frame and the broader the question.</p>
+    <div class="pyr">
+      <div class="pyslice s1">Strategic</div><div class="pydesc"><p><b>Long-term planning.</b></p><p>Example: market trends for entering a new area.</p></div>
+      <div class="pyslice s2">Tactical</div><div class="pydesc"><p><b>Short- to medium-term goals.</b></p><p>Example: monthly sales reports.</p></div>
+      <div class="pyslice s3">Operational</div><div class="pydesc"><p><b>Day-to-day decisions.</b></p><p>Example: real-time stock levels for restocking.</p></div>
+    </div>
+    <div class="warn"><b>Next slide:</b> label real Copper Table questions as strategic, tactical, or operational.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Types of information">
+  <div class="inner">
+    <div class="kicker">Judge</div>
+    <h2>Different decisions need different types of information</h2>
+    <p style="margin-top:1.2em">Which type is each of these? Tap a label.</p>
+    <div class="dilist">
+<div class="di five" data-ans="strategic"><p>Is there enough demand downtown to open a second Copper Table?</p><div class="dibtns"><button type="button" data-pick="strategic">Strategic</button><button type="button" data-pick="tactical">Tactical</button><button type="button" data-pick="operational">Operational</button></div><p class="diwhy">Strategic: a long-term question about where the business goes next.</p></div>
+<div class="di five" data-ans="tactical"><p>Last month&rsquo;s sales by day of the week.</p><div class="dibtns"><button type="button" data-pick="strategic">Strategic</button><button type="button" data-pick="tactical">Tactical</button><button type="button" data-pick="operational">Operational</button></div><p class="diwhy">Tactical: a monthly report that helps set staffing and promotions for the weeks ahead.</p></div>
+<div class="di five" data-ans="operational"><p>Right now there are 4 burger buns left.</p><div class="dibtns"><button type="button" data-pick="strategic">Strategic</button><button type="button" data-pick="tactical">Tactical</button><button type="button" data-pick="operational">Operational</button></div><p class="diwhy">Operational: a real-time number that drives a decision this hour.</p></div>
+<div class="di five" data-ans="tactical"><p>This week&rsquo;s labor cost compared with the budget.</p><div class="dibtns"><button type="button" data-pick="strategic">Strategic</button><button type="button" data-pick="tactical">Tactical</button><button type="button" data-pick="operational">Operational</button></div><p class="diwhy">Tactical: it supports short-term goals and adjustments.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-title="Five characteristics">
+  <div class="inner">
+    <div class="kicker">Judge</div>
+    <h2>Good information has five characteristics</h2>
+    <p>Information is only useful if people can trust it for a decision. Check it against five tests.</p>
+    <div class="strat">
+      <div><h3>Accurate</h3>It matches reality. A party of 6 is not logged as 4.</div>
+      <div><h3>Timely</h3>It arrives when it is still useful. A ticket that prints 20 minutes late is too late.</div>
+      <div><h3>Relevant</h3>It answers the question being asked. A drinks report does not help with bun orders.</div>
+      <div><h3>Complete</h3>Nothing needed is missing. A reservation with no phone number cannot be confirmed.</div>
+      <div><h3>Consistent</h3>Different systems agree. The app and the register show the same price.</div>
+    </div>
+    <div class="warn"><b>Next slide:</b> each situation breaks exactly one of these tests. Pick the one that fails.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Good information">
+  <div class="inner">
+    <div class="kicker">Judge</div>
+    <h2>Good information is accurate, timely, relevant, complete, and consistent</h2>
+    <p>Each situation below breaks exactly one of those. Tap the characteristic that fails.</p>
+    <div class="dilist" id="qualList">
+      <div class="di five" data-ans="timely"><p>The kitchen ticket for table 12 prints 20 minutes after the server entered the order.</p><div class="dibtns"><button type="button" data-pick="accurate">Accurate</button><button type="button" data-pick="timely">Timely</button><button type="button" data-pick="relevant">Relevant</button><button type="button" data-pick="complete">Complete</button><button type="button" data-pick="consistent">Consistent</button></div><p class="diwhy">Timely. The facts were right, but they arrived too late to be useful.</p></div>
+      <div class="di five" data-ans="accurate"><p>Table 8 is logged as a party of 4, but 6 guests sat down.</p><div class="dibtns"><button type="button" data-pick="accurate">Accurate</button><button type="button" data-pick="timely">Timely</button><button type="button" data-pick="relevant">Relevant</button><button type="button" data-pick="complete">Complete</button><button type="button" data-pick="consistent">Consistent</button></div><p class="diwhy">Accurate. The record doesn't match reality, so the kitchen and floor plan around the wrong number.</p></div>
+      <div class="di five" data-ans="complete"><p>A reservation is saved with a name and a time, but no phone number.</p><div class="dibtns"><button type="button" data-pick="accurate">Accurate</button><button type="button" data-pick="timely">Timely</button><button type="button" data-pick="relevant">Relevant</button><button type="button" data-pick="complete">Complete</button><button type="button" data-pick="consistent">Consistent</button></div><p class="diwhy">Complete. What's there may be right, but you can't text a guest to confirm.</p></div>
+      <div class="di five" data-ans="consistent"><p>The mobile app shows the Copper Burger at $16, but the register charges $14.</p><div class="dibtns"><button type="button" data-pick="accurate">Accurate</button><button type="button" data-pick="timely">Timely</button><button type="button" data-pick="relevant">Relevant</button><button type="button" data-pick="complete">Complete</button><button type="button" data-pick="consistent">Consistent</button></div><p class="diwhy">Consistent. Two systems disagree about the same fact. Which one do you trust?</p></div>
+      <div class="di five" data-ans="relevant"><p>The owner asked about kitchen delays. Her weekly report is mostly Instagram follower counts.</p><div class="dibtns"><button type="button" data-pick="accurate">Accurate</button><button type="button" data-pick="timely">Timely</button><button type="button" data-pick="relevant">Relevant</button><button type="button" data-pick="complete">Complete</button><button type="button" data-pick="consistent">Consistent</button></div><p class="diwhy">Relevant. The numbers may be perfect, but they don't help with the decision she needs to make.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-title="Quality meter">
+  <div class="inner">
+    <div class="kicker">If time allows &middot; Judge</div>
+    <h2>How much can you trust this information for the decision?</h2>
+    <p><b>The decision:</b> the kitchen manager will use tonight's order data to decide how many burger buns to order for Saturday. Rate the data on each characteristic and watch the confidence meter.</p>
+    <div class="qrows" id="qrows"><div class="qrow" data-k="accurate"><div><b>Accurate</b><small>It matches reality</small></div><div class="seg" role="group" aria-label="Accurate"><button type="button" data-v="0" aria-pressed="true">Good</button><button type="button" data-v="1" aria-pressed="false">Weak</button><button type="button" data-v="2" aria-pressed="false">Broken</button></div><div class="qc" data-c="The counts do not match what was really sold."></div></div><div class="qrow" data-k="timely"><div><b>Timely</b><small>It arrives in time</small></div><div class="seg" role="group" aria-label="Timely"><button type="button" data-v="0" aria-pressed="true">Good</button><button type="button" data-v="1" aria-pressed="false">Weak</button><button type="button" data-v="2" aria-pressed="false">Broken</button></div><div class="qc" data-c="The numbers arrive after the order deadline."></div></div><div class="qrow" data-k="relevant"><div><b>Relevant</b><small>It answers the question</small></div><div class="seg" role="group" aria-label="Relevant"><button type="button" data-v="0" aria-pressed="true">Good</button><button type="button" data-v="1" aria-pressed="false">Weak</button><button type="button" data-v="2" aria-pressed="false">Broken</button></div><div class="qc" data-c="The report covers drinks, but the question is about buns."></div></div><div class="qrow" data-k="complete"><div><b>Complete</b><small>Nothing needed is missing</small></div><div class="seg" role="group" aria-label="Complete"><button type="button" data-v="0" aria-pressed="true">Good</button><button type="button" data-v="1" aria-pressed="false">Weak</button><button type="button" data-v="2" aria-pressed="false">Broken</button></div><div class="qc" data-c="Two nights of orders are missing, so Saturday looks quieter than it is."></div></div><div class="qrow" data-k="consistent"><div><b>Consistent</b><small>Systems agree</small></div><div class="seg" role="group" aria-label="Consistent"><button type="button" data-v="0" aria-pressed="true">Good</button><button type="button" data-v="1" aria-pressed="false">Weak</button><button type="button" data-v="2" aria-pressed="false">Broken</button></div><div class="qc" data-c="The POS and the inventory system disagree on buns left."></div></div></div>
+    <div class="qmeter"><h3 style="margin:0 0 6px">Confidence in the decision</h3><div class="pm2"><i id="qBar"></i></div><p id="qLabel" style="margin:6px 0 0" aria-live="polite"></p></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Data detective">
+  <div class="inner">
+    <div class="kicker">Judge</div>
+    <h2>Data detective: find the problems in the order log</h2>
+    <p>A busy night's order log was typed by hand. Four cells will cause trouble. Tap the ones you think are wrong, then reveal.</p>
+    <table class="dtab xlike" id="dtBox">
+      <tr><th>Table</th><th>Item</th><th>Qty</th><th>Price</th></tr>
+      <tr><td class="n"><button type="button" class="ais" data-bad="0">12</button></td><td><button type="button" class="ais" data-bad="0">Copper Burger</button></td><td class="n"><button type="button" class="ais" data-bad="0">2</button></td><td class="n"><button type="button" class="ais" data-bad="0">16</button></td></tr>
+      <tr><td class="n"><button type="button" class="ais" data-bad="0">12</button></td><td><button type="button" class="ais" data-bad="1" data-why="Consistent: a typo makes Excel and Tableau treat this as a different item, so burger sales get split in two.">Cooper Burger</button></td><td class="n"><button type="button" class="ais" data-bad="0">1</button></td><td class="n"><button type="button" class="ais" data-bad="0">16</button></td></tr>
+      <tr><td class="n"><button type="button" class="ais" data-bad="0">8</button></td><td><button type="button" class="ais" data-bad="0">Chef's Special</button></td><td class="n"><button type="button" class="ais" data-bad="0">1</button></td><td class="n"><button type="button" class="ais" data-bad="1" data-why="Complete: the Chef's Special has no price, so its total would be $0, just like the $0.00 bill on opening night.">(empty)</button></td></tr>
+      <tr><td class="n"><button type="button" class="ais" data-bad="0">5</button></td><td><button type="button" class="ais" data-bad="0">Grilled Salmon</button></td><td class="n"><button type="button" class="ais" data-bad="1" data-why="Format: &quot;two&quot; was typed as text, so Excel can't multiply it by the price. It needs to be the number 2.">two</button></td><td class="n"><button type="button" class="ais" data-bad="0">22</button></td></tr>
+      <tr><td class="n"><button type="button" class="ais" data-bad="0">3</button></td><td><button type="button" class="ais" data-bad="0">Lemonade</button></td><td class="n"><button type="button" class="ais" data-bad="0">3</button></td><td class="n"><button type="button" class="ais" data-bad="1" data-why="Accurate: lemonade is $4 everywhere else. A $40 price is almost certainly a typo and would inflate the total.">40</button></td></tr>
+    </table>
+    <div class="actions"><button class="btn" id="dtReveal" type="button">Reveal</button><button class="btn ghost" id="dtReset" type="button">Start over</button><span class="feedback" id="dtFb" aria-live="polite"></span></div>
+    <div id="dtWhy"></div>
+    <p class="note">Notice that three of the four problems map to characteristics you just learned. Messy data is how bad information gets made.</p>
+  </div>
+</section>
+
+<section class="slide" data-title="Information and decisions">
+  <div class="inner">
+    <div class="kicker">Judge</div>
+    <h2>Information supports decisions, and managing it is hard</h2>
+    <p>Good information does three things for decision makers.</p>
+    <div class="strat">
+<div><h3>Identifies problems and opportunities</h3>A report showing slow tables points to the problem before guests complain.</div>
+<div><h3>Reduces uncertainty</h3>Evidence replaces guesswork: &ldquo;We think Fridays are busy&rdquo; becomes &ldquo;Fridays average 40% more covers.&rdquo;</div>
+<div><h3>Improves efficiency and outcomes</h3>Better prep and staffing choices cut waste and speed up service.</div>
+    </div>
+    <p style="margin-top:1.4em"><b>Three things make information hard to manage.</b> Which one is each situation?</p>
+    <div class="dilist">
+<div class="di five" data-ans="overload"><p>The owner gets a 200-page report every Monday and reads none of it.</p><div class="dibtns"><button type="button" data-pick="overload">Data overload</button><button type="button" data-pick="quality">Poor data quality</button><button type="button" data-pick="security">Access and security</button></div><p class="diwhy">Data overload: too much information buries the few numbers that matter.</p></div>
+<div class="di five" data-ans="quality"><p>Two systems list different prices, so the monthly budget doesn&rsquo;t add up.</p><div class="dibtns"><button type="button" data-pick="overload">Data overload</button><button type="button" data-pick="quality">Poor data quality</button><button type="button" data-pick="security">Access and security</button></div><p class="diwhy">Poor data quality: inconsistent or incorrect data leads to errors and budgeting problems.</p></div>
+<div class="di five" data-ans="security"><p>A former server can still log in and view guests&rsquo; payment details.</p><div class="dibtns"><button type="button" data-pick="overload">Data overload</button><button type="button" data-pick="quality">Poor data quality</button><button type="button" data-pick="security">Access and security</button></div><p class="diwhy">Access and security: only authorized people should see sensitive information.</p></div>
+    </div>
+    <p class="note">Discuss: have you ever made a bad decision because you lacked information, or had wrong information? What was the impact?</p>
+  </div>
+</section>
+
+<section class="slide" data-title="Quick check">
+  <div class="inner">
+    <div class="kicker">Quick check</div>
+    <h2>Three questions before we move on</h2>
+    <div class="q" data-quiz>
+      <p><b>1.</b> Which set correctly describes the structure of a business process?</p>
+      <div class="opts">
+        <button class="opt">Hardware, software, and data</button>
+        <button class="opt" data-right>Inputs, activities, and outputs</button>
+        <button class="opt">Strategy, structure, and staff</button>
+      </div>
+      <p class="explain">Inputs go in, activities transform them, and outputs come out. Hardware, software, and data are the technology side of an information system.</p>
+    </div>
+    <div class="q" data-quiz>
+      <p><b>2.</b> The owner needs this week's wait times, but the report she's handed covers last month. Which characteristic of good information is the problem?</p>
+      <div class="opts">
+        <button class="opt">Accurate</button>
+        <button class="opt" data-right>Timely</button>
+        <button class="opt">Consistent</button>
+        <button class="opt">Complete</button>
+      </div>
+      <p class="explain">Last month's numbers may be perfectly accurate. They just don't arrive in time, or in the right time frame, to support this week's decision.</p>
+    </div>
+    <div class="q" data-quiz>
+      <p><b>3.</b> How does an information system most directly improve a process?</p>
+      <div class="opts">
+        <button class="opt" data-right>By making steps faster, more accurate, and more consistent</button>
+        <button class="opt">By removing the need for procedures</button>
+        <button class="opt">By guaranteeing more sales</button>
+      </div>
+      <p class="explain">A system supports the process. It still needs procedures and people, and it can't promise revenue on its own.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-title="What is an IS?">
+  <div class="inner">
+    <div class="kicker">Trace</div>
+    <h2>An information system collects, processes, and shares information</h2>
+    <p class="lede">Implemented well, an IS can improve a business process. Quality has two dimensions.</p>
+    <div class="strat">
+      <div><h3>Effectiveness</h3>Does the process help the organization accomplish its strategy?</div>
+      <div><h3>Efficiency</h3>What is the ratio of benefits to costs?</div>
+    </div>
+    <p style="margin-top:1.2em">Which dimension does each improvement show? Tap a label.</p>
+    <div class="dilist">
+<div class="di five" data-ans="efficiency"><p>The kitchen serves the same dishes with 20% less wasted food.</p><div class="dibtns"><button type="button" data-pick="effectiveness">Effectiveness</button><button type="button" data-pick="efficiency">Efficiency</button></div><p class="diwhy">Efficiency: the same benefit at a lower cost.</p></div>
+<div class="di five" data-ans="effectiveness"><p>The owner&rsquo;s strategy is fast, friendly service, and the new ticket screens help deliver exactly that.</p><div class="dibtns"><button type="button" data-pick="effectiveness">Effectiveness</button><button type="button" data-pick="efficiency">Efficiency</button></div><p class="diwhy">Effectiveness: the process now helps the business accomplish its strategy.</p></div>
+<div class="di five" data-ans="efficiency"><p>Each server handles more tables with the same number of staff.</p><div class="dibtns"><button type="button" data-pick="effectiveness">Effectiveness</button><button type="button" data-pick="efficiency">Efficiency</button></div><p class="diwhy">Efficiency: more benefit for the same cost.</p></div>
+<div class="di five" data-ans="effectiveness"><p>A loyalty program brings back the repeat guests the business plan depends on.</p><div class="dibtns"><button type="button" data-pick="effectiveness">Effectiveness</button><button type="button" data-pick="efficiency">Efficiency</button></div><p class="diwhy">Effectiveness: it advances the strategy, not just the costs.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-title="Three ways IS helps">
+  <div class="inner">
+    <div class="kicker">Trace</div>
+    <h2>Three ways an IS improves a process</h2>
+    <p></p>
+    <div class="strat">
+<div><h3>Automation</h3>Replacing manual tasks with technology. Tickets print in the kitchen automatically instead of being walked over.</div>
+<div><h3>Real-time insights</h3>Up-to-date data for better decisions. A dashboard shows order times while the night is still happening.</div>
+<div><h3>Streamlined operations</h3>Simplifying workflows to save time and reduce errors. Online reservations replace the phone and the notebook.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-title="Systems improve processes">
+  <div class="inner">
+    <div class="kicker">If time allows &middot; Trace</div>
+    <h2>An information system can make a process faster, more accurate, and more visible</h2>
+    <p>Compare The Copper Table's order process with paper tickets and with a connected system. (The numbers are made up for this class.)</p>
+    <div class="toggle" role="group" aria-label="Compare" id="psToggle">
+      <button type="button" data-v="paper" aria-pressed="true">Paper tickets</button>
+      <button type="button" data-v="sys" aria-pressed="false">Connected system</button>
+    </div>
+    <div class="stats" id="psStats">
+      <div class="stat"><h3>Time from order to kitchen</h3><div class="bignum" data-k="time"></div><p data-k="timeNote"></p></div>
+      <div class="stat"><h3>Order mistakes per night</h3><div class="bignum" data-k="err"></div><p data-k="errNote"></p></div>
+      <div class="stat"><h3>Wait times by hour visible?</h3><div class="bignum" data-k="vis"></div><p data-k="visNote"></p></div>
+    </div>
+    <div class="warn"><b>A system improves a process only if the process makes sense.</b> Automating a confusing process just produces confusion faster. Map the process first, then choose the technology.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Systems and processes">
+  <div class="inner">
+    <div class="kicker">Trace</div>
+    <h2>Each process has a system behind it</h2>
+    <p>Every system supports a process, captures data, and feeds a decision.</p>
+    <table class="dtab"><tr><th>System</th><th>Supports</th><th>Data it captures</th><th>Who uses it</th><th>Decision it feeds</th></tr>
+    <tr><td><b>Point of sale</b></td><td>Taking and paying for orders</td><td>Items, prices, order times, payments</td><td>Servers, managers, owner</td><td>What to prep and how to staff each shift</td></tr>
+    <tr><td><b>Reservations</b></td><td>Booking and seating guests</td><td>Party size, time, name, phone number</td><td>Host and manager</td><td>How many tables to hold and servers to schedule</td></tr>
+    <tr><td><b>Inventory</b></td><td>Ordering and storing ingredients</td><td>Stock counts, deliveries, waste</td><td>Kitchen manager, purchasing</td><td>How much to order and what to feature as a special</td></tr>
+    <tr><td><b>Loyalty CRM</b></td><td>Rewarding repeat guests</td><td>Visit history, favorite dishes, contact info</td><td>Owner and marketing</td><td>Who to send offers to and which promotions work</td></tr></table>
+    <p class="note">A point of sale is a <b>transaction processing system (TPS)</b>: it records each sale as it happens. A <b>CRM</b> (customer relationship management) system organizes what you know about each customer. Next you will see where these and other kinds of systems fit.</p>
+  </div>
+</section>
+
+<section class="slide" data-title="Process to decision">
+  <div class="inner">
+    <div class="kicker">Consultant Log</div>
+    <h2>Process &rarr; Data &rarr; Information &rarr; Decision</h2>
+    <p>Everything today fits one chain. A process creates data, data is organized into information, and information supports a decision.</p>
+    <div class="strat">
+      <div><h3>Process</h3>What is the organization trying to accomplish?<br><i>Copper Table: get each order from the table to the kitchen and back, fast and correct.</i></div>
+      <div><h3>Data</h3>What is created or collected along the way?<br><i>Order time, table, items, server, time the plate left the kitchen.</i></div>
+      <div><h3>Information</h3>What useful information could those data produce?<br><i>Tables seated after 8 p.m. wait twice as long as tables seated before 7.</i></div>
+      <div><h3>Decision</h3>What could management decide with it?<br><i>Add a cook from 8 to 10 on weekend nights.</i></div>
+    </div>
+    <div class="warn"><b>LOG IT now (5 minutes):</b> choose one important process at your client organization and fill in all four boxes. You will build on this entry in Assignment 1, Part 2.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Types of systems">
+  <div class="inner">
+    <div class="kicker">Trace</div>
+    <h2>Five kinds of systems you'll hear about everywhere</h2>
+    <p>Each one handles a different part of the business. An <b>ERP</b> sits in the middle because it ties the others together.</p>
+    <div class="hub">
+      <div class="hn mis"><h3>MIS</h3><small>Management information system</small><p>Provides summary data for managers' decisions.</p><p><b>Example:</b> a monthly sales report.</p><p><b>Copper Table:</b> the nightly sales summary the owner reads.</p></div>
+      <div class="hn tps"><h3>TPS</h3><small>Transaction processing system</small><p>Manages routine transactions as they happen.</p><p><b>Example:</b> Starbucks' point of sale records orders and payments.</p><p><b>Copper Table:</b> the register that records every order.</p></div>
+      <div class="hn erp"><h3>ERP</h3><small>Enterprise resource planning</small><p>Integrates core business processes into one system.</p><p><b>Example:</b> SAP and Oracle.</p><p><b>Copper Table:</b> if it grew into a chain, one system for inventory, payroll, and accounting.</p></div>
+      <div class="hn crm"><h3>CRM</h3><small>Customer relationship management</small><p>Manages customer data and interactions.</p><p><b>Example:</b> Salesforce and HubSpot; Netflix recommending titles.</p><p><b>Copper Table:</b> the loyalty program's visit history.</p></div>
+      <div class="hn scm"><h3>SCM</h3><small>Supply chain management</small><p>Oversees the flow of goods and services.</p><p><b>Example:</b> tracking inventory from supplier to shelf.</p><p><b>Copper Table:</b> ordering from food suppliers and tracking deliveries.</p></div>
+    </div>
+    <div class="warn"><b>Next slide:</b> sort real situations into the system that handles them.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Match the system">
+  <div class="inner">
+    <div class="kicker">Trace</div>
+    <h2>Which system handles each situation?</h2>
+    <p>Select a situation, then select the system. On a computer you can also drag.</p>
+    <div class="pool" id="poolY" aria-label="Situations to sort">
+<button class="item" draggable="true" data-ans="TPS" aria-pressed="false">Recording each card payment as it happens</button>
+<button class="item" draggable="true" data-ans="MIS" aria-pressed="false">A weekly report of sales by category for the manager</button>
+<button class="item" draggable="true" data-ans="CRM" aria-pressed="false">Spotting regulars who have not visited in 60 days</button>
+<button class="item" draggable="true" data-ans="SCM" aria-pressed="false">Tracking a produce delivery from the farm to the walk-in</button>
+<button class="item" draggable="true" data-ans="ERP" aria-pressed="false">One system connecting inventory, payroll, and accounting for 12 locations</button>
+<button class="item" draggable="true" data-ans="TPS" aria-pressed="false">Updating buns left in stock when a burger is sold</button>
+<button class="item" draggable="true" data-ans="CRM" aria-pressed="false">Emailing a birthday dessert offer to loyalty members</button>
+<button class="item" draggable="true" data-ans="MIS" aria-pressed="false">Comparing this month&#39;s food cost with last month&#39;s</button>
+<button class="item" draggable="true" data-ans="SCM" aria-pressed="false">Ordering more tomatoes from the supplier when the count drops</button>
+    </div>
+    <div class="bins b5" id="binsY">
+      <div class="bin" data-bin="TPS" role="button" tabindex="0"><div class="bin-title">TPS</div></div>
+      <div class="bin" data-bin="MIS" role="button" tabindex="0"><div class="bin-title">MIS</div></div>
+      <div class="bin" data-bin="ERP" role="button" tabindex="0"><div class="bin-title">ERP</div></div>
+      <div class="bin" data-bin="CRM" role="button" tabindex="0"><div class="bin-title">CRM</div></div>
+      <div class="bin" data-bin="SCM" role="button" tabindex="0"><div class="bin-title">SCM</div></div>
+    </div>
+    <div class="actions"><button class="btn" id="sortCheckY" type="button">Check my sort</button><button class="btn ghost" id="sortResetY" type="button">Start over</button><span class="feedback" id="sortFbY" aria-live="polite"></span></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Data has a shape">
+  <div class="inner">
+    <div class="kicker">Excel</div>
+    <h2>Business data has a shape: records and fields</h2>
+    <p>Excel, Tableau, and every database you'll use this term organize data this way. Tap any part of the table, then tap a data type.</p>
+    <table class="dtab xlike" id="shape">
+      <tr><th></th><th><button type="button" class="pk" data-k="field">Table</button></th><th><button type="button" class="pk" data-k="field">Item</button></th><th><button type="button" class="pk" data-k="field">Qty</button></th><th><button type="button" class="pk" data-k="field">Price</button></th><th><button type="button" class="pk" data-k="field">Time</button></th></tr>
+      <tr><td><button type="button" class="pk" data-k="record">Record 1</button></td><td class="n"><button type="button" class="pk" data-k="value">12</button></td><td><button type="button" class="pk" data-k="value">Copper Burger</button></td><td class="n"><button type="button" class="pk" data-k="value">2</button></td><td class="n"><button type="button" class="pk" data-k="value">$16</button></td><td class="n"><button type="button" class="pk" data-k="value">7:05 PM</button></td></tr>
+      <tr><td><button type="button" class="pk" data-k="record">Record 2</button></td><td class="n"><button type="button" class="pk" data-k="value">8</button></td><td><button type="button" class="pk" data-k="value">Chef's Special</button></td><td class="n"><button type="button" class="pk" data-k="value">1</button></td><td class="n"><button type="button" class="pk" data-k="value">$24</button></td><td class="n"><button type="button" class="pk" data-k="value">7:20 PM</button></td></tr>
+      <tr><td><button type="button" class="pk" data-k="record">Record 3</button></td><td class="n"><button type="button" class="pk" data-k="value">5</button></td><td><button type="button" class="pk" data-k="value">Grilled Salmon</button></td><td class="n"><button type="button" class="pk" data-k="value">2</button></td><td class="n"><button type="button" class="pk" data-k="value">$22</button></td><td class="n"><button type="button" class="pk" data-k="value">7:32 PM</button></td></tr>
+    </table>
+    <div class="chips" id="typeChips">
+      <button class="chip" type="button" data-k="text" aria-pressed="false">Text</button>
+      <button class="chip" type="button" data-k="number" aria-pressed="false">Number</button>
+      <button class="chip" type="button" data-k="date" aria-pressed="false">Date / time</button>
+    </div>
+    <div class="band-detail" id="shapeDetail" aria-live="polite">Tap a part of the table or a data type.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Excel setup">
+  <div class="inner">
+    <div class="kicker">Excel: Chapter 1</div>
+    <h2>Start the order log workbook</h2>
+    <p>You'll turn the Copper Table's orders into a working order log. Check off each step as you go.</p>
+    <div class="steps">
+      <label><input type="checkbox"><span>Open your <b>BUS2110</b> folder in OneDrive and create a new blank Excel workbook.</span></label>
+      <label><input type="checkbox"><span>Name it <b>CopperTable_OrderLog</b>.</span></label>
+      <label><input type="checkbox"><span>Double-click the <b>Sheet1</b> tab and rename it <b>Orders</b>.</span></label>
+      <label><input type="checkbox"><span>Click cell <b>A1</b>. You'll enter six headers across row 1 on the next slide.</span></label>
+    </div>
+    <div class="cards" style="margin-top:1.2em">
+      <div class="card"><h3>Cell reference</h3>A formula like <code>=D2*E2</code> points to cells instead of typing numbers. If a quantity changes, the answer updates itself.</div>
+      <div class="card"><h3>Relative copying</h3>When you AutoFill a formula down a column, Excel shifts the row numbers for you: <code>=D2*E2</code> becomes <code>=D3*E3</code>.</div>
+      <div class="card"><h3>Number format</h3>Formatting changes how a value <i>looks</i> ($16.00), not what it <i>is</i> (16).</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-title="Build the order log">
+  <div class="inner">
+    <div class="kicker">Excel: Chapter 1</div>
+    <h2>Build the order log</h2>
+    <div class="xlsplit">
+      <div>
+        <p>Enter this data starting in cell A1:</p>
+        <table class="dtab xlike">
+          <tr><th>Table</th><th>Server</th><th>Item</th><th>Qty</th><th>Price</th><th>Total</th></tr>
+          <tr><td class="n">12</td><td>Maya</td><td>Copper Burger</td><td class="n">2</td><td class="n">16</td><td></td></tr>
+          <tr><td class="n">8</td><td>Jordan</td><td>Chef's Special</td><td class="n">1</td><td class="n">24</td><td></td></tr>
+          <tr><td class="n">8</td><td>Jordan</td><td>Truffle Fries</td><td class="n">2</td><td class="n">9</td><td></td></tr>
+          <tr><td class="n">5</td><td>Maya</td><td>Grilled Salmon</td><td class="n">2</td><td class="n">22</td><td></td></tr>
+          <tr><td class="n">12</td><td>Maya</td><td>Lemonade</td><td class="n">3</td><td class="n">4</td><td></td></tr>
+          <tr><td class="n">3</td><td>Sam</td><td>House Salad</td><td class="n">2</td><td class="n">11</td><td></td></tr>
+          <tr><td class="n">3</td><td>Sam</td><td>Copper Burger</td><td class="n">1</td><td class="n">16</td><td></td></tr>
+          <tr><td class="n">5</td><td>Maya</td><td>Truffle Fries</td><td class="n">1</td><td class="n">9</td><td></td></tr>
+        </table>
+      </div>
+      <div class="steps">
+        <label><input type="checkbox"><span>Type the six headers and eight rows. <b>Tab</b> moves right, <b>Enter</b> moves down.</span></label>
+        <label><input type="checkbox"><span>In <b>F2</b>, type <code>=D2*E2</code> (Qty times Price). AutoFill it down to F9.</span></label>
+        <label><input type="checkbox"><span>Select E2:F9. On the <b>Home</b> tab, in the <b>Number</b> group, choose <b>Currency</b>.</span></label>
+        <label><input type="checkbox"><span>Make it readable: bold the headers, and double-click the border between column letters to fit each column to its data.</span></label>
+        <label><input type="checkbox"><span>In E10 type <b>Total</b>. In F10, add F2 through F9 with a formula using plus signs. (Tedious? That's why Thursday brings SUM.)</span></label>
+      </div>
+    </div>
+    <div class="check">
+      <label for="xlTotal2"><b>What's your grand total in F10?</b></label>
+      <input id="xlTotal2" type="text" inputmode="decimal" placeholder="e.g. 500">
+      <button class="btn" id="xlCheck2" type="button">Check</button>
+      <span class="feedback" id="xlFb2" aria-live="polite"></span>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-title="Excel check">
+  <div class="inner">
+    <div class="kicker">Excel: Chapter 1</div>
+    <h2>Three questions about what Excel just did</h2>
+    <div class="q" data-quiz>
+      <p><b>1.</b> A table orders 2 burgers at $16 each plus one $5 side. Which formula gives the correct bill?</p>
+      <div class="opts">
+        <button class="opt" data-right><code>=2*16+5</code></button>
+        <button class="opt"><code>=2*(16+5)</code></button>
+        <button class="opt"><code>=2+16*5</code></button>
+      </div>
+      <p class="explain">Excel multiplies before it adds, so 2 times 16 is 32, plus 5 is $37. The parentheses in the second option would charge the side twice ($42). The third multiplies the wrong numbers ($82).</p>
+    </div>
+    <div class="q" data-quiz>
+      <p><b>2.</b> You type <code>two</code> in the Qty cell. It lines up on the left, and F2 shows an error. What happened?</p>
+      <div class="opts">
+        <button class="opt">Excel rounded the number</button>
+        <button class="opt" data-right>Excel treated it as text, which can't be multiplied</button>
+        <button class="opt">The formula bar is turned off</button>
+      </div>
+      <p class="explain">Text is left-aligned by default and numbers are right-aligned. Type the digit 2 and the formula works.</p>
+    </div>
+    <div class="q" data-quiz>
+      <p><b>3.</b> Why write <code>=D2*E2</code> instead of <code>=2*16</code>?</p>
+      <div class="opts">
+        <button class="opt">It's required by Excel</button>
+        <button class="opt" data-right>The result updates automatically if the quantity or price changes</button>
+        <button class="opt">It uses less memory</button>
+      </div>
+      <p class="explain">Cell references let a spreadsheet respond to changes. Typed numbers freeze the answer.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-title="Verify">
+  <div class="inner">
+    <div class="kicker">Verify</div>
+    <h2>How do you know your total is right?</h2>
+    <p>"It looked right" isn't evidence. Today's Consultant Log adds a new question: <b>VERIFY</b>.</p>
+    <div class="strat">
+      <div><h3>Estimate first</h3>Eight rows averaging about $20 each should land somewhere around $160. If Excel says $1,770 or $17, something's off.</div>
+      <div><h3>Come at it a second way</h3>Total the amounts by a different path, such as by server, and see whether the pieces add up to the same grand total. This is called reconciling.</div>
+      <div><h3>Spot-check one row</h3>Click a cell and read the formula bar. Does F5 say <code>=D5*E5</code>? Does the answer match what you'd work out by hand?</div>
+    </div>
+    <div class="check">
+      <label for="xlTop"><b>Reconcile it: which server's orders total the most, and how much?</b></label>
+      <input id="xlTop" type="text" inputmode="decimal" placeholder="amount" aria-label="Top server total">
+      <button class="btn" id="xlTopCheck" type="button">Check</button>
+      <span class="feedback" id="xlTopFb" aria-live="polite"></span>
+    </div>
+    <p class="note">Does the highest total make Maya the best server? What else would you need to know before you decided anything? (Think about how many tables she had.)</p>
+  </div>
+</section>
+
+<section class="slide" data-title="Your call">
+  <div class="inner">
+    <div class="kicker">Decide</div>
+    <h2>Fix the process, not just the symptom</h2>
+    <p>On Thursday, tablets said "sent" but nothing reached the kitchen. The owner can fix one thing before Saturday. Which fix best targets the process?</p>
+    <div class="q" data-quiz>
+      <div class="opts">
+        <button class="opt">Hire two more servers.</button>
+        <button class="opt" data-right>Add a step where the server confirms the ticket printed, install a backup printer, and write a rule for what to do when one fails.</button>
+        <button class="opt">Buy a faster Wi-Fi router.</button>
+        <button class="opt">Post an apology on social media.</button>
+      </div>
+      <p class="explain">That answer repairs the broken step (hardware), adds a procedure, and gives people a clear job. The Wi-Fi was working on Thursday, more servers don't help if tickets never print, and an apology doesn't change the process.</p>
+    </div>
+    <p class="lede">Discuss: what information would tell the owner on Saturday night whether the fix worked?</p>
+  </div>
+</section>
+
+<section class="slide" data-title="Log it">
+  <div class="inner">
+    <div class="logtop">
+      <div>
+        <div class="kicker">Consultant Log</div>
+        <h1 class="logit">LOG IT</h1>
+        <p class="lede">Laptops closed. Notebook only.</p>
+      </div>
+      <div class="entryhead" aria-label="Entry heading">
+        <div><b>Date:</b> <span class="blank"></span></div>
+        <div><b>Log #:</b> <span class="blank"></span></div>
+        <div><b>Topic:</b> Business Processes and Information</div>
+      </div>
+    </div>
+    <div class="qstrip" aria-label="Today's questions">
+      <div class="on">KNOW<small>What do I understand?</small></div>
+      <div class="on">DO<small>What can I do?</small></div>
+      <div class="on">DECIDE<small>What decision could this support?</small></div>
+      <div class="on">VERIFY<small>How do I know?</small></div>
+      <div>DEFEND<small>Could I explain and defend this?</small></div>
+    </div>
+    <div class="prompts">
+      <div><span class="tag">KNOW</span><p>In your own words, what are the inputs, activities, and outputs of a business process? Name the three characteristics that make something a process.</p></div>
+      <div><span class="tag">DO</span><p>Pick a process you went through today, like buying coffee. List its inputs, activities, and outputs, and name one piece of information that moved along the way.</p></div>
+      <div><span class="tag">DECIDE</span><p>Which Copper Table process would you fix first, and what information would tell you it worked?</p></div>
+      <div><span class="tag">VERIFY</span><p>Describe one way you checked your Excel total other than "it looked right." What did it show?</p></div>
+    </div>
+    <p class="note">Sentences, bullets, or a diagram are all fine. Unsure? Write the question you still have.</p>
+    <div class="warn"><b>Coming up tomorrow: competitive advantage.</b> A rival restaurant opens across the street with loyal customers and a bigger menu. Why would anyone choose The Copper Table? Think of a business you pick over its competitors and be ready to say why.</div>
+  </div>
+</section>
+
+
+</main>
+
+<footer class="nav">
+  <button class="navbtn" id="prev" type="button">Back</button>
+  <div class="dots" id="dots" role="tablist" aria-label="Slides"></div>
+  <span class="count" id="count"></span>
+  <button class="navbtn" id="next" type="button">Next</button>
+</footer>
+
+<script>
+(function(){
+  const slides=[...document.querySelectorAll('.slide')];
+  const dots=document.getElementById('dots');
+  let cur=0;
+  slides.forEach((s,i)=>{
+    const d=document.createElement('button');
+    d.className='dot';d.type='button';d.setAttribute('aria-label',(i+1)+': '+s.dataset.title);d.title=s.dataset.title;
+    d.onclick=()=>go(i);dots.appendChild(d);
+  });
+  function go(i){
+    cur=Math.max(0,Math.min(slides.length-1,i));
+    slides.forEach((s,j)=>s.classList.toggle('active',j===cur));
+    [...dots.children].forEach((d,j)=>d.setAttribute('aria-current',j===cur?'true':'false'));
+    document.getElementById('prev').disabled=cur===0;
+    document.getElementById('next').disabled=cur===slides.length-1;
+    document.getElementById('count').textContent=(cur+1)+' / '+slides.length;
+    slides[cur].scrollTop=0;
+    try{history.replaceState(null,'','#'+(cur+1))}catch(e){}
+  }
+  document.getElementById('prev').onclick=()=>go(cur-1);
+  document.getElementById('next').onclick=()=>go(cur+1);
+  document.addEventListener('keydown',e=>{
+    if(e.target.matches('textarea,input'))return;
+    if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();go(cur+1)}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur-1)}
+    else if(e.key==='f'||e.key==='F'){toggleFs()}
+  });
+  let tx=null;
+  document.getElementById('deck').addEventListener('touchstart',e=>{tx=e.touches[0].clientX},{passive:true});
+  document.getElementById('deck').addEventListener('touchend',e=>{
+    if(tx===null||e.target.closest('.item,.bin,.pool'))return;
+    const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>70)go(cur+(dx<0?1:-1));tx=null;
+  });
+  function toggleFs(){
+    try{if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen();}catch(e){}
+  }
+  document.getElementById('fsBtn').onclick=toggleFs;
+  const start=parseInt(location.hash.slice(1),10);
+  go(isNaN(start)?0:start-1);
+  document.querySelectorAll('.reveal .card').forEach(c=>c.onclick=()=>c.setAttribute('aria-expanded',c.getAttribute('aria-expanded')==='true'?'false':'true'));
+  document.querySelectorAll('[data-quiz]').forEach(q=>{
+    q.querySelectorAll('.opt').forEach(o=>o.onclick=()=>{
+      if(o.hasAttribute('data-right')){o.classList.add('right');q.querySelector('.explain').classList.add('on')}
+      else o.classList.add('wrong');
+    });
+  });
+  document.querySelectorAll('.di').forEach(d=>d.querySelectorAll('[data-pick]').forEach(b=>b.onclick=()=>{
+    d.querySelectorAll('[data-pick]').forEach(x=>x.classList.toggle('picked',x===b));
+    const ok=b.dataset.pick===d.dataset.ans;d.classList.add('done');d.classList.toggle('ok',ok);d.classList.toggle('no',!ok);
+  }));
+
+  // ---- Day 2 interactions ----
+
+  // generic sort (select an item, then a bin; or drag)
+  function makeSort(poolId,binsId,checkId,resetId,fbId,total){
+    const pool=document.getElementById(poolId),bins=document.getElementById(binsId),fb=document.getElementById(fbId);
+    const original=[...pool.children];
+    let sel=null;
+    function select(it){
+      if(sel)sel.setAttribute('aria-pressed','false');
+      sel=(sel===it)?null:it;
+      if(sel)sel.setAttribute('aria-pressed','true');
+    }
+    function place(it,bin){it.classList.remove('right','wrong');bin.appendChild(it);it.setAttribute('aria-pressed','false');sel=null;fb.textContent=''}
+    pool.addEventListener('click',e=>{const it=e.target.closest('.item');if(it)select(it)});
+    bins.addEventListener('click',e=>{
+      const it=e.target.closest('.item');
+      if(it){select(it);return}
+      const bin=e.target.closest('.bin');if(bin&&sel)place(sel,bin);
+    });
+    bins.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.classList.contains('bin')&&sel){e.preventDefault();place(sel,e.target)}});
+    original.forEach(it=>it.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain','x');sel=it}));
+    bins.querySelectorAll('.bin').forEach(b=>{
+      b.addEventListener('dragover',e=>{e.preventDefault();b.classList.add('drop')});
+      b.addEventListener('dragleave',()=>b.classList.remove('drop'));
+      b.addEventListener('drop',e=>{e.preventDefault();b.classList.remove('drop');if(sel)place(sel,b)});
+    });
+    pool.addEventListener('dragover',e=>e.preventDefault());
+    pool.addEventListener('drop',e=>{e.preventDefault();if(sel)place(sel,pool)});
+    document.getElementById(checkId).onclick=()=>{
+      let right=0;
+      bins.querySelectorAll('.item').forEach(it=>{const ok=it.dataset.ans===it.parentElement.dataset.bin;it.classList.toggle('right',ok);it.classList.toggle('wrong',!ok);if(ok)right++});
+      const left=pool.querySelectorAll('.item').length;
+      fb.textContent=right+' of '+total+' correct'+(left?' ('+left+' still to sort)':'')+(right===total?'. Nice work.':'. Orange items are in the wrong place; move them and check again.');
+    };
+    document.getElementById(resetId).onclick=()=>{original.forEach(it=>{it.classList.remove('right','wrong');it.setAttribute('aria-pressed','false');pool.appendChild(it)});sel=null;fb.textContent=''};
+  }
+  makeSort('pool2','bins2','sortCheck2','sortReset2','sortFb2',9);
+
+  // sequence game
+  (function(){
+    const box=document.getElementById('seq'),fb=document.getElementById('seqFb');
+    const original=[...box.children],total=original.length;
+    let next=1,miss=0;
+    box.addEventListener('click',e=>{
+      const b=e.target.closest('.item');if(!b||b.classList.contains('right'))return;
+      if(+b.dataset.n===next){
+        b.classList.add('right');b.insertAdjacentHTML('afterbegin','<b>'+next+'.</b>');next++;
+        fb.textContent=next>total?(miss===0?'All '+total+' in order on the first try. Nice work.':'All '+total+' in order, with '+miss+' wrong tap'+(miss===1?'':'s')+' along the way.'):'';
+      }else{
+        miss++;b.classList.add('wrong');setTimeout(()=>b.classList.remove('wrong'),700);
+        fb.textContent='Not yet. What has to happen right before that step?';
+      }
+    });
+    document.getElementById('seqReset').onclick=()=>{
+      next=1;miss=0;fb.textContent='';
+      original.forEach(b=>{b.classList.remove('right','wrong');const t=b.querySelector('b');if(t)t.remove();box.appendChild(b)});
+    };
+  })();
+
+  // follow the information stepper
+  (function(){
+    const stages=[...document.querySelectorAll('#stages .stage')],btn=document.getElementById('stBtn'),done=document.getElementById('stDone');
+    let si=0;
+    function show(){
+      stages.forEach((s,i)=>s.classList.toggle('on',i<=si));
+      const last=si>=stages.length-1;
+      done.hidden=!last;
+      btn.textContent=last?'Run it again':'Send it to the next step';
+    }
+    btn.onclick=()=>{si=(si>=stages.length-1)?0:si+1;show()};
+    show();
+  })();
+
+  // process / quality lists use the generic .di handler; two more lists share it automatically
+
+  // data detective + generic flag game
+  function flagGame(boxId,revealId,resetId,fbId,whyId,total){
+    const box=document.getElementById(boxId),why=document.getElementById(whyId),fb=document.getElementById(fbId);
+    box.querySelectorAll('.ais').forEach(a=>a.onclick=()=>{if(!box.classList.contains('revealed'))a.classList.toggle('flag')});
+    document.getElementById(revealId).onclick=()=>{
+      box.classList.add('revealed');let hit=0;why.innerHTML='';
+      box.querySelectorAll('.ais').forEach(a=>{
+        const f=a.classList.contains('flag'),b=a.dataset.bad==='1';a.classList.remove('flag');
+        if(b){a.classList.add(f?'hit':'miss');if(f)hit++;why.insertAdjacentHTML('beforeend','<p><b>'+a.textContent+'</b>: '+a.dataset.why+'</p>')}
+        else if(f)a.classList.add('false');
+      });
+      fb.textContent='You caught '+hit+' of '+total+' problems.';
+    };
+    document.getElementById(resetId).onclick=()=>{box.classList.remove('revealed');box.querySelectorAll('.ais').forEach(a=>a.classList.remove('flag','hit','miss','false'));why.innerHTML='';fb.textContent=''};
+  }
+  flagGame('dtBox','dtReveal','dtReset','dtFb','dtWhy',4);
+
+  // paper vs system toggle
+  (function(){
+    const data={
+      paper:{time:'4 min',timeNote:'A server walks the ticket to the kitchen.',err:'9',errNote:'Handwriting and missed tickets.',vis:'No',visNote:'Nobody can see when orders back up.'},
+      sys:{time:'10 sec',timeNote:'The order appears on the kitchen screen.',err:'2',errNote:'Orders are typed once and sent as entered.',vis:'Yes',visNote:'Order times are stored and can be summarized by hour.'}
+    };
+    const stats=document.getElementById('psStats');
+    function show(v){
+      document.querySelectorAll('#psToggle button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v?'true':'false'));
+      stats.classList.toggle('sys',v==='sys');
+      stats.querySelectorAll('[data-k]').forEach(el=>el.textContent=data[v][el.dataset.k]);
+    }
+    document.querySelectorAll('#psToggle button').forEach(b=>b.onclick=()=>show(b.dataset.v));
+    show('paper');
+  })();
+
+
+
+  // data shape
+  (function(){
+    const defs={
+      field:'<b>Field:</b> a column. One kind of fact recorded about every order, like Item or Price. Field names go in row 1.',
+      record:'<b>Record:</b> a row. Everything the log knows about one thing, here one line of an order.',
+      value:'<b>Value:</b> one cell, a single fact. On its own it is just data, as you saw yesterday.',
+      text:'<b>Text:</b> words and labels, like Copper Burger. Excel left-aligns text, and you can’t do math on it. A table number is a label too: you would never add table numbers together.',
+      number:'<b>Number:</b> quantities and prices, like 2 or $16. Excel right-aligns numbers and can calculate with them.',
+      date:'<b>Date / time:</b> like 7:05 PM or 1/4/2027. Excel stores these as numbers behind the scenes, so it can work out durations such as how long a table waited.'
+    };
+    const detail=document.getElementById('shapeDetail');
+    document.querySelectorAll('#shape .pk').forEach(p=>p.onclick=()=>{
+      document.querySelectorAll('#shape .pk').forEach(x=>x.classList.toggle('on',x===p));
+      document.querySelectorAll('#typeChips .chip').forEach(c=>c.setAttribute('aria-pressed','false'));
+      detail.innerHTML=defs[p.dataset.k];
+    });
+    document.querySelectorAll('#typeChips .chip').forEach(c=>c.onclick=()=>{
+      document.querySelectorAll('#shape .pk').forEach(x=>x.classList.remove('on'));
+      document.querySelectorAll('#typeChips .chip').forEach(x=>x.setAttribute('aria-pressed',x===c?'true':'false'));
+      detail.innerHTML=defs[c.dataset.k];
+    });
+  })();
+
+  // numeric checks
+  function numCheck(inp,btn,fb,ans,ok,bad){
+    document.getElementById(btn).onclick=()=>{
+      const v=parseFloat(document.getElementById(inp).value.replace(/[$,\s]/g,''));const f=document.getElementById(fb);
+      if(isNaN(v))f.textContent='Type a number first.';
+      else if(Math.abs(v-ans)<0.005)f.textContent=ok;
+      else f.textContent=bad;
+    };
+  }
+  numCheck('xlTotal2','xlCheck2','xlFb2',177,'Correct: $177. Your formulas and AutoFill worked.','Not quite. Check that F2 through F9 each multiply Qty by Price, and that F10 adds all eight.');
+  numCheck('xlTop','xlTopCheck','xlTopFb',97,'Maya: $97. Jordan ($42) and Sam ($38) bring the three servers to $177, which matches your grand total. That is a reconciliation.','Not quite. Add the Total cells for each server’s rows, then compare the three server totals.');
+
+
+
+
+  // ---- Day 2 visual additions ----
+  makeSort('poolS','binsS','sortCheckS','sortResetS','sortFbS',8);
+  makeSort('poolY','binsY','sortCheckY','sortResetY','sortFbY',9);
+
+  // KPI gauges
+  (function(){
+    const defs=[
+      {id:'kTime',good:15,warn:20,fmt:v=>v+' min'},
+      {id:'kCost',good:8,warn:10,fmt:v=>'$'+Number(v).toFixed(2)},
+      {id:'kQual',good:3,warn:6,fmt:v=>v+'%'}
+    ];
+    const names={kTime:'time',kCost:'cost',kQual:'quality'};
+    function render(){
+      let ok=0,worst=null,wv=-1;
+      defs.forEach(d=>{
+        const card=document.getElementById(d.id),inp=card.querySelector('input'),v=parseFloat(inp.value);
+        card.querySelector('.kv').textContent=d.fmt(v);
+        const st=v<=d.good?'ok':v<=d.warn?'warn':'bad';
+        card.className='kpi '+st;
+        card.querySelector('.ks').textContent=st==='ok'?'On target':st==='warn'?'Watch it':'Off target';
+        if(st==='ok')ok++;
+        const over=(v-d.good)/d.good;if(st!=='ok'&&over>wv){wv=over;worst=names[d.id]}
+      });
+      document.getElementById('kSum').innerHTML='<b>'+ok+' of 3 KPIs on target.</b> '+(ok===3?'The process is healthy. You can only know that because it is measured.':'The biggest miss is <b>'+worst+'</b>. A KPI tells you where to look, not why. Finding the cause is the next step.');
+    }
+    defs.forEach(d=>document.getElementById(d.id).querySelector('input').oninput=render);
+    const sc={tue:[13,7,2],thu:[32,9,5],fix:[11,7,2]};
+    document.querySelectorAll('#kScen button').forEach(b=>b.onclick=()=>{
+      sc[b.dataset.s].forEach((v,i)=>document.getElementById(defs[i].id).querySelector('input').value=v);render();
+    });
+    render();
+  })();
+
+  // what breaks
+  (function(){
+    const btns=[...document.querySelectorAll('#stpGrid .stp')],fb=document.getElementById('stpFb'),bk=document.getElementById('bkBtn');
+    let broken=0,backup=false;
+    function render(){
+      btns.forEach((b,i)=>{
+        const n=i+1;b.classList.remove('broken','blocked','slow');
+        if(!broken)return;
+        if(n===broken)b.classList.add('broken');
+        else if(n>broken)b.classList.add(backup?'slow':'blocked');
+      });
+      bk.setAttribute('aria-pressed',backup?'true':'false');
+      bk.textContent='Backup plan: '+(backup?'on':'off');
+      if(!broken){fb.textContent='Select a step to break it.';return}
+      const after=8-broken;
+      fb.textContent=after===0?'Step 8 broke. Nothing is downstream, but the owner has no report tonight.':
+        (backup?'Step '+broken+' broke, but the backup plan keeps '+after+' later step'+(after===1?'':'s')+' moving, just slower.':'Step '+broken+' broke, so '+after+' later step'+(after===1?' is':'s are')+' blocked.');
+    }
+    btns.forEach(b=>b.onclick=()=>{broken=+b.dataset.n;render()});
+    bk.onclick=()=>{backup=!backup;render()};
+    document.getElementById('stpReset').onclick=()=>{broken=0;render()};
+    render();
+  })();
+
+  // quality meter
+  (function(){
+    const rows=[...document.querySelectorAll('#qrows .qrow')];
+    const why={accurate:'The counts do not match what was really sold, so the order is too big or too small.',timely:'The numbers arrive after the order deadline.',relevant:'The report covers drinks, but the question is about buns.',complete:'Two nights of orders are missing, so Saturday looks quieter than it is.',consistent:'The POS and the inventory system disagree on buns left. Which one do you trust?'};
+    function render(){
+      let sum=0;
+      rows.forEach(r=>{
+        const on=r.querySelector('button[aria-pressed="true"]'),v=+on.dataset.v;sum+=v;
+        r.querySelector('.qc').textContent=v?why[r.dataset.k]:'';
+      });
+      const pct=100-sum*10;
+      document.getElementById('qBar').style.width=Math.max(4,pct)+'%';
+      document.getElementById('qLabel').textContent=(pct>=80?'Safe to decide: ':pct>=50?'Decide with caution: ':'Do not decide yet: ')+pct+'% confidence. '+(pct>=80?'The data passes the tests.':pct>=50?'Check the weak spots first.':'Fix the data before anyone orders buns.');
+    }
+    rows.forEach(r=>r.querySelectorAll('button').forEach(b=>b.onclick=()=>{r.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));render()}));
+    render();
+  })();
+})();
+</script>
+</body>
+</html>

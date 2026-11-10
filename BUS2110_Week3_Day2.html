@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Day 12: Where Data Comes From</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f4f2; --surface:#ffffff; --ink:#221a1b; --muted:#5d5657; --line:#d9d6d3;
+  --maroon:#73000a; --maroon-ink:#73000a; --gold:#b59a57; --gold-soft:#efe6cf; --teal:#527b82; --teal-soft:#dde8e9;
+  --good:#2f6b3a; --good-soft:#dcefdf; --bad:#9a3412; --bad-soft:#fbe4d8;
+  --display:'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --body:'Atkinson Hyperlegible', 'Segoe UI', Arial, sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1b1617; --surface:#262021; --ink:#f1ebe8; --muted:#b9afad; --line:#433a3b;
+    --maroon:#8f1a26; --maroon-ink:#e8858e; --gold:#cdb57a; --gold-soft:#3a3222; --teal:#7fa7ad; --teal-soft:#24363a;
+    --good:#8fd19b; --good-soft:#1f3624; --bad:#f4a582; --bad-soft:#3e2519;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1b1617; --surface:#262021; --ink:#f1ebe8; --muted:#b9afad; --line:#433a3b;
+  --maroon:#8f1a26; --maroon-ink:#e8858e; --gold:#cdb57a; --gold-soft:#3a3222; --teal:#7fa7ad; --teal-soft:#24363a;
+  --good:#8fd19b; --good-soft:#1f3624; --bad:#f4a582; --bad-soft:#3e2519;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:clamp(17px,1.35vw,22px);line-height:1.5;display:flex;flex-direction:column}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+
+header.bar{display:flex;align-items:center;justify-content:space-between;padding:12px clamp(16px,4vw,48px);border-bottom:4px solid var(--gold);background:var(--maroon);color:#fff}
+header.bar .course{font-family:var(--display);font-weight:700;letter-spacing:.01em}
+header.bar .tools{display:flex;gap:8px}
+header.bar button{background:transparent;border:1px solid rgba(255,255,255,.5);border-radius:6px;padding:4px 12px;font-size:.8em;color:#fff}
+
+main{flex:1;position:relative;overflow:hidden}
+.slide{position:absolute;inset:0;overflow-y:auto;padding:clamp(20px,4vh,48px) clamp(16px,5vw,72px) 32px;display:none}
+.slide.active{display:block}
+.inner{max-width:1120px;margin:0 auto}
+@media (prefers-reduced-motion:no-preference){.slide.active .inner{animation:in .35s ease-out}}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+h1,h2,h3{font-family:var(--display);line-height:1.1;margin:0 0 .4em}
+h1{font-size:clamp(40px,5.6vw,84px);font-weight:800;letter-spacing:-.02em}
+h2{font-size:clamp(30px,3.6vw,54px);font-weight:800;letter-spacing:-.01em;color:var(--maroon-ink)}
+h3{font-size:1.15em;font-weight:700}
+p{margin:0 0 .8em;max-width:68ch}
+.lede{font-size:1.2em;color:var(--muted)}
+.kicker{font-family:var(--display);font-weight:700;color:var(--teal);margin-bottom:.5em}
+
+/* title slide */
+.title-slide .inner{display:flex;flex-direction:column;justify-content:center;min-height:100%}
+.title-slide h1 span{display:block;color:var(--maroon-ink)}
+.agenda{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:1.5em}
+.agenda div{border-top:4px solid var(--gold);padding-top:8px}
+
+/* chips / poll */
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin:1em 0}
+.chip{border:2px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 18px}
+.chip[aria-pressed="true"]{border-color:var(--teal);background:var(--teal-soft);font-weight:700}
+.bignum{font-family:var(--display);font-weight:800;font-size:clamp(56px,7vw,110px);color:var(--maroon-ink);line-height:1}
+
+/* reveal cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:1em}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;text-align:left;width:100%}
+.card .back{display:none;margin-top:.5em;color:var(--muted)}
+.card[aria-expanded="true"] .back{display:block}
+.card[aria-expanded="true"]{border-color:var(--teal)}
+.card .hint{font-size:.8em;color:var(--teal);margin-top:.4em}
+.card[aria-expanded="true"] .hint{display:none}
+
+/* the framework band: signature visual */
+.band{margin:1.4em 0 .6em}
+.band-row{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.comp{background:var(--surface);border:2px solid var(--line);border-radius:8px;padding:14px 10px;text-align:center;font-family:var(--display);font-weight:700;font-size:1.05em}
+.comp small{display:block;font-family:var(--body);font-weight:400;font-size:.72em;color:var(--muted);margin-top:4px}
+.comp.tech{border-color:var(--teal)}
+.comp.human{border-color:var(--gold)}
+.brackets{display:grid;grid-template-columns:repeat(5,1fr);column-gap:6px;margin-top:10px}
+.brk{border:3px solid;border-top:none;height:22px;border-radius:0 0 8px 8px;position:relative;margin-bottom:34px}
+.brk span{position:absolute;left:50%;top:100%;transform:translateX(-50%);font-family:var(--display);font-weight:800;padding-top:4px}
+.it{grid-column:1 / span 3;grid-row:1;border-color:var(--teal);color:var(--teal)}
+.is{grid-column:1 / span 5;grid-row:2;border-color:var(--maroon-ink);color:var(--maroon-ink)}
+.toggle{display:flex;gap:8px;margin:1em 0}
+.toggle button{border:2px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 18px;font-weight:700}
+.toggle button[aria-pressed="true"]{background:var(--maroon);border-color:var(--maroon);color:#fff}
+.band.show-it .comp.human{opacity:.25}
+.band.show-it .is-l{visibility:hidden}
+.band.show-is .it-l{visibility:hidden}
+.band-detail{background:var(--surface);border-left:6px solid var(--gold);padding:14px 18px;border-radius:0 8px 8px 0;min-height:4em}
+.band-row .comp{cursor:pointer}
+.band-row .comp[aria-pressed="true"]{background:var(--gold-soft)}
+
+/* sort activity */
+.pool{display:flex;flex-wrap:wrap;gap:8px;min-height:56px;padding:12px;border:2px dashed var(--line);border-radius:10px;margin:1em 0}
+.item{background:var(--surface);border:2px solid var(--line);border-radius:8px;padding:8px 14px;font-size:.92em}
+.item[aria-pressed="true"]{border-color:var(--maroon-ink);box-shadow:0 0 0 3px var(--gold)}
+.item.right{border-color:var(--good);background:var(--good-soft)}
+.item.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.bins{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.bin{background:var(--surface);border:2px solid var(--line);border-radius:10px;padding:10px;min-height:170px;display:flex;flex-direction:column;gap:6px;text-align:left}
+.bin-title{font-family:var(--display);font-weight:800;text-align:center;padding-bottom:6px;border-bottom:3px solid var(--teal)}
+.bin.h .bin-title{border-color:var(--gold)}
+.bin.drop{background:var(--teal-soft)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:1em}
+.btn{background:var(--maroon);color:#fff;border:none;border-radius:8px;padding:10px 20px;font-weight:700}
+.btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--line)}
+.feedback{font-weight:700}
+@media (max-width:760px){.bins,.band-row{grid-template-columns:1fr 1fr}.brackets{display:none}}
+
+/* tabs */
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:1em 0 0}
+.tabs button{border:2px solid var(--line);border-bottom:none;background:var(--bg);border-radius:8px 8px 0 0;padding:8px 16px;font-weight:700}
+.tabs button[aria-selected="true"]{background:var(--surface);border-color:var(--teal)}
+.panel{background:var(--surface);border:2px solid var(--teal);border-radius:0 10px 10px 10px;padding:18px 22px}
+.panel dl{display:grid;grid-template-columns:max-content 1fr;gap:8px 20px;margin:0}
+.panel dt{font-family:var(--display);font-weight:700}
+.panel dd{margin:0}
+
+/* quiz + scenario */
+.q{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 22px;margin-bottom:16px}
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:.6em}
+.opt{border:2px solid var(--line);background:var(--bg);border-radius:8px;padding:8px 16px;text-align:left}
+.opt.right{border-color:var(--good);background:var(--good-soft);font-weight:700}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.explain{margin-top:.6em;display:none}
+.explain.on{display:block}
+.clock{font-family:var(--display);font-weight:800;color:var(--teal)}
+.stars{font-size:1.8em;letter-spacing:.1em;color:var(--gold)}
+.scene{background:var(--surface);border-radius:10px;border:1px solid var(--line);padding:22px 26px}
+.meter{height:10px;background:var(--line);border-radius:6px;overflow:hidden;margin:6px 0 16px}
+.meter span{display:block;height:100%;background:var(--gold);width:0;transition:width .3s}
+
+.strat{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:1em}
+.strat div{background:var(--surface);border-top:5px solid var(--teal);padding:16px;border-radius:0 0 8px 8px}
+.warn{background:var(--gold-soft);border-left:6px solid var(--gold);padding:14px 18px;border-radius:0 8px 8px 0;margin-top:1.2em}
+textarea{width:100%;min-height:110px;font:inherit;padding:12px;border-radius:8px;border:2px solid var(--line);background:var(--surface);color:var(--ink)}
+
+.logtop{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:20px;border-bottom:4px solid var(--gold);padding-bottom:16px}
+.logit{color:var(--maroon-ink);margin:0;font-size:clamp(56px,7vw,110px)}
+.logtop .lede{margin:0}
+.entryhead{background:var(--surface);border:2px solid var(--ink);border-radius:4px;padding:12px 18px;display:flex;flex-direction:column;gap:6px;min-width:280px}
+.blank{display:inline-block;width:150px;border-bottom:2px solid var(--muted);height:1.1em;vertical-align:bottom}
+.qstrip{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:18px 0}
+.qstrip div{font-family:var(--display);font-weight:800;text-align:center;padding:10px 6px;border-radius:6px;border:2px solid var(--line);color:var(--muted);opacity:.55}
+.qstrip div.on{border-color:var(--maroon);background:var(--maroon);color:#fff;opacity:1}
+.qstrip small{display:block;font-family:var(--body);font-weight:400;font-size:.7em;margin-top:2px}
+.prompts{display:flex;flex-direction:column;gap:12px}
+.prompts div{display:flex;gap:16px;align-items:baseline;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 18px}
+.prompts p{margin:0}
+.tag{font-family:var(--display);font-weight:800;color:var(--maroon-ink);min-width:5.5em}
+.note{color:var(--muted);margin-top:12px}
+@media (max-width:760px){.qstrip{grid-template-columns:1fr 1fr}.prompts div{flex-direction:column;gap:4px}}
+.weekgoals{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:1em}
+.wg{background:var(--surface);border:1px solid var(--line);border-top:6px solid var(--maroon);border-radius:0 0 10px 10px;padding:18px 22px}
+.wg.excel,.wg.analytics{border-top-color:var(--teal)}
+.wg h3{color:var(--maroon-ink)}
+.wg.excel h3,.wg.analytics h3{color:var(--teal)}
+.wg p{margin:0}
+@media (max-width:760px){.weekgoals{grid-template-columns:1fr}}
+.dilist{display:flex;flex-direction:column;gap:10px;margin-top:1em}
+.di{background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--line);border-radius:0 8px 8px 0;padding:12px 18px;display:grid;grid-template-columns:1fr auto;gap:6px 16px;align-items:center}
+.di p{margin:0}
+.di .diwhy{grid-column:1 / -1;color:var(--muted);display:none;font-size:.92em}
+.di.done .diwhy{display:block}
+.di.ok{border-left-color:var(--good)}
+.di.no{border-left-color:var(--bad)}
+.dibtns{display:flex;gap:6px}
+.dibtns button{border:2px solid var(--line);background:var(--bg);border-radius:6px;padding:6px 14px;font-weight:700}
+.dibtns button.picked{border-color:var(--ink)}
+.chip.right{border-color:var(--good);background:var(--good-soft)}
+.chip.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.chip.missed{border-style:dashed;border-color:var(--good)}
+.steps{display:flex;flex-direction:column;gap:8px}
+.steps label{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 14px;cursor:pointer}
+.steps input{width:22px;height:22px;flex:none;margin-top:3px;accent-color:var(--maroon)}
+.steps label:has(input:checked){opacity:.6}
+code{font-family:Consolas,'Courier New',monospace;background:var(--gold-soft);padding:1px 6px;border-radius:4px}
+.xl{border:2px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface);margin-top:1em;font-size:.85em}
+.xl .hs{background:transparent;border:2px solid transparent;border-radius:4px;cursor:pointer;text-align:left}
+.xl .hs:hover,.xl .hs.on{border-color:var(--gold);background:var(--gold-soft)}
+.xl-title{background:#1f6e43;color:#fff;padding:6px 10px}
+.xl-title .hs{color:#fff;font-weight:700}
+.xl-title .hs.on,.xl-title .hs:hover{color:var(--ink)}
+.xl-tabs{display:flex;gap:18px;width:100%;padding:6px 10px;flex-wrap:wrap}
+.xl-tabs .sel{font-weight:700;border-bottom:3px solid #1f6e43}
+.xl-ribbon{display:flex;gap:10px;width:100%;padding:10px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.xl-ribbon span{border:1px solid var(--line);border-radius:4px;padding:10px 14px;background:var(--bg)}
+.xl-fbar{display:flex;gap:8px;align-items:center;padding:6px 10px;border-bottom:1px solid var(--line)}
+.xl-fbar .nb{width:70px;border:1px solid var(--line)}
+.xl-fbar .fb{flex:1;border:1px solid var(--line);font-family:Consolas,'Courier New',monospace}
+.fx{font-style:italic;color:var(--muted)}
+.xl-grid{display:grid;grid-template-columns:44px repeat(4,1fr)}
+.xl-grid>*{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:4px 8px;min-height:32px}
+.xl-grid .xh{background:var(--bg);text-align:center;color:var(--muted);font-weight:700;border-radius:0}
+.xl-grid .n{text-align:right}
+.xl-grid .active{outline:3px solid #1f6e43;outline-offset:-3px}
+.xl-sheets{display:flex;gap:10px;align-items:center;padding:6px 10px;background:var(--bg)}
+.xl-sheets .hs{font-weight:700;border-bottom:3px solid #1f6e43}
+.xlsplit{display:grid;grid-template-columns:minmax(260px,1fr) 1.4fr;gap:24px;align-items:start}
+.dtab{border-collapse:collapse;background:var(--surface);width:100%}
+.dtab th,.dtab td{border:1px solid var(--line);padding:6px 12px;text-align:left}
+.dtab th{background:var(--teal-soft)}
+.dtab td:nth-child(n+2){text-align:right}
+.check{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:1.2em;background:var(--surface);border:2px solid var(--teal);border-radius:10px;padding:14px 18px}
+.check input{font:inherit;padding:8px 12px;border-radius:6px;border:2px solid var(--line);background:var(--bg);color:var(--ink);width:9em}
+.aibox{background:var(--surface);border:2px solid var(--line);border-radius:10px;padding:16px 20px;display:flex;flex-wrap:wrap;gap:4px;margin-top:1em}
+.ais{background:transparent;border:2px solid transparent;border-radius:6px;padding:4px 6px;text-align:left}
+.ais.flag{background:var(--gold-soft);border-color:var(--gold)}
+.ais.hit{background:var(--good-soft);border-color:var(--good)}
+.ais.miss{border-style:dashed;border-color:var(--bad)}
+.ais.false{background:var(--bad-soft);border-color:var(--bad)}
+#aiWhy p{background:var(--surface);border-left:6px solid var(--gold);padding:10px 16px;border-radius:0 8px 8px 0;margin-top:10px}
+.flow3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:1em}
+.flow3>div{background:var(--surface);border:1px solid var(--line);border-top:6px solid var(--maroon);border-radius:0 0 10px 10px;padding:16px 18px}
+.flow3>div:nth-child(2){border-top-color:var(--teal)}
+.flow3>div:nth-child(3){border-top-color:var(--gold)}
+.flow3 .steps label{font-size:.9em;padding:8px 10px}
+.prompt{font-family:Consolas,'Courier New',monospace;font-size:.85em;background:var(--bg);border:1px dashed var(--muted);border-radius:6px;padding:10px;margin:8px 0}
+@media (max-width:900px){.xlsplit,.flow3{grid-template-columns:1fr}.di{grid-template-columns:1fr}}
+.kbd-out{background:var(--gold-soft);border-left:6px solid var(--gold);border-radius:0 8px 8px 0;padding:12px 16px;margin:0 0 12px}
+kbd{font-family:Consolas,'Courier New',monospace;background:var(--surface);border:1px solid var(--muted);border-bottom-width:3px;border-radius:5px;padding:1px 8px;font-size:.95em}
+footer.nav{display:flex;align-items:center;gap:12px;padding:10px clamp(16px,4vw,48px);border-top:1px solid var(--line);background:var(--surface)}
+footer.nav .navbtn{background:var(--maroon);color:#fff;border:none;border-radius:8px;padding:8px 18px;font-weight:700;min-width:96px}
+footer.nav .navbtn:disabled{opacity:.35;cursor:default}
+.dots{flex:1;display:flex;justify-content:center;gap:6px;flex-wrap:wrap}
+.dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--muted);background:transparent;padding:0}
+.dot[aria-current="true"]{background:var(--maroon-ink);border-color:var(--maroon-ink)}
+.count{font-size:.8em;color:var(--muted);min-width:4em;text-align:right}
+
+/* ---- Day 2 additions ---- */
+.strat.three{grid-template-columns:repeat(3,1fr)}
+.bins.b3{grid-template-columns:repeat(3,1fr)}
+.di.five{grid-template-columns:1fr}
+.di.five .dibtns{flex-wrap:wrap}
+.stages{display:flex;flex-direction:column;gap:10px;margin-top:1em}
+.stage{background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--teal);border-radius:0 8px 8px 0;padding:12px 18px;display:none}
+.stage.on{display:block}
+.stage .tag{display:block;margin-bottom:4px}
+.stage p{margin:0 0 4px}
+.seq{display:flex;flex-wrap:wrap;gap:8px;margin:1em 0}
+.seq .item{text-align:left}
+.seq .item b{color:var(--maroon-ink);margin-right:6px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:1em}
+.stat{background:var(--surface);border:1px solid var(--line);border-top:6px solid var(--teal);border-radius:0 0 10px 10px;padding:16px 18px}
+.stat h3{font-size:1em}
+.stat .bignum{font-size:clamp(34px,4.2vw,60px)}
+.stat p{margin:.4em 0 0;color:var(--muted)}
+.stats.sys .stat{border-top-color:var(--maroon)}
+.pk{background:transparent;border:2px solid transparent;border-radius:4px;font:inherit;padding:2px 6px;text-align:left}
+.pk:hover,.pk.on{border-color:var(--gold);background:var(--gold-soft)}
+.dtab.xlike td:nth-child(n+2){text-align:left}
+.dtab.xlike td.n{text-align:right}
+.dtab.xlike td.n .ais,.dtab.xlike td.n .pk{text-align:right}
+#dtWhy p{background:var(--surface);border-left:6px solid var(--gold);padding:10px 16px;border-radius:0 8px 8px 0;margin-top:10px}
+@media (max-width:900px){.stats,.strat.three{grid-template-columns:1fr}}
+.steps label>span{flex:1}
+.xlsplit{grid-template-columns:auto 1fr}
+.xlsplit .dtab td,.xlsplit .dtab th{white-space:nowrap;padding:4px 10px}
+@media (max-width:900px){.xlsplit{grid-template-columns:1fr}}
+
+/* ---- Day 2 visual additions ---- */
+.flowrow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:stretch;margin-top:1em}
+.fcol{background:var(--surface);border-top:5px solid var(--teal);border-radius:0 0 10px 10px;padding:14px 18px}
+.fcol h3{margin:0 0 6px;color:var(--maroon-ink)}
+.fcol ul{margin:0;padding-left:1.1em}
+.farrow{display:flex;align-items:center;font-size:2em;color:var(--maroon);font-weight:700}
+.floop{margin-top:10px;border:2px dashed var(--gold);border-radius:10px;padding:10px 16px;background:var(--gold-soft);text-align:center}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:1em}
+.kpi{background:var(--surface);border-top:6px solid var(--line);border-radius:0 0 10px 10px;padding:14px 16px}
+.kpi.ok{border-top-color:var(--teal)}.kpi.warn{border-top-color:var(--gold)}.kpi.bad{border-top-color:var(--maroon)}
+.kpi h3{margin:0}
+.kpi .kv{font-size:2.2em;font-weight:800;color:var(--maroon-ink);line-height:1.1;margin:6px 0}
+.kpi input[type=range]{width:100%;accent-color:var(--maroon)}
+.kpi .ks{font-weight:700;margin:6px 0 0}
+.kpi.ok .ks{color:var(--teal)}.kpi.bad .ks{color:var(--maroon)}
+.kpi small{display:block;color:var(--muted)}
+.chevs4{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:1em}
+.chv{background:var(--maroon);color:#fff;font-weight:700;text-align:center;padding:16px 10px 16px 22px;clip-path:polygon(0 0,92% 0,100% 50%,92% 100%,0 100%,6% 50%)}
+.chv:first-child{clip-path:polygon(0 0,92% 0,100% 50%,92% 100%,0 100%)}
+.chvd{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.chvd div{background:var(--surface);border-top:4px solid var(--teal);padding:10px 12px;border-radius:0 0 8px 8px;font-size:.95em}
+.pyr{margin-top:1em;display:grid;grid-template-columns:1fr 1.3fr;gap:6px 18px;align-items:center}
+.pyslice{margin:0 auto;padding:14px 8px;text-align:center;color:#fff;font-weight:700}
+.pyslice.s1{width:46%;background:var(--maroon);clip-path:polygon(25% 0,75% 0,100% 100%,0 100%)}
+.pyslice.s2{width:73%;background:#8a2f35;clip-path:polygon(15% 0,85% 0,100% 100%,0 100%)}
+.pyslice.s3{width:100%;background:var(--teal);clip-path:polygon(7% 0,93% 0,100% 100%,0 100%)}
+.pydesc{background:var(--surface);border-left:6px solid var(--gold);padding:10px 16px;border-radius:0 8px 8px 0}
+.pydesc p{margin:2px 0}
+.hub{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:1em}
+.hn{background:var(--surface);border:2px solid var(--line);border-radius:10px;padding:10px 14px;font-size:.95em}
+.hn h3{margin:0;color:var(--maroon-ink)}
+.hn small{display:block;color:var(--muted);margin-bottom:4px}
+.hn p{margin:3px 0}
+.hn.mis{grid-column:2;grid-row:1}.hn.tps{grid-column:1;grid-row:2}.hn.erp{grid-column:2;grid-row:2;border:3px solid var(--maroon)}
+.hn.crm{grid-column:3;grid-row:2}.hn.scm{grid-column:2;grid-row:3}
+.bins.b4{grid-template-columns:repeat(4,1fr)}
+.bins.b5{grid-template-columns:repeat(5,1fr)}
+.stpgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:1em}
+.stp{background:var(--surface);border:2px solid var(--teal);border-radius:10px;padding:10px 12px;text-align:left;font:inherit;cursor:pointer;min-height:84px}
+.stp b{display:block;color:var(--maroon-ink)}
+.stp.broken{background:var(--maroon);border-color:var(--maroon);color:#fff}.stp.broken b{color:#fff}
+.stp.blocked{background:#e9d5d6;border-color:var(--maroon)}
+.stp.slow{background:var(--gold-soft);border-color:var(--gold)}
+.qrows{display:grid;gap:8px;margin-top:.8em}
+.qrow{display:grid;grid-template-columns:200px 220px 1fr;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 14px}
+.qrow b{color:var(--maroon-ink)}
+.qrow small{display:block;color:var(--muted)}
+.qrow .qc{color:var(--maroon);font-weight:600;min-height:1.2em}
+.seg{display:flex}
+.seg button{flex:1;padding:6px 0;border:2px solid var(--maroon);background:#fff;font:inherit;font-weight:600;cursor:pointer}
+.seg button:first-child{border-radius:8px 0 0 8px}.seg button:last-child{border-radius:0 8px 8px 0}
+.seg button+button{border-left:0}
+.seg button[aria-pressed="true"]{background:var(--maroon);color:#fff}
+.qmeter{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-top:10px}
+.pm2{height:18px;background:var(--line);border-radius:9px;overflow:hidden}
+.pm2 i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--maroon),var(--gold),var(--teal));transition:width .3s}
+@media (max-width:860px){.flowrow,.kpis,.chevs4,.chvd,.hub,.pyr,.stpgrid,.bins.b4,.bins.b5{grid-template-columns:1fr}.farrow{justify-content:center;transform:rotate(90deg)}.hn.mis,.hn.tps,.hn.erp,.hn.crm,.hn.scm{grid-column:1;grid-row:auto}.qrow{grid-template-columns:1fr}.chv{clip-path:none;border-radius:8px}}
+
+.dtab:not(.xlike) td{text-align:left}
+
+/* ---- Day 3 visual additions ---- */
+.mxwrap{display:grid;grid-template-columns:90px 1fr;gap:8px;margin-top:1em}
+.mxcols{display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:center;font-weight:700;color:var(--maroon-ink)}
+.mxrows{display:grid;grid-template-rows:1fr 1fr;gap:10px}
+.mxrows div{display:flex;align-items:center;justify-content:center;text-align:center;font-weight:700;color:var(--maroon-ink)}
+.bins.mx{grid-template-columns:1fr 1fr;gap:10px}
+.bins.mx .bin{min-height:120px}
+.bins.mx .bin small{display:block;color:var(--muted);margin-bottom:4px}
+.bins.mx .bin em{display:block;font-style:normal;font-weight:600;color:var(--maroon-ink);margin-bottom:4px}
+/* positioning map */
+.pmwrap{position:relative;margin-top:.8em}
+.ptray{display:flex;flex-wrap:wrap;gap:8px;min-height:92px;align-content:flex-start;margin-bottom:10px;padding:8px;border:2px dashed var(--line);border-radius:10px}
+.pchip{background:var(--surface);border:2px solid var(--maroon);border-radius:999px;padding:6px 14px;font-weight:600;cursor:grab;touch-action:none;user-select:none;white-space:nowrap}
+.pchip.placed{position:absolute;z-index:3;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.pchip.drag{cursor:grabbing;z-index:5;box-shadow:0 6px 14px rgba(0,0,0,.3)}
+.pchip.right{border-color:var(--teal);background:#e3eeee}
+.pchip.wrong{border-color:var(--gold);background:var(--gold-soft)}
+.fbadge{font-size:.72em;background:var(--teal);color:#fff;border-radius:999px;padding:1px 8px;margin-left:4px;text-transform:uppercase}
+.pmapbox{display:grid;grid-template-columns:28px 1fr;grid-template-rows:auto 24px}
+.ylab{writing-mode:vertical-rl;transform:rotate(180deg);text-align:center;font-weight:700;color:var(--maroon-ink)}
+.xlab{grid-column:2;text-align:center;font-weight:700;color:var(--maroon-ink)}
+.pmap{position:relative;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;height:360px;border:2px solid var(--line);border-radius:10px;overflow:hidden}
+.pz{padding:10px 14px;border:1px solid var(--line)}
+.pz b{display:block;color:var(--maroon-ink)}
+.pz small{color:var(--muted)}
+.pz.tr{background:#f3ecec}.pz.bl{background:#e8f0f0}.pz.tl,.pz.br{background:var(--surface)}
+#pmWhy p{background:var(--surface);border-left:6px solid var(--gold);padding:8px 14px;border-radius:0 8px 8px 0;margin:8px 0 0}
+/* five forces */
+.ffgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:.8em;align-items:stretch}
+.fbx{position:relative;background:var(--surface);border:2px solid var(--line);border-radius:10px;padding:12px 14px;text-align:left;font:inherit;color:inherit}
+.fbx h3{margin:0 0 2px;color:var(--maroon-ink)}
+.fbx .fq{margin:0 0 4px;font-weight:600}
+.fbx .fe{margin:0 0 8px;color:var(--muted);font-size:.9em}
+.fbx.entrants{grid-column:2;grid-row:1}
+.fbx.suppliers{grid-column:1;grid-row:2}
+.fbx.rivalry{grid-column:2;grid-row:2;border-color:var(--maroon);border-width:3px}
+.fbx.buyers{grid-column:3;grid-row:2}
+.fbx.subs{grid-column:2;grid-row:3}
+.fbx.entrants::after{content:"\25BC";position:absolute;bottom:-17px;left:50%;color:var(--maroon)}
+.fbx.subs::before{content:"\25B2";position:absolute;top:-17px;left:50%;color:var(--maroon)}
+.fbx.suppliers::after{content:"\25B6";position:absolute;right:-17px;top:50%;color:var(--maroon)}
+.fbx.buyers::before{content:"\25C0";position:absolute;left:-17px;top:50%;color:var(--maroon)}
+button.fbx{cursor:pointer}
+button.fbx:hover{border-color:var(--gold)}
+button.fbx:disabled{cursor:default}
+.fbx.hit{border-color:var(--teal);background:#e3eeee}
+.fbx.miss{border-color:var(--gold);background:var(--gold-soft)}
+.seg{display:flex;gap:0}
+.seg button{flex:1;padding:6px 0;border:2px solid var(--maroon);background:#fff;font:inherit;font-weight:600;cursor:pointer}
+.seg button:first-child{border-radius:8px 0 0 8px}.seg button:last-child{border-radius:0 8px 8px 0}
+.seg button+button{border-left:0}
+.seg button[aria-pressed="true"]{background:var(--maroon);color:#fff}
+.seg button.bm{outline:3px dashed var(--gold);outline-offset:2px}
+.fmeter{grid-column:1 / 4;grid-row:4;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-top:6px}
+.fmeter h3{margin:0 0 6px}
+.pm{height:18px;background:var(--line);border-radius:9px;overflow:hidden}
+.pm i{display:block;height:100%;width:50%;background:linear-gradient(90deg,var(--maroon),var(--gold),var(--teal));transition:width .3s}
+.fmeter p{margin:6px 0}
+.evcard{background:var(--gold-soft);border-left:6px solid var(--gold);border-radius:0 10px 10px 0;padding:10px 18px;margin-top:.6em}
+.evcard p{margin:4px 0 0;font-size:1.1em;font-weight:600}
+@media (max-width:860px){.ffgrid{grid-template-columns:1fr}.fbx.entrants,.fbx.suppliers,.fbx.rivalry,.fbx.buyers,.fbx.subs{grid-column:1;grid-row:auto}.fmeter{grid-column:1;grid-row:auto}.fbx::before,.fbx::after{display:none}.mxwrap{grid-template-columns:60px 1fr}}
+/* value chain */
+.vc{display:flex;flex-direction:column;gap:6px;margin-top:.8em}
+.vclabel{font-weight:700;color:var(--maroon-ink);margin-top:4px}
+.vb{background:var(--surface);border:2px solid var(--teal);border-radius:8px;padding:8px 14px;font:inherit;font-weight:600;text-align:left;cursor:pointer}
+.vprow{display:flex;gap:4px;align-items:stretch}
+.vp{flex:1;background:var(--maroon);color:#fff;border:0;font:inherit;font-weight:600;padding:18px 18px 18px 26px;cursor:pointer;clip-path:polygon(0 0,90% 0,100% 50%,90% 100%,0 100%,8% 50%);text-align:center}
+.vp:first-child{clip-path:polygon(0 0,90% 0,100% 50%,90% 100%,0 100%)}
+.vmargin{display:flex;align-items:center;justify-content:center;padding:0 16px;font-weight:700;color:var(--maroon-ink);border:2px dashed var(--gold);border-radius:8px}
+.vb.on{background:var(--gold-soft);border-color:var(--gold)}
+.vp.on{background:var(--gold);color:#1a1a1a}
+.vb:hover,.vp:hover{filter:brightness(1.08)}
+@media (max-width:860px){.vprow{flex-direction:column}.vp{clip-path:none;border-radius:8px}}
+
+/* ---- Day 4 ---- */
+.stack{display:grid;gap:6px;margin-top:1em}
+.stack>div{display:grid;grid-template-columns:140px 1fr;gap:12px;align-items:center;background:var(--surface);border-left:8px solid var(--teal);border-radius:0 8px 8px 0;padding:8px 14px}
+.stack>div:nth-child(odd){border-left-color:var(--maroon)}
+.stack b{color:var(--maroon-ink)}
+.chevs7{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:1em}
+.chevs7 .chv{font-size:.82em;padding:14px 6px 14px 16px}
+.chvd7{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.chvd7 div{background:var(--surface);border-top:4px solid var(--teal);padding:8px 8px;border-radius:0 0 8px 8px;font-size:.8em}
+.bbgrid{display:grid;grid-template-columns:1fr 1.3fr;gap:20px;margin-top:.8em}
+.bbsl label{display:grid;grid-template-columns:1fr 150px;gap:10px;align-items:center;margin-bottom:10px;font-weight:600}
+.bbsl input{accent-color:var(--maroon)}
+.bbo{margin-bottom:10px}
+.bar{height:22px;background:var(--line);border-radius:11px;overflow:hidden;margin-top:3px}
+.bar i{display:block;height:100%;width:0;background:var(--maroon);transition:width .3s}
+.bbo.best .bar i{background:var(--teal)}
+.bbo span{float:right;font-weight:700}
+#sbTopic{font:inherit;padding:6px 10px;border:2px solid var(--maroon);border-radius:8px;max-width:100%}
+.btn[aria-pressed="false"].ghost{}
+@media (max-width:860px){.chevs7,.chvd7,.bbgrid{grid-template-columns:1fr}.stack>div{grid-template-columns:1fr}.chevs7 .chv{clip-path:none;border-radius:8px}}
+
+.strat.five{grid-template-columns:repeat(5,1fr)}
+.dtab:not(.xlike) td{text-align:left}
+@media (max-width:900px){.strat.five{grid-template-columns:1fr}}
+
+/* ---- Day 5 ---- */
+.stpgrid.five{grid-template-columns:repeat(5,1fr)}
+.stpgrid.five .stp{min-height:110px}
+.stpgrid.five .stp b{margin-bottom:4px}
+.capwrap{display:grid;grid-template-columns:1.2fr 1fr;gap:20px;margin-top:.8em;align-items:start}
+.capside label{display:block;margin-bottom:10px}
+.capside input[type=range]{width:100%;accent-color:var(--maroon)}
+.chart{display:flex;align-items:flex-end;gap:10px;height:240px;position:relative;border-bottom:2px solid var(--ink);padding:18px 8px 0;background:var(--surface);border-radius:8px 8px 0 0}
+.cbar{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;position:relative}
+.cbar .seg1{width:100%;background:var(--teal);border-radius:4px 4px 0 0}
+.cbar .seg2{width:100%;background:var(--maroon)}
+.cbar span.v{font-size:.8em;font-weight:700;margin-bottom:2px}
+.cbar .lbl{position:absolute;bottom:-22px;font-size:.85em;font-weight:600}
+.capline{position:absolute;left:0;right:0;border-top:3px dashed var(--gold);z-index:2}
+.capline em{position:absolute;right:4px;top:-20px;font-style:normal;font-size:.8em;font-weight:700;background:var(--gold-soft);padding:0 6px;border-radius:4px}
+.chart{margin-bottom:26px}
+.chart.sales .cbar.hi .seg1{background:var(--gold)}
+.chart.sales .cbar.lo .seg1{background:var(--maroon)}
+.smwrap{display:grid;grid-template-columns:1fr 1.1fr;gap:20px;align-items:center;margin-top:.8em}
+.lay{display:grid;gap:4px}
+.lay div{padding:8px 14px;border-radius:6px;font-weight:600;transition:background .25s}
+.lay div.lyYou{background:var(--teal);color:#fff}
+.lay div.lyProv{background:#dfe6e8;color:#333}
+.smdesc{background:var(--surface);border-left:6px solid var(--gold);padding:12px 18px;border-radius:0 8px 8px 0}
+.key{display:inline-block;width:14px;height:14px;border-radius:3px;vertical-align:middle}
+.key.lyYou{background:var(--teal)}.key.lyProv{background:#dfe6e8;border:1px solid #bbb}
+.ifline{background:var(--surface);border:2px solid var(--maroon);border-radius:10px;padding:12px 18px;font-size:1.2em;margin:.6em 0}
+.ifline span{color:var(--maroon-ink);font-weight:700}
+.ifsl{display:block;margin:.6em 0}
+.ifsl input{width:100%;accent-color:var(--maroon)}
+.ifcode{margin:.4em 0}
+.ifrows{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.ifrows div{background:var(--surface);border-top:5px solid var(--line);border-radius:0 0 8px 8px;padding:8px;text-align:center}
+.ifrows div.busy{border-top-color:var(--gold);background:var(--gold-soft)}
+.ifrows b{display:block}
+@media (max-width:860px){.stpgrid.five,.capwrap,.smwrap,.ifrows{grid-template-columns:1fr}}
+.chart.sales .capline em{right:auto;left:4px}
+
+/* ---- Day 6 ---- */
+.silos{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:1em}
+.silos>div{background:var(--surface);border-top:6px solid var(--teal);border-radius:0 0 10px 10px;padding:12px 16px;transition:all .3s}
+.silos>div:nth-child(2){border-top-color:var(--gold)}
+.silos>div:nth-child(3){border-top-color:var(--maroon)}
+.silos h3{margin:0 0 4px}
+.silos .link{display:none;margin-top:6px;font-weight:700;color:var(--maroon-ink)}
+.silos.shared .link{display:block}
+.silos.shared>div{background:var(--gold-soft)}
+.axwrap{display:grid;grid-template-columns:1.1fr 1fr;gap:20px;margin-top:.8em;align-items:start}
+.axwrap .chart{height:260px}
+.axwrap label{display:block;margin-bottom:8px}
+.axwrap input[type=range]{width:100%;accent-color:var(--maroon)}
+.pbview{display:flex;gap:24px;align-items:center;min-height:250px;background:var(--surface);border-radius:10px;padding:14px 20px;margin-top:.8em}
+.pbpie{width:220px;height:220px;border-radius:50%;flex:none}
+.pbkey{list-style:none;margin:0;padding:0;columns:2;gap:20px}
+.pbkey li{margin:3px 0}
+.pbkey i{display:inline-block;width:14px;height:14px;border-radius:3px;margin-right:8px;vertical-align:middle}
+.pbbars{width:100%;display:grid;gap:5px}
+.pbbars div{display:grid;grid-template-columns:80px 1fr 44px;align-items:center;gap:8px}
+.pbbars i{display:block;height:18px;background:var(--teal);border-radius:0 4px 4px 0}
+.pbbars b{text-align:right}
+.three4{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:1em}
+@media (max-width:860px){.silos,.axwrap,.three4{grid-template-columns:1fr}.pbview{flex-direction:column}}
+
+.gal{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:.6em}
+.gcard{background:var(--surface);border-top:5px solid var(--teal);border-radius:0 0 10px 10px;padding:8px 14px}
+.gcard h3{margin:0 0 2px}
+.gcard p{margin:2px 0;font-size:.88em}
+.gcard .gw{color:var(--maroon-ink)}
+.gsvg svg{width:100%;height:auto;max-height:150px;display:block}
+@media (max-width:860px){.gal{grid-template-columns:1fr}}
+
+/* ---- Day 7 ---- */
+.fnrow{display:grid;grid-template-columns:200px 1fr 70px;gap:10px;align-items:center;margin:5px 0}
+.fnrow b{text-align:right}
+.fntrack{position:relative;background:#e7e9ea;border-radius:4px;height:22px;overflow:hidden}
+.fntrack i{display:block;height:100%;background:var(--teal);transition:width .25s}
+.fnwrap{display:grid;grid-template-columns:1fr 1.3fr;gap:20px;margin-top:.8em;align-items:start}
+.fnwrap label{display:block;margin-bottom:12px}
+.fnwrap input[type=range]{width:100%;accent-color:var(--maroon)}
+#spOut{position:relative;margin-top:.6em}
+#spOut .fnrow{grid-template-columns:100px 1fr 60px}
+.spline{position:absolute;top:0;bottom:0;border-left:3px dashed var(--gold);pointer-events:none}
+.spline em{position:absolute;top:-18px;left:4px;font-style:normal;font-size:.75em;font-weight:700;background:var(--gold-soft);padding:0 6px;border-radius:4px;white-space:nowrap}
+.vcgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:.5em 0}
+.vcgrid>div{background:var(--surface);border-top:5px solid var(--teal);padding:8px 12px;border-radius:0 0 8px 8px}
+.vcgrid>div:nth-child(4){border-top-color:var(--maroon)}
+.vcgrid .tag{display:block;margin-bottom:2px}
+#vcOut{margin-top:.6em;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 16px}
+#vcOut h3{margin:.2em 0}
+@media (max-width:860px){.fnwrap,.vcgrid{grid-template-columns:1fr}.fnrow{grid-template-columns:1fr}}
+
+/* ---- Days 8-10 ---- */
+.hot{cursor:pointer;border-radius:3px;transition:background .15s}
+.hot:hover{background:#f3e6b8}
+.hot.on{background:var(--gold-soft);outline:2px solid var(--gold)}
+.redact .hot.on{background:#111;color:#111;outline:none}
+.hot.ok{background:#cfe8d5!important;outline:2px solid #2e7d32;color:inherit}
+.redact .hot.ok{background:#111!important;color:#111}
+.hot.bad{background:#fde0c2!important;outline:2px solid #e07a00;color:inherit}
+.redact .hot.bad{background:#fde0c2!important}
+.hot.miss{outline:2px dashed var(--maroon)}
+.mail{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 18px;margin-top:.6em;line-height:1.8}
+.mail .hd{border-bottom:1px solid var(--line);margin-bottom:6px;padding-bottom:4px}
+.dirty td.hot,.dirty th.hot{cursor:pointer}
+.aitxt{background:#fff;border:1px solid var(--line);border-left:6px solid var(--teal);border-radius:0 10px 10px 0;padding:10px 18px;margin-top:.6em}
+.aitxt p{margin:.5em 0}
+.tempwrap{display:grid;grid-template-columns:1fr 1.2fr;gap:20px;margin-top:.8em;align-items:start}
+.tempwrap label{display:block;margin-bottom:12px}
+.tempwrap input[type=range]{width:100%;accent-color:var(--maroon)}
+.pbuild{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 18px;min-height:120px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:.6em 0}
+.csvbox{width:100%;height:270px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.78em;border:1px solid var(--line);border-radius:8px;padding:8px}
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:.6em}
+@media (max-width:860px){.tempwrap,.cols2{grid-template-columns:1fr}}
+
+/* ---- Week 3 ---- */
+.wts{display:grid;grid-template-columns:150px 1fr 60px;gap:10px;align-items:center;margin:6px 0}
+.wts input[type=range]{width:100%;accent-color:var(--maroon)}
+.matrix{width:100%;border-collapse:collapse;margin-top:.6em}
+.matrix th,.matrix td{padding:6px 10px;border-bottom:1px solid var(--line);text-align:left}
+.matrix th{background:var(--surface)}
+.scorebar{display:grid;grid-template-columns:200px 1fr 50px;gap:10px;align-items:center;margin:5px 0}
+.scorebar.win .fntrack i{background:var(--maroon)}
+.tbx{display:grid;grid-template-columns:170px 1fr;gap:14px;margin-top:.6em}
+.tbpane{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+.tbpane h4{margin:.2em 0 .4em;font-size:.85em;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.pill{display:block;width:100%;text-align:left;margin:3px 0;padding:5px 10px;border-radius:14px;border:1px solid var(--line);background:#fff;cursor:pointer;font:inherit}
+.pill.dim{background:#dbeaf5;border-color:#9cc3e0}
+.pill.mea{background:#d9efe0;border-color:#8fcfa4}
+.pill[aria-pressed=true]{outline:3px solid var(--gold)}
+.shelf{display:flex;align-items:center;gap:8px;margin:4px 0;min-height:34px;border:1px dashed #aaa;border-radius:6px;padding:2px 8px;cursor:pointer;background:#fafafa}
+.shelf b{width:66px;font-size:.8em;color:var(--muted)}
+.shelf.ready{border-color:var(--maroon);background:#fbeff1}
+.shelf .pill{width:auto;margin:0;display:inline-block}
+.tbcanvas{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin-top:6px;min-height:230px}
+.tbcanvas .ttl{font-weight:700;margin-bottom:6px}
+.vbars{display:flex;align-items:flex-end;gap:10px;height:170px;border-bottom:2px solid var(--ink);padding-top:16px}
+.vbars .col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;position:relative}
+.vbars .col .stk{width:100%;display:flex;flex-direction:column-reverse}
+.vbars .col .tot{font-size:.75em;font-weight:700;margin-bottom:2px}
+.vlabels{display:flex;gap:10px}
+.vlabels span{flex:1;text-align:center;font-size:.8em;font-weight:600;padding-top:3px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:6px;font-size:.85em}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.jointbl{width:100%;border-collapse:collapse;font-size:.9em}
+.jointbl th,.jointbl td{border:1px solid var(--line);padding:4px 8px;text-align:left}
+.jointbl th{background:var(--surface)}
+.jointbl td.nul{color:var(--maroon-ink);font-style:italic;background:#fbeff1}
+.joingrid{display:grid;grid-template-columns:1fr 1fr 1.4fr;gap:12px;margin-top:.6em;align-items:start}
+.timer{font-size:3em;font-weight:800;color:var(--maroon-ink);text-align:center;margin:.2em 0}
+.slbl{display:grid;grid-template-columns:130px 1fr 40px;gap:10px;align-items:center;margin:6px 0}
+.slbl input{width:100%;accent-color:var(--maroon)}
+.sel{font:inherit;padding:4px 8px;border-radius:6px;border:1px solid var(--line);max-width:100%}
+.frame{background:#fff;border:1px solid var(--line);border-left:6px solid var(--maroon);border-radius:0 10px 10px 0;padding:10px 18px;line-height:2.2;margin:.6em 0}
+.chain{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:.6em}
+@media (max-width:860px){.tbx,.joingrid,.chain{grid-template-columns:1fr}.wts,.scorebar,.slbl{grid-template-columns:1fr}}
+.jointbl tr[data-k]{cursor:pointer}
+.jointbl tr.on td{background:#fdf0c9;font-weight:700}
+
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="course">BUS 2110 / Week 3, Day 2</div>
+  <div class="tools">
+    <button id="fsBtn" type="button" title="Full screen (F)">Full screen</button>
+  </div>
+</header>
+
+<main id="deck">
+
+<section class="slide title-slide" data-title="Welcome">
+  <div class="inner">
+    <div class="kicker">Week 3 &middot; Where Data Comes From</div>
+    <h1>Every number starts as an event.<span>Someone ordered, someone clicked, someone paid.</span></h1>
+    <p class="lede">Today you will trace the Copper Table&#39;s data back to the systems that record it, learn how data is organized and described, and open the data for your final project.</p>
+    <div class="agenda">
+      <div><h3>Source systems</h3>Where records are created</div>
+      <div><h3>Big Data</h3>Volume, velocity, variety</div>
+      <div><h3>Data modeling</h3>Tables, keys, relationships</div>
+      <div><h3>Data dictionary</h3>Defining every field</div>
+      <div><h3>The project</h3>Your consulting case</div>
+      <div><h3>First look</h3>Spot the dirty data</div>
+      <div><h3>Clean in Excel</h3>Prepare it for analysis</div>
+      <div><h3>Log it</h3>Consultant Log entry #12</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-title="Warm-up">
+  <div class="inner">
+    <div class="kicker">Warm-up</div>
+    <h2>Yesterday in three questions</h2>
+    <p>Tap an answer.</p>
+<div class="q" data-quiz>
+<p><b>1.</b> &quot;What share of orders came from delivery last month?&quot; is which type of analytics?</p>
+<div class="opts"><button class="opt" data-right>Descriptive</button><button class="opt">Predictive</button><button class="opt">Prescriptive</button></div>
+<p class="explain">It describes what already happened.</p>
+</div>
+<div class="q" data-quiz>
+<p><b>2.</b> The loyalty program cost $1,200 and earned $1,800 in extra profit. What is the ROI?</p>
+<div class="opts"><button class="opt">33%</button><button class="opt" data-right>50%</button><button class="opt">150%</button></div>
+<p class="explain">(1,800 minus 1,200) divided by 1,200 is 50%.</p>
+</div>
+<div class="q" data-quiz>
+<p><b>3.</b> An AI says Saturday is 40% of sales. What is the best next step?</p>
+<div class="opts"><button class="opt">Use it because it sounds confident</button><button class="opt" data-right>Check it with a formula in Excel</button><button class="opt">Ask the AI to say it again</button></div>
+<p class="explain">Excel can prove the number. Confidence is not evidence.</p>
+</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Source systems">
+  <div class="inner">
+    <div class="kicker">Source systems</div>
+    <h2>Data is created by systems that record events</h2>
+    <p>A <b>source system</b> is any system where business data is first captured. Reports and dashboards are built from these records, so if the source is wrong, every report built on it is wrong too.</p>
+    <div class="strat three">
+      <div><h3>Point of sale (POS)</h3>Orders, items, prices, payments, and tips.</div>
+      <div><h3>Reservations</h3>Party size, date, time, and guest requests.</div>
+      <div><h3>Delivery app</h3>Online orders, fees, and delivery times.</div>
+      <div><h3>Inventory</h3>Ingredients received, used, and wasted.</div>
+      <div><h3>Scheduling and payroll</h3>Shifts, hours worked, and labor cost.</div>
+      <div><h3>Loyalty program</h3>Member visits, points, and rewards.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-title="Which system recorded it?">
+  <div class="inner">
+    <div class="kicker">Sort</div>
+    <h2>Where was this record created?</h2>
+    <p>Select a record, then select the system that captured it.</p>
+    <div class="pool" id="poolS" aria-label="Items to sort">
+<button class="item" draggable="true" data-ans="POS" aria-pressed="false">A table ordered two salmon dishes and a soup.</button>
+<button class="item" draggable="true" data-ans="POS" aria-pressed="false">A guest paid $84 and left a $16 tip.</button>
+<button class="item" draggable="true" data-ans="Reservations" aria-pressed="false">A party of six booked Saturday at 7:30.</button>
+<button class="item" draggable="true" data-ans="Reservations" aria-pressed="false">A guest noted a shellfish allergy for the booking.</button>
+<button class="item" draggable="true" data-ans="Delivery app" aria-pressed="false">An order was placed online with a 7-mile delivery.</button>
+<button class="item" draggable="true" data-ans="Delivery app" aria-pressed="false">A commission of 18% was charged on an order.</button>
+<button class="item" draggable="true" data-ans="Inventory" aria-pressed="false">Forty pounds of salmon arrived Tuesday morning.</button>
+<button class="item" draggable="true" data-ans="Inventory" aria-pressed="false">Six pounds of tomatoes were thrown out.</button>
+<button class="item" draggable="true" data-ans="Payroll" aria-pressed="false">A server worked a 6-hour shift.</button>
+<button class="item" draggable="true" data-ans="Payroll" aria-pressed="false">Overtime hours were approved for the cook.</button>
+    </div>
+    <div class="bins b5" id="binsS"><div class="bin" data-bin="POS" role="button" tabindex="0"><div class="bin-title">POS</div></div><div class="bin" data-bin="Reservations" role="button" tabindex="0"><div class="bin-title">Reservations</div></div><div class="bin" data-bin="Delivery app" role="button" tabindex="0"><div class="bin-title">Delivery app</div></div><div class="bin" data-bin="Inventory" role="button" tabindex="0"><div class="bin-title">Inventory</div></div><div class="bin" data-bin="Payroll" role="button" tabindex="0"><div class="bin-title">Payroll</div></div></div>
+    <div class="actions"><button class="btn" id="sortCheckS" type="button">Check my sort</button><button class="btn ghost" id="sortResetS" type="button">Start over</button><span class="feedback" id="sortFbS" aria-live="polite"></span></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Big Data">
+  <div class="inner">
+    <div class="kicker">Big Data</div>
+    <h2>Big Data is data too large, fast, or varied for ordinary tools</h2>
+    <p>The Copper Table has 120 orders in our file, which Excel handles easily. A national chain has billions. <b>Big Data</b> is described by three Vs.</p>
+    <div class="strat three">
+      <div><h3>Volume</h3><p>How much data there is.</p><p>Example: every order from 2,000 restaurants for five years.</p></div>
+      <div><h3>Velocity</h3><p>How fast data arrives and must be used.</p><p>Example: live orders and delivery locations updating every second.</p></div>
+      <div><h3>Variety</h3><p>How many different forms data takes.</p><p>Example: order tables, photos, reviews, and sensor readings.</p></div>
+    </div>
+    <div class="warn">Big Data does not mean better data. Large amounts of wrong data produce confident but wrong answers.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Which V?">
+  <div class="inner">
+    <div class="kicker">Sort</div>
+    <h2>Volume, velocity, or variety?</h2>
+    <p>Select a situation, then select the V that it describes best.</p>
+    <div class="pool" id="poolV" aria-label="Items to sort">
+<button class="item" draggable="true" data-ans="Volume" aria-pressed="false">A chain stores ten years of receipts from every location.</button>
+<button class="item" draggable="true" data-ans="Volume" aria-pressed="false">A delivery company holds billions of order records.</button>
+<button class="item" draggable="true" data-ans="Volume" aria-pressed="false">A loyalty program tracks 40 million members.</button>
+<button class="item" draggable="true" data-ans="Velocity" aria-pressed="false">Kitchen screens must show new orders within a second.</button>
+<button class="item" draggable="true" data-ans="Velocity" aria-pressed="false">A fraud system checks each card swipe as it happens.</button>
+<button class="item" draggable="true" data-ans="Velocity" aria-pressed="false">Delivery drivers&#39; locations update every few seconds.</button>
+<button class="item" draggable="true" data-ans="Variety" aria-pressed="false">Data arrives as tables, photos, voice messages, and reviews.</button>
+<button class="item" draggable="true" data-ans="Variety" aria-pressed="false">Sales data is combined with weather, social media, and maps.</button>
+<button class="item" draggable="true" data-ans="Variety" aria-pressed="false">Spreadsheets, PDFs, and emails all hold relevant facts.</button>
+    </div>
+    <div class="bins b3" id="binsV"><div class="bin" data-bin="Volume" role="button" tabindex="0"><div class="bin-title">Volume</div></div><div class="bin" data-bin="Velocity" role="button" tabindex="0"><div class="bin-title">Velocity</div></div><div class="bin" data-bin="Variety" role="button" tabindex="0"><div class="bin-title">Variety</div></div></div>
+    <div class="actions"><button class="btn" id="sortCheckV" type="button">Check my sort</button><button class="btn ghost" id="sortResetV" type="button">Start over</button><span class="feedback" id="sortFbV" aria-live="polite"></span></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Structured or unstructured?">
+  <div class="inner">
+    <div class="kicker">Data types</div>
+    <h2>Structured data fits in rows and columns</h2>
+    <p><b>Structured data</b> has a fixed layout, like an order table. <b>Unstructured data</b> has no fixed layout, like a review or a photo. Most business data is unstructured, but most analysis in Excel uses structured data.</p>
+<div class="dilist"><div class="di five" data-ans="Structured"><p>Table of orders: date, item, quantity, price.</p><div class="dibtns"><button type="button" data-pick="Structured">Structured</button><button type="button" data-pick="Unstructured">Unstructured</button></div><p class="diwhy">Fixed columns, so it is structured.</p></div><div class="di five" data-ans="Unstructured"><p>A guest&#39;s 200-word online review of the pasta.</p><div class="dibtns"><button type="button" data-pick="Structured">Structured</button><button type="button" data-pick="Unstructured">Unstructured</button></div><p class="diwhy">Free text has no fixed layout.</p></div><div class="di five" data-ans="Structured"><p>A column of daily sales totals.</p><div class="dibtns"><button type="button" data-pick="Structured">Structured</button><button type="button" data-pick="Unstructured">Unstructured</button></div><p class="diwhy">Numbers in fixed columns are structured.</p></div><div class="di five" data-ans="Unstructured"><p>A photo of the plated salmon.</p><div class="dibtns"><button type="button" data-pick="Structured">Structured</button><button type="button" data-pick="Unstructured">Unstructured</button></div><p class="diwhy">Images are unstructured.</p></div><div class="di five" data-ans="Unstructured"><p>A recorded voice message asking about a reservation.</p><div class="dibtns"><button type="button" data-pick="Structured">Structured</button><button type="button" data-pick="Unstructured">Unstructured</button></div><p class="diwhy">Audio is unstructured.</p></div></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Data modeling">
+  <div class="inner">
+    <div class="kicker">Data modeling</div>
+    <h2>A data model organizes data into related tables</h2>
+    <p>Instead of repeating a dish&#39;s name and price on every order, a data model stores each fact once and links the tables with keys.</p>
+    <div class="strat">
+      <div><h3>Table (entity)</h3>A group of records about one kind of thing, such as Orders or Menu.</div>
+      <div><h3>Field (attribute)</h3>One piece of information about a record, such as Price.</div>
+      <div><h3>Primary key</h3>A field that uniquely identifies each record, such as ItemID.</div>
+      <div><h3>Foreign key</h3>A field that points to another table&#39;s primary key, such as ItemID in Orders.</div>
+    </div>
+    <div class="warn">Why bother? If the price of Salmon changes, you update one row in Menu instead of thousands of orders.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Follow the key">
+  <div class="inner">
+    <div class="kicker">Interactive</div>
+    <h2>Follow the key from an order to the menu</h2>
+    <p>Select an order. The ItemID in the Orders table matches the ItemID in the Menu table.</p>
+    <div class="joingrid">
+      <div><b>Orders</b><table class="jointbl" id="jOrders"><tr><th>OrderID</th><th>Qty</th><th>ItemID</th></tr>
+        <tr data-k="S1"><td>7001</td><td>2</td><td>S1</td></tr>
+        <tr data-k="T3"><td>7002</td><td>1</td><td>T3</td></tr>
+        <tr data-k="B2"><td>7003</td><td>3</td><td>B2</td></tr>
+        <tr data-k="S1"><td>7004</td><td>1</td><td>S1</td></tr></table></div>
+      <div><b>Menu</b><table class="jointbl" id="jMenu"><tr><th>ItemID</th><th>Item</th><th>Price</th></tr>
+        <tr data-k="S1"><td>S1</td><td>Salmon</td><td>28</td></tr>
+        <tr data-k="B2"><td>B2</td><td>Burger</td><td>16</td></tr>
+        <tr data-k="T3"><td>T3</td><td>Tacos</td><td>15</td></tr></table></div>
+      <div><b>What you have found</b><div class="warn" id="jMsg" aria-live="polite">Select an order.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-title="Which table?">
+  <div class="inner">
+    <div class="kicker">Sort</div>
+    <h2>Which table does each field belong to?</h2>
+    <p>Select a field, then select the table where it should be stored once.</p>
+    <div class="pool" id="poolT" aria-label="Items to sort">
+<button class="item" draggable="true" data-ans="Orders" aria-pressed="false">OrderDate</button>
+<button class="item" draggable="true" data-ans="Orders" aria-pressed="false">Qty</button>
+<button class="item" draggable="true" data-ans="Orders" aria-pressed="false">ChannelID</button>
+<button class="item" draggable="true" data-ans="Menu" aria-pressed="false">ItemName</button>
+<button class="item" draggable="true" data-ans="Menu" aria-pressed="false">Price</button>
+<button class="item" draggable="true" data-ans="Menu" aria-pressed="false">Cost</button>
+<button class="item" draggable="true" data-ans="Channels" aria-pressed="false">ChannelName</button>
+<button class="item" draggable="true" data-ans="Channels" aria-pressed="false">CommissionRate</button>
+<button class="item" draggable="true" data-ans="Channels" aria-pressed="false">IsThirdParty</button>
+    </div>
+    <div class="bins b3" id="binsT"><div class="bin" data-bin="Orders" role="button" tabindex="0"><div class="bin-title">Orders</div></div><div class="bin" data-bin="Menu" role="button" tabindex="0"><div class="bin-title">Menu</div></div><div class="bin" data-bin="Channels" role="button" tabindex="0"><div class="bin-title">Channels</div></div></div>
+    <div class="actions"><button class="btn" id="sortCheckT" type="button">Check my sort</button><button class="btn ghost" id="sortResetT" type="button">Start over</button><span class="feedback" id="sortFbT" aria-live="polite"></span></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Data dictionary">
+  <div class="inner">
+    <div class="kicker">Data dictionary</div>
+    <h2>A data dictionary defines every field</h2>
+    <p>A <b>data dictionary</b> describes each field so everyone reads the data the same way. Without one, two analysts can use the same column and mean different things.</p>
+    <table class="dtab xlike"><tr><th>Field</th><th>Meaning</th><th>Type</th><th>Allowed values</th></tr>
+      <tr><td>Price</td><td>Menu price for one item</td><td>Currency</td><td>0 or more</td></tr>
+      <tr><td>Channel</td><td>How the guest ordered</td><td>Text</td><td>Dine-in, Pickup, Delivery</td></tr>
+      <tr><td>Qty</td><td>Number of that item ordered</td><td>Whole number</td><td>1 to 10</td></tr></table>
+    <div class="warn">Notice that Qty allows only 1 to 10. That rule would have caught the 40 in our data.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Build the dictionary">
+  <div class="inner">
+    <div class="kicker">Interactive</div>
+    <h2>Choose the right type for each field</h2>
+    <p>For each field in the Copper Table file, pick the data type that fits.</p>
+    <table class="dtab xlike" id="ddT">
+      <tr><th>Field</th><th>Example</th><th>Data type</th></tr>
+      <tr><td>OrderID</td><td>5001</td><td><select class="sel" data-a="Identifier"><option value="">Choose</option><option>Identifier</option><option>Quantity</option><option>Currency</option><option>Date</option><option>Category (text)</option></select></td></tr>
+      <tr><td>Date</td><td>10/6/25</td><td><select class="sel" data-a="Date"><option value="">Choose</option><option>Identifier</option><option>Quantity</option><option>Currency</option><option>Date</option><option>Category (text)</option></select></td></tr>
+      <tr><td>Channel</td><td>Delivery</td><td><select class="sel" data-a="Category (text)"><option value="">Choose</option><option>Identifier</option><option>Quantity</option><option>Currency</option><option>Date</option><option>Category (text)</option></select></td></tr>
+      <tr><td>Qty</td><td>2</td><td><select class="sel" data-a="Quantity"><option value="">Choose</option><option>Identifier</option><option>Quantity</option><option>Currency</option><option>Date</option><option>Category (text)</option></select></td></tr>
+      <tr><td>Price</td><td>28</td><td><select class="sel" data-a="Currency"><option value="">Choose</option><option>Identifier</option><option>Quantity</option><option>Currency</option><option>Date</option><option>Category (text)</option></select></td></tr>
+    </table>
+    <div class="actions"><button class="btn" id="ddCheck" type="button">Check</button><span class="feedback" id="ddFb" aria-live="polite"></span></div>
+    <div class="warn">An ID is a label, not a quantity. You would never add up order numbers.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="The project">
+  <div class="inner">
+    <div class="kicker">Final project</div>
+    <h2>Your project: advise the Copper Table</h2>
+    <p>The owner has noticed that delivery orders are growing, but profit does not seem to be growing with them. She hires your team of consultants to find out why and recommend what to do.</p>
+    <div class="strat three">
+      <div><h3>The question</h3>The owner asks: should the Copper Table encourage delivery orders, and if so, how? Your team turns that into one specific question this data can answer.</div>
+      <div><h3>The data</h3>Three months of orders: date, channel, item, quantity, price, and cost.</div>
+      <div><h3>The deliverable</h3>A management deliverable and a five-minute team presentation, with a recommendation you can defend. This is Assignment 3.</div>
+    </div>
+    <div class="warn">Today you prepare the data. Tomorrow and Thursday you analyze and visualize it. Friday you present.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="The project data">
+  <div class="inner">
+    <div class="kicker">Final project</div>
+    <h2>The order file</h2>
+    <p>Copy the data into Excel. If it lands in one column, use <b>Data</b>, <b>Text to Columns</b>, and choose Comma. This is sample data with no real guests.</p>
+    <textarea class="csvbox" id="csvData" readonly>OrderID,Date,Day,Channel,Item,Category,Qty,Price,Cost
+5001,10/6/25,Mon,Dine-in,Salmon,Entree,2,28,11
+5002,10/6/25,Mon,Dine-in,Soup,Starter,3,9,2
+5003,10/8/25,Wed,Dine-in,Steak,Entree,2,34,15
+5004,10/8/25,Wed,Dine-in,Soup,Starter,3,9,2
+5005,10/9/25,Thu,delivery,Tacos,Entree,1,15,4
+5006,10/10/25,Fri,Dine-in,Cake,Dessert,2,10,3
+5007,10/10/25,Fri,Dine-in,Salad,Starter,2,12,3
+5008,10/11/25,Sat,Delivery,Tacos,Entree,1,15,4
+5009,10/11/25,Sat,Delivery,Burger,Entree,1,16,5
+5010,10/12/25,Sun,Dine-in,Steak,Entree,4,34,15
+5011,10/12/25,Sun,Dine-in,Salad,Starter,1,12,3
+5012,10/13/25,Mon,delivery,Pasta,Entree,2,18,5
+5013,10/14/25,Tue,Dine-in,Soup,Starter,3,9,2
+5014,10/15/25,Wed,Dine-in,Burger,Entree,4,16,5
+5015,10/16/25,Thu,Dine-in,Pasta,Entree,40,18,5
+5016,10/16/25,Thu,DINE-IN,Steak,Entree,2,34,15
+5017,10/17/25,Fri,Dine-in,Salad,Starter,2,12,3
+5018,10/17/25,Fri,delivery,Tacos,Entree,1,15,4
+5019,10/18/25,Sat,Dine-in,Steak,Entree,2,34,15
+5020,10/18/25,Sat,Dine-in,Salad,Starter,2,12,3
+5021,10/21/25,Tue,Dine-in,Cake,Dessert,4,10,3
+5022,10/22/25,Wed,Delivery,Tacos,Entree,1,15,4
+5023,10/22/25,Wed,Delivery,Pasta,Entree,2,18,5
+5024,10/22/25,Wed,Pickup,Steak,Entree,1,34,15
+5025,10/23/25,Thu,Dine-in,Salmon,Entree,4,28,11
+5026,10/23/25,Thu,Dine-in,Steak,Entree,2,34,15
+5027,10/23/25,Thu,Delivery,Tacos,Entree,3,15,4
+5028,10/24/25,Fri,Pickup,Tacos,Entree,3,15,4
+5029,10/24/25,Fri,Delivery,Soup,Starter,1,9,2
+5030,10/25/25,Sat,Pickup,Salmon,Entree,1,28,11
+5030,10/25/25,Sat,Pickup,Salmon,Entree,1,28,11
+5031,10/25/25,Sat,Dine-in,Cake,Dessert,2,10,3
+5032,10/26/25,Sun,Dine-in,Burger,Entree,3,16,5
+5033,10/26/25,Sun,Dine-in,Salmon,Entree,2,28,11
+5034,10/27/25,Mon,Dine-in,Salad,Starter,3,12,3
+5035,10/28/25,Tue,Dine-in,Salad,Starter,1,12,3
+5036,10/28/25,Tue,Dine-in,Salmon,Entree,4,28,11
+5037,10/30/25,Thu,Delivery,Burger,Entree,1,16,5
+5038,10/31/25,Fri,DINE-IN,Salmon,Entree,1,28,11
+5039,10/31/25,Fri,Dine-in,Salmon,Entree,3,28,11
+5040,10/31/25,Fri,Dine-in,Steak,Entree,2,34,15
+5041,11/1/25,Sat,Dine-in,Salmon,Entree,4,28,11
+5042,11/1/25,Sat,Dine-in,Salmon,Entree,2,28,11
+5043,11/1/25,Sat,Pickup,Soup,Starter,1,9,2
+5044,11/1/25,Sat,Dine-in,Soup,Starter,3,9,2
+5045,11/2/25,Sun,Dine-in,Tacos,Entree,2,15,4
+5046,11/2/25,Sun,Delivery,Burger,Entree,2,16,5
+5047,11/4/25,Tue,Dine-in,Salad,Starter,2,12,3
+5048,11/6/25,Thu,Dine-in,Steak,Entree,2,34,15
+5049,11/6/25,Thu,Pickup,Salad,Starter,2,12,3
+5050,11/7/25,Fri,Dine-in,Soup,Starter,2,9,2
+5051,11/7/25,Fri,Dine-in,Steak,Entree,3,34,15
+5052,11/7/25,Fri,Delivery,Pasta,Entree,2,18,5
+5053,11/7/25,Fri,Dine-in,Salmon,Entree,2,28,11
+5054,11/8/25,Sat,delivery,Salad,Starter,1,12,3
+5055,11/8/25,Sat,Dine-in,Salmon,Entree,2,28,11
+5056,11/9/25,Sun,Dine-in,Salmon,Entree,2,28,11
+5057,11/9/25,Sun,Dine-in,Steak,Entree,2,34,15
+5058,11/9/25,Sun,Dine-in,Salad,Starter,3,12,3
+5059,11/10/25,Mon,Delivery,Tacos,Entree,1,15,4
+5060,11/11/25,Tue,Delivery,Burger,Entree,1,16,5
+5061,11/12/25,Wed,Dine-in,Burger,Entree,2,16,5
+5062,11/13/25,Thu,Delivery,Cake,Dessert,2,10,3
+5063,11/13/25,Thu,Dine-in,Salmon,Entree,4,28,11
+5064,11/16/25,Sun,Dine-in,Steak,Entree,3,34,15
+5065,11/16/25,Sun,Dine-in,Cake,Dessert,4,10,3
+5066,11/16/25,Sun,Dine-in,Salmon,Entree,4,28,11
+5067,11/19/25,Wed,Dine-in,Cake,Dessert,2,10,3
+5068,11/20/25,Thu,Delivery,Pasta,Entree,1,18,5
+5069,11/20/25,Thu,Delivery,Pasta,Entree,1,18,5
+5070,11/21/25,Fri,Delivery,Burger,Entree,1,16,5
+5071,11/21/25,Fri,Delivery,Salad,Starter,3,12,3
+5072,11/21/25,Fri,Delivery,Burger,Entree,1,16,5
+5073,11/22/25,Sat,Dine-in,Steak,Entree,3,34,15
+5074,11/22/25,Sat,Dine-in,Salmon,Entree,2,28,11
+5074,11/22/25,Sat,Dine-in,Salmon,Entree,2,28,11
+5075,11/23/25,Sun,Delivery,Burger,Entree,1,16,5
+5076,11/23/25,Sun,Pickup,Steak,Entree,1,34,15
+5077,11/24/25,Mon,Dine-in,Salad,Starter,2,12,3
+5078,11/27/25,Thu,Dine-in,Burger,Entree,2,16,5
+5079,11/30/25,Sun,Delivery,Tacos,Entree,2,15,4
+5080,12/2/25,Tue,Pickup,Burger,Entree,3,16,5
+5081,12/2/25,Tue,Dine-in,Pasta,Entree,2,18,5
+5082,12/4/25,Thu,Pickup,Pasta,Entree,2,18,5
+5083,12/5/25,Fri,Pickup,Pasta,Entree,2,18,5
+5084,12/5/25,Fri,Dine-in,Salmon,Entree,2,28,11
+5085,12/5/25,Fri,Delivery,Burger,Entree,1,16,5
+5086,12/6/25,Sat,Delivery,Steak,Entree,2,34,15
+5087,12/7/25,Sun,Delivery,Salmon,Entree,3,28,11
+5088,12/9/25,Tue,Dine-in,Salad,Starter,3,12,3
+5089,12/11/25,Thu,Dine-in,Pasta,Entree,2,18,5
+5090,12/11/25,Thu,Pickup,Cake,Dessert,1,10,3
+5091,12/11/25,Thu,Delivery,Salad,Starter,2,12,3
+5092,12/12/25,Fri,Delivery,Burger,Entree,1,16,5
+5093,12/13/25,Sat,Dine-in,Steak,Entree,1,34,15
+5094,12/13/25,Sat,Pickup,Salad,Starter,1,12,3
+5095,12/13/25,Sat,Dine-in,Salad,Starter,1,12,3
+5096,12/14/25,Sun,Dine-in,Soup,Starter,2,9,2
+5097,12/14/25,Sun,Delivery,Tacos,Entree,2,15,4
+5098,12/15/25,Mon,Dine-in,Steak,Entree,4,34,15
+5099,12/15/25,Mon,Delivery,Salmon,Entree,1,28,11
+5100,12/16/25,Tue,Delivery,Pasta,Entree,2,18,5
+5101,12/17/25,Wed,Delivery,Tacos,Entree,2,15,4
+5102,12/18/25,Thu,Dine-in,Steak,Entree,4,34,15
+5103,12/18/25,Thu,Delivery,Tacos,Entree,1,15,4
+5104,12/18/25,Thu,Delivery,Steak,Entree,3,34,15
+5105,12/19/25,Fri,Dine-in,Salmon,Entree,1,28,11
+5106,12/19/25,Fri,Delivery,Burger,Entree,1,16,5
+5107,12/20/25,Sat,Delivery,Tacos,Entree,2,15,4
+5108,12/20/25,Sat,Delivery,Soup,Starter,1,9,2
+5109,12/20/25,Sat,Dine-in,Soup,Starter,1,9,2
+5110,12/21/25,Sun,Dine-in,Salmon,Entree,2,28,11
+5111,12/21/25,Sun,Pickup,Burger,Entree,1,16,5
+5112,12/22/25,Mon,Pickup,Cake,Dessert,1,10,3
+5113,12/24/25,Wed,Delivery,Tacos,Entree,2,15,4
+5114,12/24/25,Wed,Delivery,Salad,Starter,1,12,3
+5115,12/27/25,Sat,Delivery,Tacos,Entree,1,15,4
+5116,12/27/25,Sat,Dine-in,Soup,Starter,3,9,2
+5117,12/27/25,Sat,Dine-in,Salmon,Entree,4,28,11
+5118,12/27/25,Sat,Delivery,Tacos,Entree,1,15,4
+5119,12/28/25,Sun,Dine-in,Burger,Entree,1,16,5
+5120,12/28/25,Sun,Dine-in,Tacos,Entree,3,15,4</textarea>
+    <div class="actions"><button class="btn" id="csvCopy" type="button">Copy the data</button><span class="feedback" id="csvFb" aria-live="polite"></span></div>
+    <div class="warn"><b>Fields:</b> Price is what the guest pays per item. Cost is what the kitchen spends on ingredients per item. Revenue is Qty times Price. Gross profit is Qty times (Price minus Cost).</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Spot the dirty data">
+  <div class="inner">
+    <div class="kicker">Click to flag</div>
+    <h2>Find the five problems in this excerpt</h2>
+    <p>These nine rows come from the file. Select every cell or row that needs attention, then check.</p>
+    <table class="dtab xlike" id="dirtyBox"><tr><th>OrderID</th><th>Date</th><th>Channel</th><th>Item</th><th>Qty</th><th>Price</th></tr><tr><td class="hot">5012</td><td class="hot">10/13/25</td><td class="hot" data-hot="1">delivery</td><td class="hot">Pasta</td><td class="hot">2</td><td class="hot">18</td></tr><tr><td class="hot">5013</td><td class="hot">10/14/25</td><td class="hot">Dine-in</td><td class="hot">Soup</td><td class="hot">3</td><td class="hot">9</td></tr><tr><td class="hot">5014</td><td class="hot">10/15/25</td><td class="hot">Dine-in</td><td class="hot">Burger</td><td class="hot">4</td><td class="hot">16</td></tr><tr><td class="hot">5015</td><td class="hot">10/16/25</td><td class="hot">Dine-in</td><td class="hot">Pasta</td><td class="hot" data-hot="1">40</td><td class="hot">18</td></tr><tr><td class="hot">5016</td><td class="hot">10/16/25</td><td class="hot" data-hot="1">DINE-IN</td><td class="hot">Steak</td><td class="hot">2</td><td class="hot">34</td></tr><tr><td class="hot">5017</td><td class="hot">10/17/25</td><td class="hot">Dine-in</td><td class="hot">Salad</td><td class="hot">2</td><td class="hot">12</td></tr><tr><td class="hot">5018</td><td class="hot">10/17/25</td><td class="hot" data-hot="1">delivery</td><td class="hot">Tacos</td><td class="hot">1</td><td class="hot">15</td></tr><tr><td class="hot">5030</td><td class="hot">10/25/25</td><td class="hot">Pickup</td><td class="hot">Salmon</td><td class="hot">1</td><td class="hot">28</td></tr><tr><td class="hot" data-hot="1">5030</td><td class="hot">10/25/25</td><td class="hot">Pickup</td><td class="hot">Salmon</td><td class="hot">1</td><td class="hot">28</td></tr></table>
+    <div class="actions"><button class="btn" id="dirtyCheck" type="button">Check</button><button class="btn" id="dirtyReset" type="button">Reset</button><span class="feedback" id="dirtyFb" aria-live="polite"></span></div>
+    <div class="warn" id="dirtyRev" hidden>Three channel names are spelled inconsistently, one quantity of 40 breaks the 1 to 10 rule, and order 5030 appears twice. The same problems appear elsewhere in the full file.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Plan with AI">
+  <div class="inner">
+    <div class="kicker">AI as a planner</div>
+    <h2>Ask AI for a cleaning plan, then check it</h2>
+    <p>Open Gemini with your Elon account. Ask for a plan, not a cleaned file. Paste only the header row and the first 30 rows. This is sample data with no real guests.</p>
+    <textarea class="csvbox" id="planPrompt" readonly style="height:170px">I am cleaning a restaurant order export. It is sample data with no real people. The columns are OrderID, Date, Day, Channel, Item, Category, Qty, Price, Cost. List the data-quality problems I should look for, grouped as duplicates, inconsistent formats, outliers, and missing values. For each one, tell me how to find it in Excel. Do not fix or change the data. Then tell me which of your suggestions I must verify myself.
+
+[paste the header row and the first 30 rows here]</textarea>
+    <div class="actions"><button class="btn" type="button" data-copy="planPrompt">Copy the prompt</button><span class="feedback" aria-live="polite"></span></div>
+    <div class="steps"><label><input type="checkbox"><span>Compare its list with the five problems you just found. What did it catch, and what did it miss or invent?</span></label><label><input type="checkbox"><span>Write down one suggestion you accepted and one you rejected, with your reason. You will need both for your Evidence Trail and your defense on Friday.</span></label></div>
+    <div class="warn">The AI has seen 30 rows. You are responsible for all 122. You clean the data yourself in Excel on the next slide.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Clean the project data">
+  <div class="inner">
+    <div class="kicker">Clean in Excel</div>
+    <h2>Clean the project data</h2>
+    <p>Work on a copy of the file. Keep the original untouched.</p>
+    <div class="xlsplit"><div><table class="dtab xlike"><tr><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th></tr><tr><td>OrderID</td><td>Date</td><td>Channel</td><td>Item</td><td>Qty</td><td>Price</td></tr><tr><td class="n">5012</td><td>10/13/25</td><td>delivery</td><td>Pasta</td><td class="n">2</td><td class="n">18</td></tr><tr><td class="n">5015</td><td>10/16/25</td><td>Dine-in</td><td>Pasta</td><td class="n">40</td><td class="n">18</td></tr><tr><td class="n">5016</td><td>10/16/25</td><td>DINE-IN</td><td>Steak</td><td class="n">2</td><td class="n">34</td></tr><tr><td class="n">5030</td><td>10/25/25</td><td>Pickup</td><td>Salmon</td><td class="n">1</td><td class="n">28</td></tr><tr><td class="n">5030</td><td>10/25/25</td><td>Pickup</td><td>Salmon</td><td class="n">1</td><td class="n">28</td></tr></table></div><div class="steps"><label><input type="checkbox"><span>Sort or filter and standardize Channel to <b>Dine-in</b>, <b>Pickup</b> or <b>Delivery</b>.</span></label><label><input type="checkbox"><span>Use <b>Remove Duplicates</b> on OrderID. There are two duplicate orders.</span></label><label><input type="checkbox"><span>Order 5015 should be Qty <b>2</b>. In the real world you would confirm this with the POS record. Fix it and note the change.</span></label><label><input type="checkbox"><span>Add a column <b>Revenue</b> with <code>=Qty*Price</code> and fill down.</span></label><label><input type="checkbox"><span>Check the total with <code>=SUM()</code> and the count of rows.</span></label></div></div>
+    <div class="check">
+      <label for="cl1"><b>How many orders remain after removing duplicates?</b></label>
+      <input id="cl1" type="text" inputmode="decimal" placeholder="a number">
+      <button class="btn" id="cl1Btn" type="button">Check</button>
+      <span class="feedback" id="cl1Fb" aria-live="polite"></span>
+    </div>
+    <div class="check">
+      <label for="cl2"><b>What is total revenue after cleaning? (Number only.)</b></label>
+      <input id="cl2" type="text" inputmode="decimal" placeholder="a dollar amount">
+      <button class="btn" id="cl2Btn" type="button">Check</button>
+      <span class="feedback" id="cl2Fb" aria-live="polite"></span>
+    </div>
+    <div class="check">
+      <label for="cl3"><b>What would total revenue have been if you had left the duplicates and the Qty 40 in? (Number only.)</b></label>
+      <input id="cl3" type="text" inputmode="decimal" placeholder="a dollar amount">
+      <button class="btn" id="cl3Btn" type="button">Check</button>
+      <span class="feedback" id="cl3Fb" aria-live="polite"></span>
+    </div>
+<div class="warn">The dirty file overstates revenue by $768. That is the cost of not cleaning.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="First look: by channel">
+  <div class="inner">
+    <div class="kicker">Clean in Excel</div>
+    <h2>First look: by channel</h2>
+    <p>Now that the data is clean, filter by channel and use a Total Row to compare. Turn the data into a table with <b>Insert</b>, <b>Table</b> and turn on <b>Total Row</b>.</p>
+    <div class="xlsplit"><div><table class="dtab xlike"><tr><th>A</th><th>B</th><th>C</th></tr><tr><td>Channel</td><td>Orders</td><td>Revenue</td></tr><tr><td>Dine-in</td><td>?</td><td>?</td></tr><tr><td>Delivery</td><td>?</td><td>?</td></tr><tr><td>Pickup</td><td>?</td><td>?</td></tr></table></div><div class="steps"><label><input type="checkbox"><span>Click inside your data and press <b>Ctrl+T</b> to make it a table. Check &quot;My table has headers.&quot;</span></label><label><input type="checkbox"><span>In <b>Table Design</b>, check <b>Total Row</b>.</span></label><label><input type="checkbox"><span>Use the Channel filter arrow to show only Delivery. Read the Revenue total and the row count.</span></label><label><input type="checkbox"><span>Repeat for Dine-in and Pickup.</span></label></div></div>
+    <div class="check">
+      <label for="fl1"><b>How many Delivery orders are there?</b></label>
+      <input id="fl1" type="text" inputmode="decimal" placeholder="a number">
+      <button class="btn" id="fl1Btn" type="button">Check</button>
+      <span class="feedback" id="fl1Fb" aria-live="polite"></span>
+    </div>
+    <div class="check">
+      <label for="fl2"><b>What is Delivery revenue? (Number only.)</b></label>
+      <input id="fl2" type="text" inputmode="decimal" placeholder="a dollar amount">
+      <button class="btn" id="fl2Btn" type="button">Check</button>
+      <span class="feedback" id="fl2Fb" aria-live="polite"></span>
+    </div>
+    <div class="check">
+      <label for="fl3"><b>What is Dine-in revenue? (Number only.)</b></label>
+      <input id="fl3" type="text" inputmode="decimal" placeholder="a dollar amount">
+      <button class="btn" id="fl3Btn" type="button">Check</button>
+      <span class="feedback" id="fl3Fb" aria-live="polite"></span>
+    </div>
+<div class="warn">Delivery is $1,075 of revenue from 41 orders. Hold that thought. Tomorrow you will see how much of that is left after the delivery commission.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Team data dictionary">
+  <div class="inner">
+    <div class="kicker">Assignment 3 &middot; Know your data</div>
+    <h2>Start your team&#39;s data dictionary</h2>
+    <p>Before you analyze, show that you understand what you are working with. Start a sheet named <b>Dictionary</b> in your project workbook and write one row for each variable you will use.</p>
+    <table class="dtab"><tr><th>Variable</th><th>What it represents</th><th>Type or format</th><th>Units or categories</th><th>Problems found</th><th>What an analyst should know</th></tr><tr><td>Channel</td><td>How the guest ordered</td><td>Text (category)</td><td>Dine-in, Pickup, Delivery</td><td>Mixed capitalization in 6 rows</td><td>Standardized before filtering</td></tr><tr><td>Qty</td><td>Number of that item on the order</td><td>Whole number</td><td>Items, 1 to 10</td><td>Order 5015 showed 40</td><td>Corrected to 2. Confirm with the POS record</td></tr><tr><td>Cost</td><td>?</td><td>?</td><td>?</td><td>?</td><td>?</td></tr></table>
+    <div class="steps"><label><input type="checkbox"><span>Finish the Cost row, then add rows for Date, Price, and every calculated field you create (Revenue so far).</span></label><label><input type="checkbox"><span>Below the table, list each change you made to the data today and why. That is your preparation record.</span></label><label><input type="checkbox"><span>One judgment call goes in every member&#39;s Consultant Log tonight: what you decided about order 5015 and how you would defend it.</span></label></div>
+    <div class="warn">The data dictionary and preparation record are Part 2 of the Final Consulting Engagement. Keep them in the workbook your whole team uses.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Good question">
+  <div class="inner">
+    <div class="kicker">Project analysis</div>
+    <h2>Which question can this data answer?</h2>
+    <p>Good analysis starts with a question the data can really answer.</p>
+<div class="q" data-quiz>
+<p></p>
+<div class="opts"><button class="opt">Why do guests dislike our service?</button><button class="opt" data-right>Which channel earns the most profit per order?</button><button class="opt">Will our competitors open next year?</button><button class="opt">What are guests thinking when they order?</button></div>
+<p class="explain">The file holds orders, items, prices, costs, and channels. It can show profit per order by channel. It cannot show opinions or competitors.</p>
+</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Your call">
+  <div class="inner">
+    <div class="kicker">Decide</div>
+    <h2>Order 5015 shows a quantity of 40</h2>
+    <p>One Pasta order shows Qty 40, but the Copper Table has never sold more than a few at a time. What do you do?</p>
+<div class="q" data-quiz>
+<p></p>
+<div class="opts"><button class="opt">Delete the row so it does not distort the totals.</button><button class="opt">Change it to 2 without telling anyone.</button><button class="opt" data-right>Flag it, check the POS record or ask the manager, correct it, and note the change.</button><button class="opt">Leave it in because it is in the data.</button></div>
+<p class="explain">Check the source system. Your correction should be documented so others can follow what you did and why.</p>
+</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Log it">
+  <div class="inner">
+    <div class="logtop">
+      <div>
+        <div class="kicker">Consultant Log</div>
+        <h1 class="logit">LOG IT</h1>
+        <p class="lede">Laptops closed. Notebook only.</p>
+      </div>
+      <div class="entryhead" aria-label="Entry heading">
+        <div><b>Date:</b> <span class="blank"></span></div>
+        <div><b>Log #:</b> <span class="blank"></span></div>
+        <div><b>Topic:</b> Where Data Comes From</div>
+      </div>
+    </div>
+    <div class="qstrip" aria-label="Today's questions">
+      <div class="on">KNOW<small>What do I understand?</small></div>
+      <div class="on">DO<small>What can I do?</small></div>
+      <div class="on">DECIDE<small>What decision could this support?</small></div>
+      <div class="on">VERIFY<small>How do I know?</small></div>
+      <div class="on">DEFEND<small>Could I explain and defend this?</small></div>
+    </div>
+    <div class="prompts"><div><span class="tag">KNOW</span><p>Name three source systems at the Copper Table and one thing each records.</p></div><div><span class="tag">DO</span><p>Describe how you cleaned the project data in Excel, step by step.</p></div><div><span class="tag">DECIDE</span><p>Order 5015 shows Qty 40. What did you do and why?</p></div><div><span class="tag">VERIFY</span><p>How did you check that your cleaned total of $4,916 is right?</p></div><div><span class="tag">DEFEND</span><p>A classmate says, "Dirty data is fine because the totals are close." Defend or challenge that claim.</p></div></div>
+    <div class="warn"><b>Looking ahead:</b> tomorrow we build the data warehouse idea, turn data into business intelligence, and use Tableau. Save your cleaned data as an Excel workbook, and make sure Tableau opens on your laptop tonight.</div>
+  </div>
+</section>
+
+
+</main>
+
+<footer class="nav">
+  <button class="navbtn" id="prev" type="button">Back</button>
+  <div class="dots" id="dots" role="tablist" aria-label="Slides"></div>
+  <span class="count" id="count"></span>
+  <button class="navbtn" id="next" type="button">Next</button>
+</footer>
+
+<script>
+(function(){
+  const slides=[...document.querySelectorAll('.slide')];
+  const dots=document.getElementById('dots');
+  let cur=0;
+  slides.forEach((s,i)=>{
+    const d=document.createElement('button');
+    d.className='dot';d.type='button';d.setAttribute('aria-label',(i+1)+': '+s.dataset.title);d.title=s.dataset.title;
+    d.onclick=()=>go(i);dots.appendChild(d);
+  });
+  function go(i){
+    cur=Math.max(0,Math.min(slides.length-1,i));
+    slides.forEach((s,j)=>s.classList.toggle('active',j===cur));
+    [...dots.children].forEach((d,j)=>d.setAttribute('aria-current',j===cur?'true':'false'));
+    document.getElementById('prev').disabled=cur===0;
+    document.getElementById('next').disabled=cur===slides.length-1;
+    document.getElementById('count').textContent=(cur+1)+' / '+slides.length;
+    slides[cur].scrollTop=0;
+    try{history.replaceState(null,'','#'+(cur+1))}catch(e){}
+  }
+  document.getElementById('prev').onclick=()=>go(cur-1);
+  document.getElementById('next').onclick=()=>go(cur+1);
+  document.addEventListener('keydown',e=>{
+    if(e.target.matches('textarea,input'))return;
+    if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();go(cur+1)}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur-1)}
+    else if(e.key==='f'||e.key==='F'){toggleFs()}
+  });
+  let tx=null;
+  document.getElementById('deck').addEventListener('touchstart',e=>{tx=e.touches[0].clientX},{passive:true});
+  document.getElementById('deck').addEventListener('touchend',e=>{
+    if(tx===null||e.target.closest('.item,.bin,.pool'))return;
+    const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>70)go(cur+(dx<0?1:-1));tx=null;
+  });
+  function toggleFs(){
+    try{if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen();}catch(e){}
+  }
+  document.getElementById('fsBtn').onclick=toggleFs;
+  const start=parseInt(location.hash.slice(1),10);
+  go(isNaN(start)?0:start-1);
+  document.querySelectorAll('.reveal .card').forEach(c=>c.onclick=()=>c.setAttribute('aria-expanded',c.getAttribute('aria-expanded')==='true'?'false':'true'));
+  document.querySelectorAll('[data-quiz]').forEach(q=>{
+    q.querySelectorAll('.opt').forEach(o=>o.onclick=()=>{
+      if(o.hasAttribute('data-right')){o.classList.add('right');q.querySelector('.explain').classList.add('on')}
+      else o.classList.add('wrong');
+    });
+  });
+  document.querySelectorAll('.di').forEach(d=>d.querySelectorAll('[data-pick]').forEach(b=>b.onclick=()=>{
+    d.querySelectorAll('[data-pick]').forEach(x=>x.classList.toggle('picked',x===b));
+    const ok=b.dataset.pick===d.dataset.ans;d.classList.add('done');d.classList.toggle('ok',ok);d.classList.toggle('no',!ok);
+  }));
+  function makeSort(poolId,binsId,checkId,resetId,fbId,total){
+    const pool=document.getElementById(poolId),bins=document.getElementById(binsId),fb=document.getElementById(fbId);
+    const original=[...pool.children];
+    let sel=null;
+    function select(it){
+      if(sel)sel.setAttribute('aria-pressed','false');
+      sel=(sel===it)?null:it;
+      if(sel)sel.setAttribute('aria-pressed','true');
+    }
+    function place(it,bin){it.classList.remove('right','wrong');bin.appendChild(it);it.setAttribute('aria-pressed','false');sel=null;fb.textContent=''}
+    pool.addEventListener('click',e=>{const it=e.target.closest('.item');if(it)select(it)});
+    bins.addEventListener('click',e=>{
+      const it=e.target.closest('.item');
+      if(it){select(it);return}
+      const bin=e.target.closest('.bin');if(bin&&sel)place(sel,bin);
+    });
+    bins.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.classList.contains('bin')&&sel){e.preventDefault();place(sel,e.target)}});
+    original.forEach(it=>it.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain','x');sel=it}));
+    bins.querySelectorAll('.bin').forEach(b=>{
+      b.addEventListener('dragover',e=>{e.preventDefault();b.classList.add('drop')});
+      b.addEventListener('dragleave',()=>b.classList.remove('drop'));
+      b.addEventListener('drop',e=>{e.preventDefault();b.classList.remove('drop');if(sel)place(sel,b)});
+    });
+    pool.addEventListener('dragover',e=>e.preventDefault());
+    pool.addEventListener('drop',e=>{e.preventDefault();if(sel)place(sel,pool)});
+    document.getElementById(checkId).onclick=()=>{
+      let right=0;
+      bins.querySelectorAll('.item').forEach(it=>{const ok=it.dataset.ans===it.parentElement.dataset.bin;it.classList.toggle('right',ok);it.classList.toggle('wrong',!ok);if(ok)right++});
+      const left=pool.querySelectorAll('.item').length;
+      fb.textContent=right+' of '+total+' correct'+(left?' ('+left+' still to sort)':'')+(right===total?'. Nice work.':'. Orange items are in the wrong place; move them and check again.');
+    };
+    document.getElementById(resetId).onclick=()=>{original.forEach(it=>{it.classList.remove('right','wrong');it.setAttribute('aria-pressed','false');pool.appendChild(it)});sel=null;fb.textContent=''};
+  }
+
+  function numCheck(inp,btn,fb,answers,ok,bad){
+    document.getElementById(btn).onclick=()=>{
+      const v=parseFloat(document.getElementById(inp).value.replace(/[$,%\s]/g,''));const f=document.getElementById(fb);
+      if(isNaN(v))f.textContent='Type a number first.';
+      else if(answers.some(a=>Math.abs(v-a)<0.051))f.textContent=ok;
+      else f.textContent=bad;
+    };
+  }
+
+
+  // click-to-flag game
+  function hotGame(boxId,checkId,resetId,fbId,revealId){
+    const box=document.getElementById(boxId),fb=document.getElementById(fbId),rev=revealId?document.getElementById(revealId):null;
+    const all=()=>[...box.querySelectorAll('.hot')];
+    box.addEventListener('click',e=>{const h=e.target.closest('.hot');if(h){h.classList.toggle('on');h.classList.remove('ok','bad')}});
+    document.getElementById(checkId).onclick=()=>{
+      let found=0,extra=0;const total=all().filter(h=>h.dataset.hot).length;
+      all().forEach(h=>{const on=h.classList.contains('on'),want=!!h.dataset.hot;h.classList.remove('ok','bad','miss');
+        if(on&&want){found++;h.classList.add('ok')}else if(on&&!want){extra++;h.classList.add('bad')}else if(!on&&want){h.classList.add('miss')}});
+      fb.textContent='Found '+found+' of '+total+(extra?'. '+extra+' selected '+(extra===1?'item is':'items are')+' actually fine (shown in orange).':'.')+(found===total&&!extra?' Nice work.':'');
+      if(rev)rev.hidden=false;
+    };
+    document.getElementById(resetId).onclick=()=>{all().forEach(h=>h.classList.remove('on','ok','bad','miss'));fb.textContent='';if(rev)rev.hidden=true};
+  }
+
+
+  makeSort('poolS','binsS','sortCheckS','sortResetS','sortFbS',10);
+  makeSort('poolV','binsV','sortCheckV','sortResetV','sortFbV',9);
+  makeSort('poolT','binsT','sortCheckT','sortResetT','sortFbT',9);
+  hotGame('dirtyBox','dirtyCheck','dirtyReset','dirtyFb','dirtyRev');
+  numCheck('cl1','cl1Btn','cl1Fb',[120],'Correct: 120 orders. 122 rows minus 2 duplicates.','Not quite. The file has 122 rows and 2 duplicates.');
+  numCheck('cl2','cl2Btn','cl2Fb',[4916],'Correct: $4,916.','Not quite. Fix the duplicates and the Qty 40, then sum Qty times Price.');
+  numCheck('cl3','cl3Btn','cl3Fb',[5684],'Correct: $5,684. The dirty file overstates revenue by $768.','Not quite. Sum Qty times Price over all 122 rows without fixing anything.');
+  numCheck('fl1','fl1Btn','fl1Fb',[41],'Correct: 41 Delivery orders.','Not quite. Filter Channel to Delivery and count the rows.');
+  numCheck('fl2','fl2Btn','fl2Fb',[1075],'Correct: $1,075.','Not quite. Filter to Delivery and read the Revenue total.');
+  numCheck('fl3','fl3Btn','fl3Fb',[3499],'Correct: $3,499.','Not quite. Filter to Dine-in and read the Revenue total.');
+  function copyBtn(btn,ta,fb){document.getElementById(btn).onclick=()=>{const t=document.getElementById(ta);t.focus();t.select();let ok=false;try{ok=document.execCommand('copy')}catch(e){}document.getElementById(fb).textContent=ok?'Copied.':'Selected. Press Ctrl+C (or Cmd+C) to copy.'}}
+  copyBtn('csvCopy','csvData','csvFb');
+  (function(){
+    const o=document.getElementById('jOrders'),m=document.getElementById('jMenu'),msg=document.getElementById('jMsg');
+    o.addEventListener('click',e=>{const tr=e.target.closest('tr[data-k]');if(!tr)return;
+      o.querySelectorAll('tr').forEach(r=>r.classList.remove('on'));m.querySelectorAll('tr').forEach(r=>r.classList.remove('on'));
+      tr.classList.add('on');const k=tr.dataset.k,mr=m.querySelector('tr[data-k="'+k+'"]');mr.classList.add('on');
+      const c=tr.children,d=mr.children;
+      msg.innerHTML='Order '+c[0].textContent+' has ItemID <b>'+k+'</b>. In Menu, <b>'+k+'</b> is '+d[1].textContent+' at $'+d[2].textContent+'. So the order is worth '+c[1].textContent+' &times; $'+d[2].textContent+' = <b>$'+(+c[1].textContent*+d[2].textContent)+'</b>.';
+    });
+  })();
+  (function(){
+    const t=document.getElementById('ddT'),fb=document.getElementById('ddFb');
+    document.getElementById('ddCheck').onclick=()=>{let n=0;const sel=[...t.querySelectorAll('select')];
+      sel.forEach(s=>{const ok=s.value===s.dataset.a;s.style.outline=ok?'3px solid #4a9a62':(s.value?'3px solid #d98a2b':'');if(ok)n++});
+      fb.textContent=n+' of '+sel.length+' correct.'+(n===sel.length?' Nice work.':'')};
+  })();
+
+})();
+</script>
+<script>
+/* Generic helpers for slides added in the course-alignment pass: number checks and copy buttons */
+(function(){
+  document.querySelectorAll('[data-num]').forEach(function(box){
+    var inp=box.querySelector('input'),btn=box.querySelector('button'),fb=box.querySelector('.feedback');
+    var ans=box.dataset.num.split('|').map(Number);
+    btn.onclick=function(){
+      var v=parseFloat(inp.value.replace(/[$,%\s]/g,''));
+      if(isNaN(v))fb.textContent='Type a number first.';
+      else fb.textContent=ans.some(function(a){return Math.abs(v-a)<0.051})?box.dataset.ok:box.dataset.bad;
+    };
+  });
+  document.querySelectorAll('[data-copy]').forEach(function(btn){
+    btn.onclick=function(){
+      var t=document.getElementById(btn.dataset.copy),fb=btn.parentNode.querySelector('.feedback'),ok=false;
+      t.focus();t.select();
+      try{ok=document.execCommand('copy')}catch(e){}
+      if(fb)fb.textContent=ok?'Copied.':'Selected. Press Ctrl+C (or Cmd+C) to copy.';
+    };
+  });
+})();
+</script>
+</body>
+</html>

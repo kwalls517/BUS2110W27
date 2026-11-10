@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Day 3: Technology Creates Advantage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f4f2; --surface:#ffffff; --ink:#221a1b; --muted:#5d5657; --line:#d9d6d3;
+  --maroon:#73000a; --maroon-ink:#73000a; --gold:#b59a57; --gold-soft:#efe6cf; --teal:#527b82; --teal-soft:#dde8e9;
+  --good:#2f6b3a; --good-soft:#dcefdf; --bad:#9a3412; --bad-soft:#fbe4d8;
+  --display:'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --body:'Atkinson Hyperlegible', 'Segoe UI', Arial, sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1b1617; --surface:#262021; --ink:#f1ebe8; --muted:#b9afad; --line:#433a3b;
+    --maroon:#8f1a26; --maroon-ink:#e8858e; --gold:#cdb57a; --gold-soft:#3a3222; --teal:#7fa7ad; --teal-soft:#24363a;
+    --good:#8fd19b; --good-soft:#1f3624; --bad:#f4a582; --bad-soft:#3e2519;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1b1617; --surface:#262021; --ink:#f1ebe8; --muted:#b9afad; --line:#433a3b;
+  --maroon:#8f1a26; --maroon-ink:#e8858e; --gold:#cdb57a; --gold-soft:#3a3222; --teal:#7fa7ad; --teal-soft:#24363a;
+  --good:#8fd19b; --good-soft:#1f3624; --bad:#f4a582; --bad-soft:#3e2519;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:clamp(17px,1.35vw,22px);line-height:1.5;display:flex;flex-direction:column}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+
+header.bar{display:flex;align-items:center;justify-content:space-between;padding:12px clamp(16px,4vw,48px);border-bottom:4px solid var(--gold);background:var(--maroon);color:#fff}
+header.bar .course{font-family:var(--display);font-weight:700;letter-spacing:.01em}
+header.bar .tools{display:flex;gap:8px}
+header.bar button{background:transparent;border:1px solid rgba(255,255,255,.5);border-radius:6px;padding:4px 12px;font-size:.8em;color:#fff}
+
+main{flex:1;position:relative;overflow:hidden}
+.slide{position:absolute;inset:0;overflow-y:auto;padding:clamp(20px,4vh,48px) clamp(16px,5vw,72px) 32px;display:none}
+.slide.active{display:block}
+.inner{max-width:1120px;margin:0 auto}
+@media (prefers-reduced-motion:no-preference){.slide.active .inner{animation:in .35s ease-out}}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+h1,h2,h3{font-family:var(--display);line-height:1.1;margin:0 0 .4em}
+h1{font-size:clamp(40px,5.6vw,84px);font-weight:800;letter-spacing:-.02em}
+h2{font-size:clamp(30px,3.6vw,54px);font-weight:800;letter-spacing:-.01em;color:var(--maroon-ink)}
+h3{font-size:1.15em;font-weight:700}
+p{margin:0 0 .8em;max-width:68ch}
+.lede{font-size:1.2em;color:var(--muted)}
+.kicker{font-family:var(--display);font-weight:700;color:var(--teal);margin-bottom:.5em}
+
+/* title slide */
+.title-slide .inner{display:flex;flex-direction:column;justify-content:center;min-height:100%}
+.title-slide h1 span{display:block;color:var(--maroon-ink)}
+.agenda{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:1.5em}
+.agenda div{border-top:4px solid var(--gold);padding-top:8px}
+
+/* chips / poll */
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin:1em 0}
+.chip{border:2px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 18px}
+.chip[aria-pressed="true"]{border-color:var(--teal);background:var(--teal-soft);font-weight:700}
+.bignum{font-family:var(--display);font-weight:800;font-size:clamp(56px,7vw,110px);color:var(--maroon-ink);line-height:1}
+
+/* reveal cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:1em}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;text-align:left;width:100%}
+.card .back{display:none;margin-top:.5em;color:var(--muted)}
+.card[aria-expanded="true"] .back{display:block}
+.card[aria-expanded="true"]{border-color:var(--teal)}
+.card .hint{font-size:.8em;color:var(--teal);margin-top:.4em}
+.card[aria-expanded="true"] .hint{display:none}
+
+/* the framework band: signature visual */
+.band{margin:1.4em 0 .6em}
+.band-row{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.comp{background:var(--surface);border:2px solid var(--line);border-radius:8px;padding:14px 10px;text-align:center;font-family:var(--display);font-weight:700;font-size:1.05em}
+.comp small{display:block;font-family:var(--body);font-weight:400;font-size:.72em;color:var(--muted);margin-top:4px}
+.comp.tech{border-color:var(--teal)}
+.comp.human{border-color:var(--gold)}
+.brackets{display:grid;grid-template-columns:repeat(5,1fr);column-gap:6px;margin-top:10px}
+.brk{border:3px solid;border-top:none;height:22px;border-radius:0 0 8px 8px;position:relative;margin-bottom:34px}
+.brk span{position:absolute;left:50%;top:100%;transform:translateX(-50%);font-family:var(--display);font-weight:800;padding-top:4px}
+.it{grid-column:1 / span 3;grid-row:1;border-color:var(--teal);color:var(--teal)}
+.is{grid-column:1 / span 5;grid-row:2;border-color:var(--maroon-ink);color:var(--maroon-ink)}
+.toggle{display:flex;gap:8px;margin:1em 0}
+.toggle button{border:2px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 18px;font-weight:700}
+.toggle button[aria-pressed="true"]{background:var(--maroon);border-color:var(--maroon);color:#fff}
+.band.show-it .comp.human{opacity:.25}
+.band.show-it .is-l{visibility:hidden}
+.band.show-is .it-l{visibility:hidden}
+.band-detail{background:var(--surface);border-left:6px solid var(--gold);padding:14px 18px;border-radius:0 8px 8px 0;min-height:4em}
+.band-row .comp{cursor:pointer}
+.band-row .comp[aria-pressed="true"]{background:var(--gold-soft)}
+
+/* sort activity */
+.pool{display:flex;flex-wrap:wrap;gap:8px;min-height:56px;padding:12px;border:2px dashed var(--line);border-radius:10px;margin:1em 0}
+.item{background:var(--surface);border:2px solid var(--line);border-radius:8px;padding:8px 14px;font-size:.92em}
+.item[aria-pressed="true"]{border-color:var(--maroon-ink);box-shadow:0 0 0 3px var(--gold)}
+.item.right{border-color:var(--good);background:var(--good-soft)}
+.item.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.bins{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.bin{background:var(--surface);border:2px solid var(--line);border-radius:10px;padding:10px;min-height:170px;display:flex;flex-direction:column;gap:6px;text-align:left}
+.bin-title{font-family:var(--display);font-weight:800;text-align:center;padding-bottom:6px;border-bottom:3px solid var(--teal)}
+.bin.h .bin-title{border-color:var(--gold)}
+.bin.drop{background:var(--teal-soft)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:1em}
+.btn{background:var(--maroon);color:#fff;border:none;border-radius:8px;padding:10px 20px;font-weight:700}
+.btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--line)}
+.feedback{font-weight:700}
+@media (max-width:760px){.bins,.band-row{grid-template-columns:1fr 1fr}.brackets{display:none}}
+
+/* tabs */
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:1em 0 0}
+.tabs button{border:2px solid var(--line);border-bottom:none;background:var(--bg);border-radius:8px 8px 0 0;padding:8px 16px;font-weight:700}
+.tabs button[aria-selected="true"]{background:var(--surface);border-color:var(--teal)}
+.panel{background:var(--surface);border:2px solid var(--teal);border-radius:0 10px 10px 10px;padding:18px 22px}
+.panel dl{display:grid;grid-template-columns:max-content 1fr;gap:8px 20px;margin:0}
+.panel dt{font-family:var(--display);font-weight:700}
+.panel dd{margin:0}
+
+/* quiz + scenario */
+.q{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 22px;margin-bottom:16px}
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:.6em}
+.opt{border:2px solid var(--line);background:var(--bg);border-radius:8px;padding:8px 16px;text-align:left}
+.opt.right{border-color:var(--good);background:var(--good-soft);font-weight:700}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.explain{margin-top:.6em;display:none}
+.explain.on{display:block}
+.clock{font-family:var(--display);font-weight:800;color:var(--teal)}
+.stars{font-size:1.8em;letter-spacing:.1em;color:var(--gold)}
+.scene{background:var(--surface);border-radius:10px;border:1px solid var(--line);padding:22px 26px}
+.meter{height:10px;background:var(--line);border-radius:6px;overflow:hidden;margin:6px 0 16px}
+.meter span{display:block;height:100%;background:var(--gold);width:0;transition:width .3s}
+
+.strat{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:1em}
+.strat div{background:var(--surface);border-top:5px solid var(--teal);padding:16px;border-radius:0 0 8px 8px}
+.warn{background:var(--gold-soft);border-left:6px solid var(--gold);padding:14px 18px;border-radius:0 8px 8px 0;margin-top:1.2em}
+textarea{width:100%;min-height:110px;font:inherit;padding:12px;border-radius:8px;border:2px solid var(--line);background:var(--surface);color:var(--ink)}
+
+.logtop{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:20px;border-bottom:4px solid var(--gold);padding-bottom:16px}
+.logit{color:var(--maroon-ink);margin:0;font-size:clamp(56px,7vw,110px)}
+.logtop .lede{margin:0}
+.entryhead{background:var(--surface);border:2px solid var(--ink);border-radius:4px;padding:12px 18px;display:flex;flex-direction:column;gap:6px;min-width:280px}
+.blank{display:inline-block;width:150px;border-bottom:2px solid var(--muted);height:1.1em;vertical-align:bottom}
+.qstrip{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:18px 0}
+.qstrip div{font-family:var(--display);font-weight:800;text-align:center;padding:10px 6px;border-radius:6px;border:2px solid var(--line);color:var(--muted);opacity:.55}
+.qstrip div.on{border-color:var(--maroon);background:var(--maroon);color:#fff;opacity:1}
+.qstrip small{display:block;font-family:var(--body);font-weight:400;font-size:.7em;margin-top:2px}
+.prompts{display:flex;flex-direction:column;gap:12px}
+.prompts div{display:flex;gap:16px;align-items:baseline;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 18px}
+.prompts p{margin:0}
+.tag{font-family:var(--display);font-weight:800;color:var(--maroon-ink);min-width:5.5em}
+.note{color:var(--muted);margin-top:12px}
+@media (max-width:760px){.qstrip{grid-template-columns:1fr 1fr}.prompts div{flex-direction:column;gap:4px}}
+.weekgoals{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:1em}
+.wg{background:var(--surface);border:1px solid var(--line);border-top:6px solid var(--maroon);border-radius:0 0 10px 10px;padding:18px 22px}
+.wg.excel,.wg.analytics{border-top-color:var(--teal)}
+.wg h3{color:var(--maroon-ink)}
+.wg.excel h3,.wg.analytics h3{color:var(--teal)}
+.wg p{margin:0}
+@media (max-width:760px){.weekgoals{grid-template-columns:1fr}}
+.dilist{display:flex;flex-direction:column;gap:10px;margin-top:1em}
+.di{background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--line);border-radius:0 8px 8px 0;padding:12px 18px;display:grid;grid-template-columns:1fr auto;gap:6px 16px;align-items:center}
+.di p{margin:0}
+.di .diwhy{grid-column:1 / -1;color:var(--muted);display:none;font-size:.92em}
+.di.done .diwhy{display:block}
+.di.ok{border-left-color:var(--good)}
+.di.no{border-left-color:var(--bad)}
+.dibtns{display:flex;gap:6px}
+.dibtns button{border:2px solid var(--line);background:var(--bg);border-radius:6px;padding:6px 14px;font-weight:700}
+.dibtns button.picked{border-color:var(--ink)}
+.chip.right{border-color:var(--good);background:var(--good-soft)}
+.chip.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.chip.missed{border-style:dashed;border-color:var(--good)}
+.steps{display:flex;flex-direction:column;gap:8px}
+.steps label{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 14px;cursor:pointer}
+.steps input{width:22px;height:22px;flex:none;margin-top:3px;accent-color:var(--maroon)}
+.steps label:has(input:checked){opacity:.6}
+code{font-family:Consolas,'Courier New',monospace;background:var(--gold-soft);padding:1px 6px;border-radius:4px}
+.xl{border:2px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface);margin-top:1em;font-size:.85em}
+.xl .hs{background:transparent;border:2px solid transparent;border-radius:4px;cursor:pointer;text-align:left}
+.xl .hs:hover,.xl .hs.on{border-color:var(--gold);background:var(--gold-soft)}
+.xl-title{background:#1f6e43;color:#fff;padding:6px 10px}
+.xl-title .hs{color:#fff;font-weight:700}
+.xl-title .hs.on,.xl-title .hs:hover{color:var(--ink)}
+.xl-tabs{display:flex;gap:18px;width:100%;padding:6px 10px;flex-wrap:wrap}
+.xl-tabs .sel{font-weight:700;border-bottom:3px solid #1f6e43}
+.xl-ribbon{display:flex;gap:10px;width:100%;padding:10px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.xl-ribbon span{border:1px solid var(--line);border-radius:4px;padding:10px 14px;background:var(--bg)}
+.xl-fbar{display:flex;gap:8px;align-items:center;padding:6px 10px;border-bottom:1px solid var(--line)}
+.xl-fbar .nb{width:70px;border:1px solid var(--line)}
+.xl-fbar .fb{flex:1;border:1px solid var(--line);font-family:Consolas,'Courier New',monospace}
+.fx{font-style:italic;color:var(--muted)}
+.xl-grid{display:grid;grid-template-columns:44px repeat(4,1fr)}
+.xl-grid>*{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:4px 8px;min-height:32px}
+.xl-grid .xh{background:var(--bg);text-align:center;color:var(--muted);font-weight:700;border-radius:0}
+.xl-grid .n{text-align:right}
+.xl-grid .active{outline:3px solid #1f6e43;outline-offset:-3px}
+.xl-sheets{display:flex;gap:10px;align-items:center;padding:6px 10px;background:var(--bg)}
+.xl-sheets .hs{font-weight:700;border-bottom:3px solid #1f6e43}
+.xlsplit{display:grid;grid-template-columns:minmax(260px,1fr) 1.4fr;gap:24px;align-items:start}
+.dtab{border-collapse:collapse;background:var(--surface);width:100%}
+.dtab th,.dtab td{border:1px solid var(--line);padding:6px 12px;text-align:left}
+.dtab th{background:var(--teal-soft)}
+.dtab td:nth-child(n+2){text-align:right}
+.check{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:1.2em;background:var(--surface);border:2px solid var(--teal);border-radius:10px;padding:14px 18px}
+.check input{font:inherit;padding:8px 12px;border-radius:6px;border:2px solid var(--line);background:var(--bg);color:var(--ink);width:9em}
+.aibox{background:var(--surface);border:2px solid var(--line);border-radius:10px;padding:16px 20px;display:flex;flex-wrap:wrap;gap:4px;margin-top:1em}
+.ais{background:transparent;border:2px solid transparent;border-radius:6px;padding:4px 6px;text-align:left}
+.ais.flag{background:var(--gold-soft);border-color:var(--gold)}
+.ais.hit{background:var(--good-soft);border-color:var(--good)}
+.ais.miss{border-style:dashed;border-color:var(--bad)}
+.ais.false{background:var(--bad-soft);border-color:var(--bad)}
+#aiWhy p{background:var(--surface);border-left:6px solid var(--gold);padding:10px 16px;border-radius:0 8px 8px 0;margin-top:10px}
+.flow3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:1em}
+.flow3>div{background:var(--surface);border:1px solid var(--line);border-top:6px solid var(--maroon);border-radius:0 0 10px 10px;padding:16px 18px}
+.flow3>div:nth-child(2){border-top-color:var(--teal)}
+.flow3>div:nth-child(3){border-top-color:var(--gold)}
+.flow3 .steps label{font-size:.9em;padding:8px 10px}
+.prompt{font-family:Consolas,'Courier New',monospace;font-size:.85em;background:var(--bg);border:1px dashed var(--muted);border-radius:6px;padding:10px;margin:8px 0}
+@media (max-width:900px){.xlsplit,.flow3{grid-template-columns:1fr}.di{grid-template-columns:1fr}}
+.kbd-out{background:var(--gold-soft);border-left:6px solid var(--gold);border-radius:0 8px 8px 0;padding:12px 16px;margin:0 0 12px}
+kbd{font-family:Consolas,'Courier New',monospace;background:var(--surface);border:1px solid var(--muted);border-bottom-width:3px;border-radius:5px;padding:1px 8px;font-size:.95em}
+footer.nav{display:flex;align-items:center;gap:12px;padding:10px clamp(16px,4vw,48px);border-top:1px solid var(--line);background:var(--surface)}
+footer.nav .navbtn{background:var(--maroon);color:#fff;border:none;border-radius:8px;padding:8px 18px;font-weight:700;min-width:96px}
+footer.nav .navbtn:disabled{opacity:.35;cursor:default}
+.dots{flex:1;display:flex;justify-content:center;gap:6px;flex-wrap:wrap}
+.dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--muted);background:transparent;padding:0}
+.dot[aria-current="true"]{background:var(--maroon-ink);border-color:var(--maroon-ink)}
+.count{font-size:.8em;color:var(--muted);min-width:4em;text-align:right}
+
+/* ---- Day 2 additions ---- */
+.strat.three{grid-template-columns:repeat(3,1fr)}
+.bins.b3{grid-template-columns:repeat(3,1fr)}
+.di.five{grid-template-columns:1fr}
+.di.five .dibtns{flex-wrap:wrap}
+.stages{display:flex;flex-direction:column;gap:10px;margin-top:1em}
+.stage{background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--teal);border-radius:0 8px 8px 0;padding:12px 18px;display:none}
+.stage.on{display:block}
+.stage .tag{display:block;margin-bottom:4px}
+.stage p{margin:0 0 4px}
+.seq{display:flex;flex-wrap:wrap;gap:8px;margin:1em 0}
+.seq .item{text-align:left}
+.seq .item b{color:var(--maroon-ink);margin-right:6px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:1em}
+.stat{background:var(--surface);border:1px solid var(--line);border-top:6px solid var(--teal);border-radius:0 0 10px 10px;padding:16px 18px}
+.stat h3{font-size:1em}
+.stat .bignum{font-size:clamp(34px,4.2vw,60px)}
+.stat p{margin:.4em 0 0;color:var(--muted)}
+.stats.sys .stat{border-top-color:var(--maroon)}
+.pk{background:transparent;border:2px solid transparent;border-radius:4px;font:inherit;padding:2px 6px;text-align:left}
+.pk:hover,.pk.on{border-color:var(--gold);background:var(--gold-soft)}
+.dtab.xlike td:nth-child(n+2){text-align:left}
+.dtab.xlike td.n{text-align:right}
+.dtab.xlike td.n .ais,.dtab.xlike td.n .pk{text-align:right}
+#dtWhy p{background:var(--surface);border-left:6px solid var(--gold);padding:10px 16px;border-radius:0 8px 8px 0;margin-top:10px}
+@media (max-width:900px){.stats,.strat.three{grid-template-columns:1fr}}
+.steps label>span{flex:1}
+.xlsplit{grid-template-columns:auto 1fr}
+.xlsplit .dtab td,.xlsplit .dtab th{white-space:nowrap;padding:4px 10px}
+@media (max-width:900px){.xlsplit{grid-template-columns:1fr}}
+
+
+/* ---- Day 3 visual additions ---- */
+.mxwrap{display:grid;grid-template-columns:90px 1fr;gap:8px;margin-top:1em}
+.mxcols{display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:center;font-weight:700;color:var(--maroon-ink)}
+.mxrows{display:grid;grid-template-rows:1fr 1fr;gap:10px}
+.mxrows div{display:flex;align-items:center;justify-content:center;text-align:center;font-weight:700;color:var(--maroon-ink)}
+.bins.mx{grid-template-columns:1fr 1fr;gap:10px}
+.bins.mx .bin{min-height:120px}
+.bins.mx .bin small{display:block;color:var(--muted);margin-bottom:4px}
+.bins.mx .bin em{display:block;font-style:normal;font-weight:600;color:var(--maroon-ink);margin-bottom:4px}
+/* positioning map */
+.pmwrap{position:relative;margin-top:.8em}
+.ptray{display:flex;flex-wrap:wrap;gap:8px;min-height:92px;align-content:flex-start;margin-bottom:10px;padding:8px;border:2px dashed var(--line);border-radius:10px}
+.pchip{background:var(--surface);border:2px solid var(--maroon);border-radius:999px;padding:6px 14px;font-weight:600;cursor:grab;touch-action:none;user-select:none;white-space:nowrap}
+.pchip.placed{position:absolute;z-index:3;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.pchip.drag{cursor:grabbing;z-index:5;box-shadow:0 6px 14px rgba(0,0,0,.3)}
+.pchip.right{border-color:var(--teal);background:#e3eeee}
+.pchip.wrong{border-color:var(--gold);background:var(--gold-soft)}
+.fbadge{font-size:.72em;background:var(--teal);color:#fff;border-radius:999px;padding:1px 8px;margin-left:4px;text-transform:uppercase}
+.pmapbox{display:grid;grid-template-columns:28px 1fr;grid-template-rows:auto 24px}
+.ylab{writing-mode:vertical-rl;transform:rotate(180deg);text-align:center;font-weight:700;color:var(--maroon-ink)}
+.xlab{grid-column:2;text-align:center;font-weight:700;color:var(--maroon-ink)}
+.pmap{position:relative;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;height:360px;border:2px solid var(--line);border-radius:10px;overflow:hidden}
+.pz{padding:10px 14px;border:1px solid var(--line)}
+.pz b{display:block;color:var(--maroon-ink)}
+.pz small{color:var(--muted)}
+.pz.tr{background:#f3ecec}.pz.bl{background:#e8f0f0}.pz.tl,.pz.br{background:var(--surface)}
+#pmWhy p{background:var(--surface);border-left:6px solid var(--gold);padding:8px 14px;border-radius:0 8px 8px 0;margin:8px 0 0}
+/* five forces */
+.ffgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:.8em;align-items:stretch}
+.fbx{position:relative;background:var(--surface);border:2px solid var(--line);border-radius:10px;padding:12px 14px;text-align:left;font:inherit;color:inherit}
+.fbx h3{margin:0 0 2px;color:var(--maroon-ink)}
+.fbx .fq{margin:0 0 4px;font-weight:600}
+.fbx .fe{margin:0 0 8px;color:var(--muted);font-size:.9em}
+.fbx.entrants{grid-column:2;grid-row:1}
+.fbx.suppliers{grid-column:1;grid-row:2}
+.fbx.rivalry{grid-column:2;grid-row:2;border-color:var(--maroon);border-width:3px}
+.fbx.buyers{grid-column:3;grid-row:2}
+.fbx.subs{grid-column:2;grid-row:3}
+.fbx.entrants::after{content:"\25BC";position:absolute;bottom:-17px;left:50%;color:var(--maroon)}
+.fbx.subs::before{content:"\25B2";position:absolute;top:-17px;left:50%;color:var(--maroon)}
+.fbx.suppliers::after{content:"\25B6";position:absolute;right:-17px;top:50%;color:var(--maroon)}
+.fbx.buyers::before{content:"\25C0";position:absolute;left:-17px;top:50%;color:var(--maroon)}
+button.fbx{cursor:pointer}
+button.fbx:hover{border-color:var(--gold)}
+button.fbx:disabled{cursor:default}
+.fbx.hit{border-color:var(--teal);background:#e3eeee}
+.fbx.miss{border-color:var(--gold);background:var(--gold-soft)}
+.seg{display:flex;gap:0}
+.seg button{flex:1;padding:6px 0;border:2px solid var(--maroon);background:#fff;font:inherit;font-weight:600;cursor:pointer}
+.seg button:first-child{border-radius:8px 0 0 8px}.seg button:last-child{border-radius:0 8px 8px 0}
+.seg button+button{border-left:0}
+.seg button[aria-pressed="true"]{background:var(--maroon);color:#fff}
+.seg button.bm{outline:3px dashed var(--gold);outline-offset:2px}
+.fmeter{grid-column:1 / 4;grid-row:4;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-top:6px}
+.fmeter h3{margin:0 0 6px}
+.pm{height:18px;background:var(--line);border-radius:9px;overflow:hidden}
+.pm i{display:block;height:100%;width:50%;background:linear-gradient(90deg,var(--maroon),var(--gold),var(--teal));transition:width .3s}
+.fmeter p{margin:6px 0}
+.evcard{background:var(--gold-soft);border-left:6px solid var(--gold);border-radius:0 10px 10px 0;padding:10px 18px;margin-top:.6em}
+.evcard p{margin:4px 0 0;font-size:1.1em;font-weight:600}
+@media (max-width:860px){.ffgrid{grid-template-columns:1fr}.fbx.entrants,.fbx.suppliers,.fbx.rivalry,.fbx.buyers,.fbx.subs{grid-column:1;grid-row:auto}.fmeter{grid-column:1;grid-row:auto}.fbx::before,.fbx::after{display:none}.mxwrap{grid-template-columns:60px 1fr}}
+/* value chain */
+.vc{display:flex;flex-direction:column;gap:6px;margin-top:.8em}
+.vclabel{font-weight:700;color:var(--maroon-ink);margin-top:4px}
+.vb{background:var(--surface);border:2px solid var(--teal);border-radius:8px;padding:8px 14px;font:inherit;font-weight:600;text-align:left;cursor:pointer}
+.vprow{display:flex;gap:4px;align-items:stretch}
+.vp{flex:1;background:var(--maroon);color:#fff;border:0;font:inherit;font-weight:600;padding:18px 18px 18px 26px;cursor:pointer;clip-path:polygon(0 0,90% 0,100% 50%,90% 100%,0 100%,8% 50%);text-align:center}
+.vp:first-child{clip-path:polygon(0 0,90% 0,100% 50%,90% 100%,0 100%)}
+.vmargin{display:flex;align-items:center;justify-content:center;padding:0 16px;font-weight:700;color:var(--maroon-ink);border:2px dashed var(--gold);border-radius:8px}
+.vb.on{background:var(--gold-soft);border-color:var(--gold)}
+.vp.on{background:var(--gold);color:#1a1a1a}
+.vb:hover,.vp:hover{filter:brightness(1.08)}
+@media (max-width:860px){.vprow{flex-direction:column}.vp{clip-path:none;border-radius:8px}}
+
+.tbd{background:var(--gold-soft);border:2px dashed var(--gold);border-radius:6px;padding:0 8px;font-weight:700}
+.qstrip.five div{opacity:1}
+#aiWhy3 p{background:var(--surface);border-left:6px solid var(--gold);padding:10px 16px;border-radius:0 8px 8px 0;margin-top:10px}
+.qstrip small{overflow-wrap:anywhere}
+
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="course">BUS 2110 / Week 1, Day 3</div>
+  <div class="tools">
+    <button id="fsBtn" type="button" title="Full screen (F)">Full screen</button>
+  </div>
+</header>
+
+<main id="deck">
+
+<section class="slide title-slide" data-title="Welcome">
+  <div class="inner">
+    <div class="kicker">Technology Creates Advantage</div>
+    <h1>Technology doesn't create advantage by itself,<span>strategy does. Technology makes it possible.</span></h1>
+    <p class="lede">A rival restaurant opened across the street from The Copper Table. Today you'll learn how businesses compete, how technology supports that competition, and then use Excel and AI to evaluate a decision.</p>
+    <div class="agenda">
+      <div><h3>Choose</h3>Three ways to compete</div>
+      <div><h3>Analyze</h3>Porter's five forces</div>
+      <div><h3>Connect</h3>The value chain and technology</div>
+      <div><h3>Sustain</h3>Can rivals copy it?</div>
+      <div><h3>Calculate</h3>ROI in Excel</div>
+      <div><h3>Research</h3>Using AI to investigate</div>
+      <div><h3>Verify</h3>Checking what AI tells you</div>
+      <div><h3>Log it</h3>Consultant Log entry #3</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-title="Warm-up">
+  <div class="inner">
+    <div class="kicker">Warm-up</div>
+    <h2>Yesterday in three questions</h2>
+    <p>Tap an answer.</p>
+<div class="q" data-quiz>
+<p><b>1.</b> Which of these is <i>not</i> a characteristic of good information?</p>
+<div class="opts"><button class="opt">Timely</button><button class="opt">Complete</button><button class="opt" data-right>Entertaining</button><button class="opt">Consistent</button></div>
+<p class="explain">The five are accurate, timely, relevant, complete, and consistent.</p>
+</div>
+<div class="q" data-quiz>
+<p><b>2.</b> Real-time stock levels used to decide what to restock today are which type of information?</p>
+<div class="opts"><button class="opt">Strategic</button><button class="opt">Tactical</button><button class="opt" data-right>Operational</button></div>
+<p class="explain">Operational information supports day-to-day decisions. Strategic is long-term planning, and tactical covers short- to medium-term goals.</p>
+</div>
+<div class="q" data-quiz>
+<p><b>3.</b> A point of sale that records each sale as it happens is an example of a&hellip;</p>
+<div class="opts"><button class="opt">CRM</button><button class="opt" data-right>Transaction processing system (TPS)</button><button class="opt">ERP</button></div>
+<p class="explain">A TPS manages routine transactions as they happen. A CRM organizes customer data, and an ERP integrates core business processes.</p>
+</div>
+  </div>
+</section>
+
+<section class="slide" data-title="The rival">
+  <div class="inner">
+    <div class="kicker">Choose</div>
+    <h2>A rival opens across the street</h2>
+    <p>Lantern Kitchen has a bigger menu, a loyal crowd from its other locations, and half-price appetizer nights. The owner asks: "Why would anyone choose us?" Tap every reason a guest might choose The Copper Table.</p>
+    <div class="chips" id="reasons">
+      <button class="chip" aria-pressed="false">Lower prices</button>
+      <button class="chip" aria-pressed="false">Dishes you can't get elsewhere</button>
+      <button class="chip" aria-pressed="false">Faster service</button>
+      <button class="chip" aria-pressed="false">Local ingredients</button>
+      <button class="chip" aria-pressed="false">Friendlier staff</button>
+      <button class="chip" aria-pressed="false">Rewards for regulars</button>
+      <button class="chip" aria-pressed="false">Close to where I live or work</button>
+      <button class="chip" aria-pressed="false">Date-night atmosphere</button>
+    </div>
+    <div class="band-detail" id="reasonMsg" aria-live="polite">Pick a few reasons.</div>
+    <p class="note">Each reason is a bet on a strategy. Price points toward cost leadership, a better or different experience toward differentiation, and serving a specific group or place toward focus.</p>
+  </div>
+</section>
+
+<section class="slide" data-title="Competitive strategy">
+  <div class="inner">
+    <div class="kicker">Choose</div>
+    <h2>Competitive strategy is the search for a position that earns lasting profit</h2>
+    <p>Businesses don't pick technology first. The order runs the other way.</p>
+    <div class="qstrip" aria-label="From industry to systems">
+      <div class="on">INDUSTRY STRUCTURE<small>The forces you face</small></div>
+      <div class="on">COMPETITIVE STRATEGY<small>How you will compete</small></div>
+      <div class="on">VALUE CHAIN<small>Activities that create value</small></div>
+      <div class="on">BUSINESS PROCESSES<small>How work gets done</small></div>
+      <div class="on">INFORMATION SYSTEMS<small>Technology that supports it</small></div>
+    </div>
+    <p>To choose a strategy, a business asks two questions:</p>
+    <div class="cards">
+      <div class="card"><h3>1. Is the industry attractive?</h3>What determines long-term profitability in this industry?</div>
+      <div class="card"><h3>2. Where do we stand?</h3>What determines our competitive position within the industry?</div>
+    </div>
+    <div class="warn"><b>Sustainable competitive advantage</b> is the basis of above-average performance over time. The rest of today is about how to find one.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Strategy basics">
+  <div class="inner">
+    <div class="kicker">Choose</div>
+    <h2>Porter's three generic strategies</h2>
+    <p>Every business has to answer two questions: <b>how will we win customers</b> (lower cost, or something unique), and <b>how wide a market will we serve</b> (broad, or one narrow segment). The answers give three strategies, and focus comes in two variants.</p>
+    <div class="strat three">
+      <div><h3>Cost leadership</h3><p>Be the lowest-cost provider in a <b>broad</b> market, either to price below rivals or to keep average prices and earn a bigger margin.</p><p><b>Example:</b> Walmart streamlines its supply chain to keep costs and prices down.</p></div>
+      <div><h3>Differentiation</h3><p>Offer unique features, quality, or experiences across a <b>broad</b> market that customers will pay a premium for.</p><p><b>Example:</b> Apple's product design; Tesla's technology and brand.</p></div>
+      <div><h3>Focus</h3><p>Concentrate on one <b>narrow</b> segment (a customer group, a region, a product line) and serve it better than anyone. It comes as <b>cost focus</b> or <b>differentiation focus</b>.</p><p><b>Example:</b> A luxury hotel chain for ultra-wealthy guests.</p></div>
+    </div>
+    <div class="warn"><b>Next slide:</b> a 2x2 grid with market scope down the side and cost versus uniqueness across the top. You will sort business moves into the four boxes.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Strategy matrix">
+  <div class="inner">
+    <div class="kicker">Choose</div>
+    <h2>Porter's three generic strategies on one map</h2>
+    <p>Cost leadership and differentiation aim at a broad market. Focus narrows to one segment, in two variants. Select a business move, then select the box where it belongs. On a computer you can also drag.</p>
+    <div class="pool" id="poolM" aria-label="Moves to sort">
+<button class="item" draggable="true" data-ans="cost" aria-pressed="false">Bulk buying and a tight supply chain to offer the lowest prices to everyone</button>
+<button class="item" draggable="true" data-ans="diff" aria-pressed="false">Design and brand so strong that customers nationwide pay a premium</button>
+<button class="item" draggable="true" data-ans="costfocus" aria-pressed="false">A no-frills meal-prep service for college students only</button>
+<button class="item" draggable="true" data-ans="difffocus" aria-pressed="false">Luxury hotels built only for ultra-wealthy travelers</button>
+<button class="item" draggable="true" data-ans="cost" aria-pressed="false">A 12-dish menu and a lean kitchen that serves everyone for less</button>
+<button class="item" draggable="true" data-ans="difffocus" aria-pressed="false">Gluten-free fine dining for that community only</button>
+<button class="item" draggable="true" data-ans="costfocus" aria-pressed="false">The cheapest oil changes, offered only to delivery fleets</button>
+<button class="item" draggable="true" data-ans="diff" aria-pressed="false">A signature burger no one else serves, marketed to all diners</button>
+    </div>
+    <div class="mxwrap">
+      <div></div>
+      <div class="mxcols"><div>Lower cost</div><div>Differentiated</div></div>
+      <div class="mxrows"><div>Broad<br>market</div><div>Narrow<br>market</div></div>
+      <div class="bins mx" id="binsM">
+        <div class="bin" data-bin="cost" role="button" tabindex="0"><div class="bin-title">Cost leadership</div><small>The lowest-cost provider for a broad market.</small><em>Example: Walmart</em></div>
+        <div class="bin" data-bin="diff" role="button" tabindex="0"><div class="bin-title">Differentiation</div><small>Unique features customers pay extra for, across a broad market.</small><em>Example: Apple</em></div>
+        <div class="bin" data-bin="costfocus" role="button" tabindex="0"><div class="bin-title">Cost focus</div><small>A cost advantage within one narrow segment.</small></div>
+        <div class="bin" data-bin="difffocus" role="button" tabindex="0"><div class="bin-title">Differentiation focus</div><small>A unique offering for one narrow segment.</small><em>Example: luxury hotels; Tesla's early luxury EVs</em></div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn" id="sortCheckM" type="button">Check my map</button>
+      <button class="btn ghost" id="sortResetM" type="button">Start over</button>
+      <span class="feedback" id="sortFbM" aria-live="polite"></span>
+    </div>
+    <p class="note">Cost leadership still needs good-enough quality, or customers avoid it. Differentiation needs a premium that more than covers its higher costs.</p>
+  </div>
+</section>
+
+<section class="slide" data-title="Positioning basics">
+  <div class="inner">
+    <div class="kicker">If time allows &middot; Choose</div>
+    <h2>Strategy shows up as a position: price and uniqueness</h2>
+    <p>You can place any business on two measures. <b>Price</b> runs left to right. <b>How unique the offering is</b> runs bottom to top. Where a business sits tells you which strategy it is really following.</p>
+    <div class="strat three">
+      <div><h3>Low price, standard offer</h3><p>Bottom left. This is <b>cost leadership</b>: win on price and efficiency.</p></div>
+      <div><h3>High price, unique offer</h3><p>Top right. This is <b>differentiation</b>: customers pay more because they get something they cannot get elsewhere.</p></div>
+      <div><h3>High price, nothing special</h3><p>Bottom right. This is the danger zone, <b>stuck in the middle</b> or simply overpriced. Customers have no reason to pay.</p></div>
+    </div>
+    <p>Focus is about the <b>segment</b> you serve, so it does not get its own spot on this map. A narrow-segment business still lands in the bottom left (cost focus) or top right (differentiation focus). Unique and cheap (top left) is rare and hard to keep, because rivals can copy it.</p>
+    <div class="warn"><b>Next slide:</b> drag seven businesses onto the map. Ask two questions for each one: is it cheap or pricey, and is it standard or distinctive?</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Positioning map">
+  <div class="inner">
+    <div class="kicker">If time allows &middot; Choose</div>
+    <h2>Where does each business sit on the map?</h2>
+    <p>Drag each business onto the map by its price and how unique its offering is. Then check.</p>
+    <div class="pmwrap" id="pmwrap">
+      <div class="ptray" id="ptray">
+<div class="pchip" data-t="BL" data-why="Low prices on a standard range of goods: cost leadership.">Walmart</div>
+<div class="pchip" data-t="TR" data-why="Premium prices backed by distinctive design: differentiation.">Apple</div>
+<div class="pchip" data-t="TR" data-why="High price, highly unique, narrow segment: differentiation focus.">Luxury hotel for ultra-wealthy travelers <span class="fbadge">focus</span></div>
+<div class="pchip" data-t="BL" data-why="Low price, simple offer, narrow segment: cost focus.">Budget meal-prep for college students <span class="fbadge">focus</span></div>
+<div class="pchip" data-t="TR" data-why="A premium, distinctive experience: differentiation.">The Copper Table with a chef-led local menu</div>
+<div class="pchip" data-t="BL" data-why="Competing mainly on price and volume: closer to cost leadership.">Lantern Kitchen: big menu, half-price nights</div>
+<div class="pchip" data-t="BR" data-why="Charging a premium without anything unique to justify it. Customers leave.">Restaurant with high prices and an ordinary menu</div>
+      </div>
+      <div class="pmapbox">
+        <div class="ylab">More unique &uarr;</div>
+        <div class="pmap" id="pmap">
+          <div class="pz tl"><b>Unique and cheap</b><small>Rare, and hard to sustain</small></div>
+          <div class="pz tr"><b>Differentiation</b><small>Premium price, distinctive offer</small></div>
+          <div class="pz bl"><b>Cost leadership</b><small>Low price, standard offer</small></div>
+          <div class="pz br"><b>Overpriced</b><small>High price, nothing special</small></div>
+        </div>
+        <div class="xlab">Higher price &rarr;</div>
+      </div>
+    </div>
+    <div class="actions"><button class="btn" id="pmCheck" type="button">Check my map</button><button class="btn ghost" id="pmReset" type="button">Start over</button><span class="feedback" id="pmFb" aria-live="polite"></span></div>
+    <div id="pmWhy"></div>
+    <p class="note">The "focus" tag shows a narrow segment. Price and uniqueness place the business, and the segment tells you whether it is a focus strategy. A business that is neither cheap nor distinctive is "stuck in the middle".</p>
+  </div>
+</section>
+
+<section class="slide" data-title="Five forces basics">
+  <div class="inner">
+    <div class="kicker">Analyze</div>
+    <h2>Porter's five forces: what shapes an industry's profit</h2>
+    <p>Before choosing a strategy, a business asks <b>whether the industry itself is attractive</b>. Five forces push on profit. The more of them that are strong, the harder it is to earn a return.</p>
+    <div class="strat three">
+      <div><h3>New entrants</h3><p>How easily can newcomers enter? Low barriers invite competition.</p><p><b>Example:</b> fintech companies entering banking.</p></div>
+      <div><h3>Substitutes</h3><p>Can customers meet the same need a different way?</p><p><b>Example:</b> streaming replacing traditional TV.</p></div>
+      <div><h3>Buyer power</h3><p>Can customers push for lower prices or better quality?</p><p><b>Example:</b> shoppers using price comparison apps.</p></div>
+      <div><h3>Supplier power</h3><p>Can suppliers raise prices or restrict supply?</p><p><b>Example:</b> semiconductor shortages in automotive.</p></div>
+      <div><h3>Rivalry</h3><p>How fiercely do existing competitors fight for the same customers?</p><p><b>Example:</b> Uber versus Lyft.</p></div>
+      <div><h3>Read the result</h3><p>Strong forces mean <b>lower profit potential</b>. Weak forces mean a more attractive industry.</p></div>
+    </div>
+    <div class="warn"><b>Next slide:</b> you rate each force for The Copper Table from Low to High and watch the industry's profit potential move.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Five forces">
+  <div class="inner">
+    <div class="kicker">Analyze</div>
+    <h2>Porter's five forces: how hard is this industry?</h2>
+    <p>Set the pressure each force puts on The Copper Table, from Low to High. Watch the industry's profit potential change.</p>
+    <div class="ffgrid"><div class="fbx entrants" data-f="entrants"><h3>New entrants</h3><p class="fq">How easily can newcomers enter?</p><p class="fe">Fintech disrupting traditional banking</p><div class="seg" role="group" aria-label="New entrants pressure" data-f="entrants"><button type="button" data-v="1">Low</button><button type="button" data-v="2">Med</button><button type="button" data-v="3">High</button></div></div><div class="fbx subs" data-f="subs"><h3>Substitutes</h3><p class="fq">Can customers meet the need another way?</p><p class="fe">Streaming replacing traditional TV</p><div class="seg" role="group" aria-label="Substitutes pressure" data-f="subs"><button type="button" data-v="1">Low</button><button type="button" data-v="2">Med</button><button type="button" data-v="3">High</button></div></div><div class="fbx buyers" data-f="buyers"><h3>Buyer power</h3><p class="fq">Can customers push on price and quality?</p><p class="fe">Shoppers using price comparison apps</p><div class="seg" role="group" aria-label="Buyer power pressure" data-f="buyers"><button type="button" data-v="1">Low</button><button type="button" data-v="2">Med</button><button type="button" data-v="3">High</button></div></div><div class="fbx suppliers" data-f="suppliers"><h3>Supplier power</h3><p class="fq">Can suppliers push on costs and supply?</p><p class="fe">Semiconductor shortages in automotive</p><div class="seg" role="group" aria-label="Supplier power pressure" data-f="suppliers"><button type="button" data-v="1">Low</button><button type="button" data-v="2">Med</button><button type="button" data-v="3">High</button></div></div><div class="fbx rivalry" data-f="rivalry"><h3>Rivalry</h3><p class="fq">How fierce is competition among existing players?</p><p class="fe">Uber vs. Lyft</p><div class="seg" role="group" aria-label="Rivalry pressure" data-f="rivalry"><button type="button" data-v="1">Low</button><button type="button" data-v="2">Med</button><button type="button" data-v="3">High</button></div></div>
+      <div class="fmeter"><h3>Industry profit potential</h3><div class="pm"><i id="ffBar"></i></div><p id="ffLabel" aria-live="polite"></p><button class="btn ghost" id="ffBench" type="button">Compare with a class-discussion read</button></div>
+    </div>
+    <div class="band-detail" id="ffBenchNote" hidden>Dashed outlines show one reasonable read for downtown dining, as a starting point for debate: new entrants Medium (a lease and kitchen are real costs, but nothing legally blocks a newcomer), substitutes High (meal kits, delivery apps, home cooking), buyer power High (guests compare and switch for free), supplier power Medium, rivalry High. More High forces mean lower profit potential, which is why the strategy you pick matters.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Forces change">
+  <div class="inner">
+    <div class="kicker">If time allows &middot; Analyze</div>
+    <h2>Forces move whenever something changes in the market</h2>
+    <p>Industry structure is not fixed. New technology, new rules, and rivals' decisions all shift the forces. Netflix shows how each force can show up in one business:</p>
+    <div class="strat three">
+      <div><h3>New entrants</h3><p>High barriers: building a content library and global streaming service takes huge investment.</p></div>
+      <div><h3>Substitutes</h3><p>YouTube and TikTok compete for the same viewing time.</p></div>
+      <div><h3>Buyer power</h3><p>Subscribers can cancel at any time.</p></div>
+      <div><h3>Supplier power</h3><p>Studios such as Disney can pull their titles and launch their own services.</p></div>
+      <div><h3>Rivalry</h3><p>Prime Video, Disney+, Hulu, and HBO Max all fight for subscribers.</p></div>
+      <div><h3>How to analyze an event</h3><p>Ask what changed, <b>who gains power or loses it</b>, and whether it is easier or harder for someone to enter, switch, or charge more.</p></div>
+    </div>
+    <div class="warn"><b>Next slide:</b> six news events hit The Copper Table's market. Tap the force each one moves and watch the profit meter.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Force events">
+  <div class="inner">
+    <div class="kicker">If time allows &middot; Analyze</div>
+    <h2>News hits the industry: which force moved?</h2>
+    <p>Read the event, then tap the force it changes. The profit meter shows what happens to the industry.</p>
+    <div class="evcard" id="evCard"><span class="tag" id="evNum"></span><p id="evText"></p></div>
+    <div class="ffgrid"><button type="button" class="fbx entrants" data-f="entrants"><h3>New entrants</h3><p class="fq">How easily can newcomers enter?</p><p class="fe">Fintech disrupting traditional banking</p></button><button type="button" class="fbx subs" data-f="subs"><h3>Substitutes</h3><p class="fq">Can customers meet the need another way?</p><p class="fe">Streaming replacing traditional TV</p></button><button type="button" class="fbx buyers" data-f="buyers"><h3>Buyer power</h3><p class="fq">Can customers push on price and quality?</p><p class="fe">Shoppers using price comparison apps</p></button><button type="button" class="fbx suppliers" data-f="suppliers"><h3>Supplier power</h3><p class="fq">Can suppliers push on costs and supply?</p><p class="fe">Semiconductor shortages in automotive</p></button><button type="button" class="fbx rivalry" data-f="rivalry"><h3>Rivalry</h3><p class="fq">How fierce is competition among existing players?</p><p class="fe">Uber vs. Lyft</p></button>
+      <div class="fmeter"><h3>Industry profit potential</h3><div class="pm"><i id="evBar"></i></div><p id="evLabel" aria-live="polite"></p></div>
+    </div>
+    <div class="actions"><button class="btn" id="evNext" type="button" disabled>Next event</button><span class="feedback" id="evFb" aria-live="polite"></span></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Value chain basics">
+  <div class="inner">
+    <div class="kicker">Connect</div>
+    <h2>The value chain: the activities that turn inputs into a product</h2>
+    <p>Strategy only works if a business carries it out. Porter's <b>value chain</b> splits a business into the activities it performs. <b>Primary activities</b> create and deliver the product. <b>Support activities</b> help every primary activity. The gap between the value created and the cost of the activities is the <b>margin</b>.</p>
+    <div class="strat three">
+      <div><h3>Primary activities</h3><p>Inbound logistics, operations, outbound logistics, marketing and sales, and service.</p></div>
+      <div><h3>Support activities</h3><p>Firm infrastructure, human resource management, technology development, and procurement.</p></div>
+      <div><h3>Why it matters for MIS</h3><p>The chain shows where a business creates value, so it is a model for deciding <b>which IT projects matter most</b>.</p></div>
+    </div>
+    <div class="warn"><b>Next slide:</b> select each activity to see what it covers and how it appears at The Copper Table.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Value chain">
+  <div class="inner">
+    <div class="kicker">Connect</div>
+    <h2>The value chain shows where a business creates value</h2>
+    <p><b>Support activities</b> make the <b>primary activities</b> possible, and together they produce a margin. The value chain is also a model for deciding which IT projects matter most. Select any activity.</p>
+    <div class="vc">
+      <div class="vclabel">Support activities</div>
+      <button class="vb" data-k="infra" type="button">Firm infrastructure</button>
+      <button class="vb" data-k="hr" type="button">Human resource management</button>
+      <button class="vb tech" data-k="tech" type="button">Technology development</button>
+      <button class="vb" data-k="proc" type="button">Procurement</button>
+      <div class="vclabel">Primary activities</div>
+      <div class="vprow">
+        <button class="vp" data-k="in" type="button">Inbound logistics</button>
+        <button class="vp" data-k="ops" type="button">Operations</button>
+        <button class="vp" data-k="out" type="button">Outbound logistics</button>
+        <button class="vp" data-k="mkt" type="button">Marketing and sales</button>
+        <button class="vp" data-k="svc" type="button">Service</button>
+        <div class="vmargin">Margin</div>
+      </div>
+    </div>
+    <div class="band-detail" id="vcDetail" aria-live="polite">Select an activity to see what it covers and how it looks at The Copper Table.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Technology and strategy">
+  <div class="inner">
+    <div class="kicker">Connect</div>
+    <h2>MIS helps carry out the strategy</h2>
+    <p>Information systems collect, process, and analyze data so managers can make strategic decisions. Tap each way technology supports competition.</p>
+    <div class="cards reveal">
+<button class="card" aria-expanded="false"><h3>Operational efficiency</h3><div class="hint">Tap to reveal</div><div class="back">Streamlining processes, as in Walmart’s inventory management. At the Copper Table: kitchen screens that speed up tickets.</div></button>
+<button class="card" aria-expanded="false"><h3>Customer experience</h3><div class="hint">Tap to reveal</div><div class="back">Personalization and real-time insight, as in Netflix’s recommendation engine. A loyalty system that remembers a guest’s favorite dish.</div></button>
+<button class="card" aria-expanded="false"><h3>Innovation support</h3><div class="hint">Tap to reveal</div><div class="back">Using data to drive research and new ideas, as in Tesla’s simulation software. Testing new menu items against sales data.</div></button>
+    </div>
+<div class="q" data-quiz>
+<p>The Copper Table installs kitchen display screens. Where does that sit in the value chain?</p>
+<div class="opts"><button class="opt">Inbound logistics</button><button class="opt" data-right>Technology development, a support activity</button><button class="opt">Service</button></div>
+<p class="explain">It is a support activity that makes a primary activity, operations, faster and more accurate.</p>
+</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Sustainability">
+  <div class="inner">
+    <div class="kicker">Sustain</div>
+    <h2>An advantage only matters if rivals can't easily copy it</h2>
+    <p>Sustainable advantages come from things like proprietary technology, strong brand loyalty, and economies of scale. Even those can erode with competitor innovation, market shifts, or changing customer preferences. How easily could Lantern Kitchen copy each move? Tap a label.</p>
+    <div class="dilist">
+<div class="di" data-ans="easy"><p>Dropping prices by 10% for a month.</p><div class="dibtns"><button type="button" data-pick="hard">Hard to copy</button><button type="button" data-pick="easy">Easy to copy</button></div><p class="diwhy">Easy to copy. A rival with more scale can match a price cut and outlast you.</p></div>
+<div class="di" data-ans="hard"><p>Years of guest data and a loyalty program that guests actually use.</p><div class="dibtns"><button type="button" data-pick="hard">Hard to copy</button><button type="button" data-pick="easy">Easy to copy</button></div><p class="diwhy">Hard to copy. Loyalty and data take years to build and can’t be bought.</p></div>
+<div class="di" data-ans="easy"><p>Adding a trendy item to the menu.</p><div class="dibtns"><button type="button" data-pick="hard">Hard to copy</button><button type="button" data-pick="easy">Easy to copy</button></div><p class="diwhy">Easy to copy. A rival can add the same item next week.</p></div>
+<div class="di" data-ans="hard"><p>A strong local reputation built over years.</p><div class="dibtns"><button type="button" data-pick="hard">Hard to copy</button><button type="button" data-pick="easy">Easy to copy</button></div><p class="diwhy">Hard to copy. Brand loyalty is earned over time.</p></div>
+<div class="di" data-ans="easy"><p>Buying the same online-ordering app every other restaurant uses.</p><div class="dibtns"><button type="button" data-pick="hard">Hard to copy</button><button type="button" data-pick="easy">Easy to copy</button></div><p class="diwhy">Easy to copy. Anyone can buy a ready-made product, so it is no edge by itself.</p></div>
+<div class="di" data-ans="hard"><p>A chain’s ability to negotiate lower supplier costs by buying in huge volume.</p><div class="dibtns"><button type="button" data-pick="hard">Hard to copy</button><button type="button" data-pick="easy">Easy to copy</button></div><p class="diwhy">Hard to copy. Economies of scale are the kind of advantage Walmart relies on.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-title="Quick check">
+  <div class="inner">
+    <div class="kicker">Quick check</div>
+    <h2>Three questions before we move on</h2>
+<div class="q" data-quiz>
+<p><b>1.</b> A luxury hotel chain that targets only ultra-wealthy travelers uses which strategy?</p>
+<div class="opts"><button class="opt">Cost leadership</button><button class="opt">Broad differentiation</button><button class="opt" data-right>Focus</button></div>
+<p class="explain">It concentrates on one narrow segment and doesn’t compete for budget or mid-tier guests.</p>
+</div>
+<div class="q" data-quiz>
+<p><b>2.</b> What does cost leadership require?</p>
+<div class="opts"><button class="opt">Selling the cheapest, lowest-quality product</button><button class="opt" data-right>Lower costs than rivals while still offering good-enough quality</button><button class="opt">Charging premium prices for unique features</button></div>
+<p class="explain">If the product seems too cheap or inferior, customers avoid it. It needs parity or proximity in quality.</p>
+</div>
+<div class="q" data-quiz>
+<p><b>3.</b> What role does MIS play in competitive strategy?</p>
+<div class="opts"><button class="opt">It replaces the need for a strategy</button><button class="opt" data-right>It helps carry out the strategy through operations, customer experience, and innovation</button><button class="opt">It matters only to IT staff</button></div>
+<p class="explain">Strategy comes first. Technology supports it.</p>
+</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Numbers behind strategy">
+  <div class="inner">
+    <div class="kicker">Excel</div>
+    <h2>The numbers behind a strategy decision</h2>
+    <p>Strategy ends in numbers. Tap a measure, then check yourself.</p>
+    <div class="tabs" role="tablist" id="nmTabs">
+      <button role="tab" aria-selected="true" data-i="0">Revenue vs. profit</button>
+      <button role="tab" aria-selected="false" data-i="1">Profit margin</button>
+      <button role="tab" aria-selected="false" data-i="2">Market share</button>
+      <button role="tab" aria-selected="false" data-i="3">ROI</button>
+    </div>
+    <div class="panel" role="tabpanel" id="nmPanel"></div>
+<div class="q" data-quiz>
+<p>A restaurant has $500,000 in revenue and $50,000 in net profit. What is its profit margin?</p>
+<div class="opts"><button class="opt">5%</button><button class="opt" data-right>10%</button><button class="opt">50%</button></div>
+<p class="explain">$50,000 / $500,000 = 0.10, or 10%.</p>
+</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Build the ROI model">
+  <div class="inner">
+    <div class="kicker">Excel: Chapter 1</div>
+    <h2>Is the investment worth it? Build the ROI model</h2>
+    <p>The owner is considering $12,000 of kitchen ticket screens. The figures below are estimates made up for this class.</p>
+    <div class="xlsplit">
+      <div>
+        <p>Enter this in columns A and B:</p>
+        <table class="dtab xlike">
+          <tr><th>A</th><th>B</th></tr>
+          <tr><td>Investment cost</td><td class="n">12000</td></tr>
+          <tr><td>Annual labor savings</td><td class="n">6000</td></tr>
+          <tr><td>Fewer order errors</td><td class="n">1500</td></tr>
+          <tr><td>Added revenue</td><td class="n">7500</td></tr>
+          <tr><td>Total benefits</td><td class="n"></td></tr>
+          <tr><td>Net profit</td><td class="n"></td></tr>
+          <tr><td>ROI</td><td class="n"></td></tr>
+        </table>
+      </div>
+      <div class="steps">
+        <label><input type="checkbox"><span>Leave row 1 for a title. Type the labels in A2:A8 and the four numbers in B2:B5. Rename the sheet <b>ROI</b>.</span></label>
+        <label><input type="checkbox"><span>In <b>B6</b>, total the benefits: <code>=B3+B4+B5</code>.</span></label>
+        <label><input type="checkbox"><span>In <b>B7</b>, net profit is benefits minus cost: <code>=B6-B2</code>.</span></label>
+        <label><input type="checkbox"><span>In <b>B8</b>, ROI is net profit divided by cost: <code>=B7/B2</code>. Excel shows 0.25, so apply <b>Percent Style</b> on the Home tab.</span></label>
+        <label><input type="checkbox"><span>Format B2:B7 as <b>Currency</b>, then bold the labels and widen column A.</span></label>
+      </div>
+    </div>
+    <div class="check">
+      <label for="roi1"><b>What is the ROI in B8, as a percent?</b></label>
+      <input id="roi1" type="text" inputmode="decimal" placeholder="e.g. 10">
+      <button class="btn" id="roi1Btn" type="button">Check</button>
+      <span class="feedback" id="roi1Fb" aria-live="polite"></span>
+    </div>
+    <div class="check">
+      <label for="roi2"><b>Now change Added revenue (B5) to 3000. What does B8 become?</b></label>
+      <input id="roi2" type="text" inputmode="decimal" placeholder="percent">
+      <button class="btn" id="roi2Btn" type="button">Check</button>
+      <span class="feedback" id="roi2Fb" aria-live="polite"></span>
+    </div>
+    <p class="note">Check without opening the formulas: if benefits are a bit larger than cost, ROI should be small and positive. Then ask what the number can't tell the owner, since every input is an estimate.</p>
+  </div>
+</section>
+
+<section class="slide" data-title="Excel check">
+  <div class="inner">
+    <div class="kicker">Excel: Chapter 1</div>
+    <h2>Three questions about the ROI model</h2>
+<div class="q" data-quiz>
+<p><b>1.</b> Benefits are in B6 and cost is in B2. Which formula gives ROI?</p>
+<div class="opts"><button class="opt" data-right><code>=(B6-B2)/B2</code></button><button class="opt"><code>=B6-B2/B2</code></button><button class="opt"><code>=B6/B2</code></button></div>
+<p class="explain">Excel divides before it subtracts, so the parentheses force the subtraction first. <code>=B6/B2</code> is the benefit-to-cost ratio (125%), not the return.</p>
+</div>
+<div class="q" data-quiz>
+<p><b>2.</b> B8 shows 0.25 and you want it to read 25%. What is the best fix?</p>
+<div class="opts"><button class="opt">Type 25 over the formula</button><button class="opt" data-right>Apply the Percent Style number format</button><button class="opt">Multiply the formula by 100</button></div>
+<p class="explain">Formatting changes how a value looks, not what it is. Typing 25 would delete the formula.</p>
+</div>
+<div class="q" data-quiz>
+<p><b>3.</b> You change B5. Which cells recalculate automatically?</p>
+<div class="opts"><button class="opt">Only B5</button><button class="opt" data-right>B6, B7, and B8</button><button class="opt">Nothing until you save</button></div>
+<p class="explain">Every formula that refers to B5, directly or through another cell, updates right away.</p>
+</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Pearson simulation: Chapter 1">
+  <div class="inner">
+    <div class="kicker">Pearson MyLab IT</div>
+    <h2>Simulation lab: Excel Chapter 1</h2>
+    <p>About 40 minutes, in class. The simulation practices entering data, formulas, AutoFill, and number formats, in the same task-by-task format the certification exam uses.</p>
+    <div class="steps"><label><input type="checkbox"><span>Open <b>Pearson MyLab IT</b> from the link in Canvas and sign in.</span></label><label><input type="checkbox"><span>Start the <b>Chapter 1 simulation</b>.</span></label><label><input type="checkbox"><span>Try every task yourself first. Use the built-in hints only after a real attempt.</span></label><label><input type="checkbox"><span>No AI on simulations. The certification exam is AI-free, so this is where you find out what you can do alone.</span></label><label><input type="checkbox"><span>Stuck for more than two minutes? Raise your hand. If you run out of time, finish the simulation tonight.</span></label></div>
+    <div class="warn"><b>Outside class:</b> the Chapter 1 Pearson project. The due date is in Canvas.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="AI as a research assistant">
+  <div class="inner">
+    <div class="kicker">AI</div>
+    <h2>AI is a fast research assistant, not a source</h2>
+    <p>Used well, AI speeds up the start of research. Used carelessly, it hands you confident mistakes. Tap each card.</p>
+    <div class="cards reveal">
+<button class="card" aria-expanded="false"><h3>Good for</h3><div class="hint">Tap to reveal</div><div class="back">Explaining a concept, summarizing, brainstorming angles, and drafting questions to investigate.</div></button>
+<button class="card" aria-expanded="false"><h3>Risky for</h3><div class="hint">Tap to reveal</div><div class="back">Specific facts, numbers, dates, quotes, and sources. Always check these.</div></button>
+<button class="card" aria-expanded="false"><h3>Hallucinations</h3><div class="hint">Tap to reveal</div><div class="back">Output that sounds convincing but is factually wrong or fabricated, often when the AI goes beyond its training data.</div></button>
+<button class="card" aria-expanded="false"><h3>Bias and overreliance</h3><div class="hint">Tap to reveal</div><div class="back">AI learns from data that may be unrepresentative, and leaning on it can weaken your own thinking.</div></button>
+    </div>
+    <div class="warn"><b>The habit:</b> use AI to get started, then verify against a real source before you rely on any claim.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Build a better prompt">
+  <div class="inner">
+    <div class="kicker">AI</div>
+    <h2>A better prompt gets a better first draft</h2>
+    <p>Start with the weak prompt below. Turn on each technique and watch the prompt change.</p>
+    <div class="steps" id="pbOpts">
+      <label><input type="checkbox" data-t="You are a business analyst preparing a briefing for a restaurant owner."><span><b>Role.</b> Tell the AI who to be.</span></label>
+      <label><input type="checkbox" data-t="She is deciding how to compete with a bigger rival."><span><b>Context.</b> Say what the answer is for.</span></label>
+      <label><input type="checkbox" data-t="Identify which of Porter's three generic strategies (cost leadership, differentiation, or focus) Starbucks uses."><span><b>Clear, specific task.</b> Ask for exactly what you need.</span></label>
+      <label><input type="checkbox" data-t="Give three pieces of evidence, each as a bullet."><span><b>Structure.</b> Say how to organize the answer.</span></label>
+      <label><input type="checkbox" data-t="Use under 150 words, name the source for each claim, and say &quot;not sure&quot; if you can't verify something."><span><b>Constraints.</b> Limit length and require sources and honesty.</span></label>
+    </div>
+    <div class="prompt" id="pbOut" aria-live="polite"></div>
+    <div class="meter" aria-hidden="true"><span id="pbMeter"></span></div>
+    <p class="note">Notice the last line. Asking for sources and "not sure" doesn't make the answer true, but it gives you something to check. If the first answer isn't good, refine and ask again.</p>
+  </div>
+</section>
+
+<section class="slide" data-title="Spot the errors">
+  <div class="inner">
+    <div class="kicker">Verify</div>
+    <h2>Check the AI: find the problems</h2>
+    <p>Here is a sample AI explanation of competitive strategy, written for this class to resemble a typical chatbot answer. Tap every sentence you think is wrong, overstated, or unverifiable, then reveal.</p>
+    <div class="aibox" id="aibox3">
+      <button type="button" class="ais" data-bad="0">Porter's five forces is a framework for analyzing the competitive forces that shape an industry's profitability.</button>
+      <button type="button" class="ais" data-bad="1" data-why="Cost leadership means the lowest cost, not the lowest quality. The product still needs parity or proximity in quality, or customers avoid it.">Cost leadership means selling the lowest-quality product at the lowest price.</button>
+      <button type="button" class="ais" data-bad="0">A focus strategy concentrates on a specific market segment rather than the whole industry.</button>
+      <button type="button" class="ais" data-bad="1" data-why="Differentiation usually raises costs, so firms charge a premium. Lower prices are the cost-leadership route.">Differentiation lets a company charge lower prices than every competitor.</button>
+      <button type="button" class="ais" data-bad="1" data-why="Unverifiable and overstated. No source is named, the study can't be checked, and &quot;always&quot; is a red flag. Strategies depend on the industry and the business. Never rely on a claim you can't trace.">A 2022 Harvard study of 4,000 restaurants proves cost leadership always beats differentiation.</button>
+      <button type="button" class="ais" data-bad="0">An advantage is sustainable only if rivals can't easily copy it.</button>
+    </div>
+    <div class="actions"><button class="btn" id="aiReveal3" type="button">Reveal</button><button class="btn ghost" id="aiReset3" type="button">Start over</button><span class="feedback" id="aiFb3" aria-live="polite"></span></div>
+    <div id="aiWhy3"></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Try it with AI">
+  <div class="inner">
+    <div class="kicker">AI</div>
+    <h2>Your turn: my thinking, AI's thinking, my evaluation</h2>
+    <div class="flow3">
+      <div><span class="tag">1. My thinking</span><p><b>Laptop closed.</b> Pick a business you choose over its competitors. In your Consultant Log, name its strategy (cost leadership, differentiation, or focus) and one of the five forces that matters to it.</p></div>
+      <div><span class="tag">2. AI's thinking</span><p>Open Gemini signed in with your <b>elon.edu</b> account (check the profile picture first). Replace [BUSINESS] and paste this prompt:</p>
+        <div class="prompt" id="aiPrompt3">You are a business analyst. Explain which of Porter's three generic strategies (cost leadership, differentiation, or focus) [BUSINESS] uses. Give three pieces of evidence as bullets, name the source for each, and say "not sure" if you can't verify something. Use under 150 words.</div>
+        <button class="btn ghost" id="copyPrompt3" type="button">Copy prompt</button> <span class="feedback" id="copyFb3" aria-live="polite"></span></div>
+      <div><span class="tag">3. My evaluation</span><p>Verify before you trust:</p>
+        <div class="steps">
+          <label><input type="checkbox"><span>Can I find each claim in a real source, like the company's website, an annual report, or the news?</span></label>
+          <label><input type="checkbox"><span>Are the dates and numbers current and correct?</span></label>
+          <label><input type="checkbox"><span>Did it name a source I can't find?</span></label>
+          <label><input type="checkbox"><span>Does its strategy label match the class definition?</span></label>
+          <label><input type="checkbox"><span>What did AI see that I missed, and what did I notice that it missed?</span></label>
+        </div>
+      </div>
+    </div>
+    <p class="note">Your thinking is captured before the tool can influence it. On timed Excel work and the certification exam, you'll work without AI.</p>
+  </div>
+</section>
+
+<section class="slide" data-title="Your call">
+  <div class="inner">
+    <div class="kicker">Decide</div>
+    <h2>How should The Copper Table compete with Lantern Kitchen?</h2>
+    <p>Lantern Kitchen has scale, a bigger menu, and loyal customers. Which plan gives The Copper Table the best chance?</p>
+<div class="q" data-quiz>
+<p></p>
+<div class="opts"><button class="opt">Match their prices on every dish.</button><button class="opt" data-right>Build a local-ingredient dining experience, and use the loyalty system’s guest data to personalize visits and offers.</button><button class="opt">Add 40 new dishes to match their menu.</button><button class="opt">Wait and see how many customers leave.</button></div>
+<p class="explain">That plan differentiates in a way a larger rival can’t quickly copy, and technology (guest data) supports it. Matching prices attacks the rival where it is strongest, copying the menu chases its advantage, and waiting is not a strategy.</p>
+</div>
+    <p class="lede">Discuss: what data would show, within a month, whether the plan is working?</p>
+  </div>
+</section>
+
+<section class="slide" data-title="Log it">
+  <div class="inner">
+    <div class="logtop">
+      <div>
+        <div class="kicker">Consultant Log</div>
+        <h1 class="logit">LOG IT</h1>
+        <p class="lede">Laptops closed. Notebook only.</p>
+      </div>
+      <div class="entryhead" aria-label="Entry heading">
+        <div><b>Date:</b> <span class="blank"></span></div>
+        <div><b>Log #:</b> <span class="blank"></span></div>
+        <div><b>Topic:</b> Competitive Strategy and AI Research</div>
+      </div>
+    </div>
+    <div class="qstrip" aria-label="Today's questions">
+      <div class="on">KNOW<small>What do I understand?</small></div>
+      <div class="on">DO<small>What can I do?</small></div>
+      <div class="on">DECIDE<small>What decision could this support?</small></div>
+      <div class="on">VERIFY<small>How do I know?</small></div>
+      <div>DEFEND<small>Could I explain and defend this?</small></div>
+    </div>
+    <div class="prompts">
+      <div><span class="tag">KNOW</span><p>Name Porter's three generic strategies. Pick one and explain it in your own words with an example.</p></div>
+      <div><span class="tag">DO</span><p>Use the five forces to describe the one force that matters most to a business you like, and why.</p></div>
+      <div><span class="tag">DECIDE</span><p>Which strategy would you recommend for The Copper Table, and how would technology support it?</p></div>
+      <div><span class="tag">VERIFY</span><p>Pick one claim from the AI answer you got today. How did you check it, and what did you find?</p></div><div><span class="tag">BRIEF</span><p>Name one technology your client uses or could reasonably use. Which does it affect most: cost, efficiency, customers, suppliers, operations, differentiation, competition, or decision-making? Why does it matter to the business? (Assignment 1, Part 3)</p></div>
+    </div>
+    <p class="note">Sentences, bullets, or a diagram are all fine. Unsure? Write the question you still have.</p>
+    <div class="warn"><b>Coming up tomorrow: inside the technology.</b> The Copper Table wants to add kitchen screens and online ordering. What are the hardware, software, and network pieces behind a system like that? Think about the last time Wi-Fi or an app failed you, and work out what was actually broken.</div>
+  </div>
+</section>
+
+
+</main>
+
+<footer class="nav">
+  <button class="navbtn" id="prev" type="button">Back</button>
+  <div class="dots" id="dots" role="tablist" aria-label="Slides"></div>
+  <span class="count" id="count"></span>
+  <button class="navbtn" id="next" type="button">Next</button>
+</footer>
+
+<script>
+(function(){
+  const slides=[...document.querySelectorAll('.slide')];
+  const dots=document.getElementById('dots');
+  let cur=0;
+  slides.forEach((s,i)=>{
+    const d=document.createElement('button');
+    d.className='dot';d.type='button';d.setAttribute('aria-label',(i+1)+': '+s.dataset.title);d.title=s.dataset.title;
+    d.onclick=()=>go(i);dots.appendChild(d);
+  });
+  function go(i){
+    cur=Math.max(0,Math.min(slides.length-1,i));
+    slides.forEach((s,j)=>s.classList.toggle('active',j===cur));
+    [...dots.children].forEach((d,j)=>d.setAttribute('aria-current',j===cur?'true':'false'));
+    document.getElementById('prev').disabled=cur===0;
+    document.getElementById('next').disabled=cur===slides.length-1;
+    document.getElementById('count').textContent=(cur+1)+' / '+slides.length;
+    slides[cur].scrollTop=0;
+    try{history.replaceState(null,'','#'+(cur+1))}catch(e){}
+  }
+  document.getElementById('prev').onclick=()=>go(cur-1);
+  document.getElementById('next').onclick=()=>go(cur+1);
+  document.addEventListener('keydown',e=>{
+    if(e.target.matches('textarea,input'))return;
+    if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();go(cur+1)}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur-1)}
+    else if(e.key==='f'||e.key==='F'){toggleFs()}
+  });
+  let tx=null;
+  document.getElementById('deck').addEventListener('touchstart',e=>{tx=e.touches[0].clientX},{passive:true});
+  document.getElementById('deck').addEventListener('touchend',e=>{
+    if(tx===null||e.target.closest('.item,.bin,.pool'))return;
+    const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>70)go(cur+(dx<0?1:-1));tx=null;
+  });
+  function toggleFs(){
+    try{if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen();}catch(e){}
+  }
+  document.getElementById('fsBtn').onclick=toggleFs;
+  const start=parseInt(location.hash.slice(1),10);
+  go(isNaN(start)?0:start-1);
+  document.querySelectorAll('.reveal .card').forEach(c=>c.onclick=()=>c.setAttribute('aria-expanded',c.getAttribute('aria-expanded')==='true'?'false':'true'));
+  document.querySelectorAll('[data-quiz]').forEach(q=>{
+    q.querySelectorAll('.opt').forEach(o=>o.onclick=()=>{
+      if(o.hasAttribute('data-right')){o.classList.add('right');q.querySelector('.explain').classList.add('on')}
+      else o.classList.add('wrong');
+    });
+  });
+  document.querySelectorAll('.di').forEach(d=>d.querySelectorAll('[data-pick]').forEach(b=>b.onclick=()=>{
+    d.querySelectorAll('[data-pick]').forEach(x=>x.classList.toggle('picked',x===b));
+    const ok=b.dataset.pick===d.dataset.ans;d.classList.add('done');d.classList.toggle('ok',ok);d.classList.toggle('no',!ok);
+  }));
+
+  // ---- Day 3 interactions ----
+  function tabsInit(tabsId,panelId,data){
+    const panel=document.getElementById(panelId),btns=document.querySelectorAll('#'+tabsId+' button');
+    function show(i){
+      panel.innerHTML='<dl>'+Object.entries(data[i]).map(([k,v])=>'<dt>'+k+'</dt><dd>'+v+'</dd>').join('')+'</dl>';
+      btns.forEach(b=>b.setAttribute('aria-selected',b.dataset.i==i?'true':'false'));
+    }
+    btns.forEach(b=>b.onclick=()=>show(+b.dataset.i));
+    show(0);
+  }
+
+  // reasons chips
+  (function(){
+    const box=document.getElementById('reasons'),msg=document.getElementById('reasonMsg');
+    box.addEventListener('click',e=>{
+      const c=e.target.closest('.chip');if(!c)return;
+      c.setAttribute('aria-pressed',c.getAttribute('aria-pressed')==='true'?'false':'true');
+      const n=box.querySelectorAll('[aria-pressed="true"]').length;
+      msg.textContent=n===0?'Pick a few reasons.':'You chose '+n+' reason'+(n===1?'':'s')+'. Each one is a bet on a strategy, and a business has to decide which bet to make.';
+    });
+  })();
+
+
+
+  tabsInit('nmTabs','nmPanel',[
+    {'What it measures':'Revenue is money coming in from sales. Profit is what is left after costs.','Why profit matters':'Sustainability, investor confidence, taxes (based on profit), and operational efficiency.','Example':'$500,000 in sales with $450,000 in costs leaves $50,000 of profit.'},
+    {'What it measures':'How efficiently a business turns revenue into profit.','Formula':'(Net profit ÷ Revenue) × 100','Example':'Revenue of $1 million and profit of $200,000 is a 20% margin.'},
+    {'What it measures':'A company’s size relative to its market and competitors.','Formula':'(Company sales ÷ Total market sales) × 100','Example':'$2.2 million in sales in a $10 million downtown dining market is 22% share.'},
+    {'What it measures':'The profitability of an investment.','Formula':'(Net profit ÷ Investment cost) × 100, where net profit is the benefits minus the cost','Example':'Warehouse software costs $400,000 and brings $380,000 a year in benefits. ROI is −5%. Is that automatically a bad investment? What else would you want to know?'}
+  ]);
+
+  // prompt builder
+  (function(){
+    const base='Tell me about Starbucks.';
+    const opts=[...document.querySelectorAll('#pbOpts input')],out=document.getElementById('pbOut'),meter=document.getElementById('pbMeter');
+    function upd(){
+      const on=opts.filter(o=>o.checked);
+      out.textContent=on.length?on.map(o=>o.dataset.t).join(' '):base;
+      meter.style.width=(on.length/opts.length*100)+'%';
+    }
+    opts.forEach(o=>o.addEventListener('change',upd));
+    upd();
+  })();
+
+  // AI error spotting
+  function flagGame(boxId,revealId,resetId,fbId,whyId,total){
+    const box=document.getElementById(boxId),why=document.getElementById(whyId),fb=document.getElementById(fbId);
+    box.querySelectorAll('.ais').forEach(a=>a.onclick=()=>{if(!box.classList.contains('revealed'))a.classList.toggle('flag')});
+    document.getElementById(revealId).onclick=()=>{
+      box.classList.add('revealed');let hit=0;why.innerHTML='';
+      box.querySelectorAll('.ais').forEach(a=>{
+        const f=a.classList.contains('flag'),b=a.dataset.bad==='1';a.classList.remove('flag');
+        if(b){a.classList.add(f?'hit':'miss');if(f)hit++;why.insertAdjacentHTML('beforeend','<p><b>"'+a.textContent+'"</b> '+a.dataset.why+'</p>')}
+        else if(f)a.classList.add('false');
+      });
+      fb.textContent='You caught '+hit+' of '+total+' problems.';
+    };
+    document.getElementById(resetId).onclick=()=>{box.classList.remove('revealed');box.querySelectorAll('.ais').forEach(a=>a.classList.remove('flag','hit','miss','false'));why.innerHTML='';fb.textContent=''};
+  }
+  flagGame('aibox3','aiReveal3','aiReset3','aiFb3','aiWhy3',3);
+
+  // copy prompt
+  document.getElementById('copyPrompt3').onclick=()=>{
+    const t=document.getElementById('aiPrompt3').textContent,fb=document.getElementById('copyFb3');
+    const fallback=()=>{const r=document.createRange();r.selectNodeContents(document.getElementById('aiPrompt3'));const sel=getSelection();sel.removeAllRanges();sel.addRange(r);fb.textContent='Selected. Press Ctrl+C (or Cmd+C) to copy.'};
+    try{navigator.clipboard.writeText(t).then(()=>fb.textContent='Copied.',fallback)}catch(e){fallback()}
+  };
+
+  // numeric checks (accept one or more answers)
+  function numCheck(inp,btn,fb,answers,ok,bad){
+    document.getElementById(btn).onclick=()=>{
+      const v=parseFloat(document.getElementById(inp).value.replace(/[$,%\s]/g,'').replace('−','-'));const f=document.getElementById(fb);
+      if(isNaN(v))f.textContent='Type a number first.';
+      else if(answers.some(a=>Math.abs(v-a)<0.0005))f.textContent=ok;
+      else f.textContent=bad;
+    };
+  }
+  numCheck('roi1','roi1Btn','roi1Fb',[25,0.25],'Correct: 25%. Net profit of $3,000 on a $12,000 investment.','Not quite. B6 should be $15,000, B7 should be $3,000, and B8 is B7 divided by B2.');
+  numCheck('roi2','roi2Btn','roi2Fb',[-12.5,-0.125],'Correct: −12.5%. Benefits fall to $10,500, which is less than the cost, and every dependent cell updated by itself.','Not quite. With B5 at 3000, benefits are $10,500, net profit is −$1,500, and ROI is that divided by $12,000.');
+
+  // ---- Day 3 visual strategy section ----
+  function makeSort(poolId,binsId,checkId,resetId,fbId,total){
+    const pool=document.getElementById(poolId),bins=document.getElementById(binsId),fb=document.getElementById(fbId);
+    const original=[...pool.children];
+    let sel=null;
+    function select(it){
+      if(sel)sel.setAttribute('aria-pressed','false');
+      sel=(sel===it)?null:it;
+      if(sel)sel.setAttribute('aria-pressed','true');
+    }
+    function place(it,bin){it.classList.remove('right','wrong');bin.appendChild(it);it.setAttribute('aria-pressed','false');sel=null;fb.textContent=''}
+    pool.addEventListener('click',e=>{const it=e.target.closest('.item');if(it)select(it)});
+    bins.addEventListener('click',e=>{
+      const it=e.target.closest('.item');
+      if(it){select(it);return}
+      const bin=e.target.closest('.bin');if(bin&&sel)place(sel,bin);
+    });
+    bins.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.classList.contains('bin')&&sel){e.preventDefault();place(sel,e.target)}});
+    original.forEach(it=>it.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain','x');sel=it}));
+    bins.querySelectorAll('.bin').forEach(b=>{
+      b.addEventListener('dragover',e=>{e.preventDefault();b.classList.add('drop')});
+      b.addEventListener('dragleave',()=>b.classList.remove('drop'));
+      b.addEventListener('drop',e=>{e.preventDefault();b.classList.remove('drop');if(sel)place(sel,b)});
+    });
+    pool.addEventListener('dragover',e=>e.preventDefault());
+    pool.addEventListener('drop',e=>{e.preventDefault();if(sel)place(sel,pool)});
+    document.getElementById(checkId).onclick=()=>{
+      let right=0;
+      bins.querySelectorAll('.item').forEach(it=>{const ok=it.dataset.ans===it.parentElement.dataset.bin;it.classList.toggle('right',ok);it.classList.toggle('wrong',!ok);if(ok)right++});
+      const left=pool.querySelectorAll('.item').length;
+      fb.textContent=right+' of '+total+' correct'+(left?' ('+left+' still to sort)':'')+(right===total?'. Nice work.':'. Orange items are in the wrong place; move them and check again.');
+    };
+    document.getElementById(resetId).onclick=()=>{original.forEach(it=>{it.classList.remove('right','wrong');it.setAttribute('aria-pressed','false');pool.appendChild(it)});sel=null;fb.textContent=''};
+  }
+  makeSort('poolM','binsM','sortCheckM','sortResetM','sortFbM',8);
+
+  // positioning map: drag chips (or select a chip, then click the map)
+  (function(){
+    const tray=document.getElementById('ptray'),map=document.getElementById('pmap'),fb=document.getElementById('pmFb'),why=document.getElementById('pmWhy');
+    const chips=[...tray.children];let sel=null;
+    function putAt(c,x,y){
+      const r=map.getBoundingClientRect();
+      x=Math.max(0,Math.min(r.width,x));y=Math.max(0,Math.min(r.height,y));
+      map.appendChild(c);c.classList.add('placed');c.style.left=x+'px';c.style.top=y+'px';c.style.transform='translate(-50%,-50%)';
+      c.classList.remove('right','wrong');fb.textContent='';why.innerHTML='';
+    }
+    function home(c){c.classList.remove('placed','right','wrong');c.style.left=c.style.top=c.style.transform='';tray.appendChild(c)}
+    chips.forEach(c=>{
+      c.setAttribute('tabindex','0');
+      c.addEventListener('pointerdown',e=>{
+        e.preventDefault();
+        let moved=false;const sx=e.clientX,sy=e.clientY;
+        function mv(ev){
+          if(!moved&&Math.hypot(ev.clientX-sx,ev.clientY-sy)<6)return;
+          moved=true;c.classList.add('drag');
+          if(c.parentElement!==map){map.appendChild(c);c.classList.add('placed')}
+          const r=map.getBoundingClientRect();
+          c.style.transform='translate(-50%,-50%)';
+          c.style.left=Math.max(0,Math.min(r.width,ev.clientX-r.left))+'px';
+          c.style.top=Math.max(0,Math.min(r.height,ev.clientY-r.top))+'px';
+          c.classList.remove('right','wrong');fb.textContent='';why.innerHTML='';
+        }
+        function up(ev){
+          document.removeEventListener('pointermove',mv);document.removeEventListener('pointerup',up);document.removeEventListener('pointercancel',up);
+          c.classList.remove('drag');
+          if(moved){
+            const r=map.getBoundingClientRect();
+            const inside=ev.clientX>=r.left&&ev.clientX<=r.right&&ev.clientY>=r.top&&ev.clientY<=r.bottom;
+            if(!inside)home(c);
+          }else{
+            if(sel&&sel!==c){sel.setAttribute('aria-pressed','false');sel.style.outline=''}
+            sel=(sel===c)?null:c;c.setAttribute('aria-pressed',sel?'true':'false');
+            c.style.outline=sel?'3px solid var(--gold)':'';
+          }
+        }
+        document.addEventListener('pointermove',mv);document.addEventListener('pointerup',up);document.addEventListener('pointercancel',up);
+      });
+    });
+    map.addEventListener('click',e=>{
+      if(!sel||e.target.closest('.pchip'))return;
+      const r=map.getBoundingClientRect();putAt(sel,e.clientX-r.left,e.clientY-r.top);
+      sel.style.outline='';sel.setAttribute('aria-pressed','false');sel=null;
+    });
+    document.getElementById('pmCheck').onclick=()=>{
+      const r=map.getBoundingClientRect();let right=0,placed=0,notes=[];
+      chips.forEach(c=>{
+        if(c.parentElement!==map){return}
+        placed++;
+        const x=parseFloat(c.style.left)/r.width,y=parseFloat(c.style.top)/r.height;
+        const q=(y<0.5?'T':'B')+(x>=0.5?'R':'L');
+        const ok=q===c.dataset.t;
+        c.classList.toggle('right',ok);c.classList.toggle('wrong',!ok);
+        if(ok)right++;else notes.push('<p><b>'+c.firstChild.textContent.trim()+':</b> '+c.dataset.why+'</p>');
+      });
+      const total=chips.length;
+      fb.textContent=right+' of '+total+' in the right zone'+(placed<total?' ('+(total-placed)+' still in the tray)':'')+(right===total?'. Nice work.':'. Gold chips are in the wrong zone.');
+      why.innerHTML=notes.join('');
+    };
+    document.getElementById('pmReset').onclick=()=>{chips.forEach(home);sel=null;fb.textContent='';why.innerHTML=''};
+  })();
+
+  // five forces dials
+  (function(){
+    const names={entrants:'New entrants',subs:'Substitutes',buyers:'Buyer power',suppliers:'Supplier power',rivalry:'Rivalry'};
+    function meter(vals,bar,label){
+      const keys=Object.keys(names);let sum=0;
+      keys.forEach(k=>sum+=vals[k]||2);
+      const pct=Math.round((15-sum)/10*100);
+      bar.style.width=Math.max(4,pct)+'%';
+      const hi=keys.filter(k=>(vals[k]||2)===3).length;
+      const word=pct>=67?'Attractive':pct>=34?'Moderate':'Tough';
+      label.textContent=word+' industry: '+pct+'% profit potential. '+hi+' of 5 forces are High.';
+    }
+    // dials
+    const vals={},bar=document.getElementById('ffBar'),lab=document.getElementById('ffLabel');
+    document.querySelectorAll('.seg').forEach(seg=>{
+      const f=seg.dataset.f;
+      seg.querySelectorAll('button').forEach(b=>{
+        b.setAttribute('aria-pressed','false');
+        b.onclick=()=>{vals[f]=+b.dataset.v;seg.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));meter(vals,bar,lab)};
+      });
+    });
+    meter(vals,bar,lab);
+    const bench={entrants:2,subs:3,buyers:3,suppliers:2,rivalry:3};
+    const bb=document.getElementById('ffBench'),note=document.getElementById('ffBenchNote');
+    bb.onclick=()=>{
+      const on=!note.hidden;note.hidden=on;
+      document.querySelectorAll('.seg').forEach(seg=>{
+        seg.querySelectorAll('button').forEach(b=>b.classList.toggle('bm',!on&&+b.dataset.v===bench[seg.dataset.f]));
+      });
+      bb.textContent=on?'Compare with a class-discussion read':'Hide the class-discussion read';
+    };
+    // event simulator
+    const evs=[
+      ['A meal-kit company starts delivering restaurant-quality dinners to downtown apartments.','subs',1,'Diners can meet the same need another way: a substitute.'],
+      ['A city grant cuts the cost of opening a restaurant, and a dozen newcomers announce plans.','entrants',1,'Barriers to entry fell, so new entrants are easier.'],
+      ['A review app lets diners compare every menu, price, and wait time instantly.','buyers',1,'Customers can compare and switch for free: buyer power rises.'],
+      ['The only organic farm co-op in town raises its prices 20%.','suppliers',1,'A supplier with few rivals can push costs up: supplier power rises.'],
+      ['Lantern Kitchen and two other rivals launch half-price weeks.','rivalry',1,'Existing competitors fighting on price: rivalry intensifies.'],
+      ['The Copper Table signs exclusive contracts with three regional farms.','suppliers',-1,'Alternatives for suppliers shrink and The Copper Table gains leverage: supplier power falls.']
+    ];
+    const evVals={entrants:2,subs:2,buyers:2,suppliers:2,rivalry:2};
+    const card=document.getElementById('evCard'),num=document.getElementById('evNum'),txt=document.getElementById('evText');
+    const eb=document.getElementById('evBar'),el=document.getElementById('evLabel'),fb=document.getElementById('evFb'),next=document.getElementById('evNext');
+    const boxes=[...document.querySelectorAll('button.fbx')];
+    let i=0,done=false;
+    function show(){
+      boxes.forEach(b=>b.classList.remove('hit','miss'));
+      done=false;next.disabled=true;fb.textContent='';
+      num.textContent='Event '+(i+1)+' of '+evs.length;txt.textContent=evs[i][0];
+    }
+    boxes.forEach(b=>b.onclick=()=>{
+      if(done||i>=evs.length)return;
+      const ev=evs[i];
+      if(b.dataset.f===ev[1]){
+        b.classList.remove('miss');b.classList.add('hit');done=true;
+        evVals[ev[1]]=Math.max(1,Math.min(3,evVals[ev[1]]+ev[2]));
+        meter(evVals,eb,el);
+        fb.textContent=ev[3];
+        if(i===evs.length-1){next.textContent='See where the industry ended up';}
+        next.disabled=false;
+      }else{
+        b.classList.add('miss');fb.textContent='Not that one. Ask what changed: who has more power, or what is easier for whom?';
+      }
+    });
+    next.onclick=()=>{
+      i++;
+      if(i>=evs.length){
+        num.textContent='Done';txt.textContent='Six events later, '+el.textContent.split(':')[0].toLowerCase()+'. Forces move all the time, so a strategy has to be re-checked, not chosen once.';
+        next.disabled=true;fb.textContent='';boxes.forEach(b=>b.disabled=true);return;
+      }
+      show();
+    };
+    meter(evVals,eb,el);show();
+  })();
+
+  // value chain
+  (function(){
+    const D={
+      infra:['Firm infrastructure','Management, accounting, finance, legal, and the planning that keeps the firm running.','Bookkeeping and reporting that show which dishes and nights actually make money.'],
+      hr:['Human resource management','Hiring, training, scheduling, and paying people.','Scheduling servers around reservation demand; training staff on the menu.'],
+      tech:['Technology development','Systems and know-how that improve every other activity. This is where MIS lives.','A point-of-sale system, online reservations, kitchen screens, and an inventory spreadsheet.'],
+      proc:['Procurement','Buying the inputs every activity needs.','Negotiating with farms and distributors for produce, proteins, and linens.'],
+      in:['Inbound logistics','Receiving, storing, and managing inputs.','Deliveries from farms, cold storage, and tracking inventory.'],
+      ops:['Operations','Turning inputs into the product.','Prep, cooking, and plating in the kitchen.'],
+      out:['Outbound logistics','Getting the product to the customer.','Table service, takeout, and delivery handoffs.'],
+      mkt:['Marketing and sales','Making customers aware and getting them to buy.','Social media, reservations, menus, and the local-food story.'],
+      svc:['Service','Support after the sale.','Handling complaints, remembering regulars, and follow-up for events.']
+    };
+    const det=document.getElementById('vcDetail'),all=[...document.querySelectorAll('.vb,.vp')];
+    all.forEach(b=>b.onclick=()=>{
+      all.forEach(x=>x.classList.toggle('on',x===b));
+      const d=D[b.dataset.k];
+      det.innerHTML='<b>'+d[0]+'.</b> '+d[1]+'<br><b>At The Copper Table:</b> '+d[2];
+    });
+  })();
+
+})();
+</script>
+</body>
+</html>

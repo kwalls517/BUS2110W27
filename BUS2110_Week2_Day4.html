@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Day 9: Responsibility and Risk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f4f2; --surface:#ffffff; --ink:#221a1b; --muted:#5d5657; --line:#d9d6d3;
+  --maroon:#73000a; --maroon-ink:#73000a; --gold:#b59a57; --gold-soft:#efe6cf; --teal:#527b82; --teal-soft:#dde8e9;
+  --good:#2f6b3a; --good-soft:#dcefdf; --bad:#9a3412; --bad-soft:#fbe4d8;
+  --display:'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --body:'Atkinson Hyperlegible', 'Segoe UI', Arial, sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1b1617; --surface:#262021; --ink:#f1ebe8; --muted:#b9afad; --line:#433a3b;
+    --maroon:#8f1a26; --maroon-ink:#e8858e; --gold:#cdb57a; --gold-soft:#3a3222; --teal:#7fa7ad; --teal-soft:#24363a;
+    --good:#8fd19b; --good-soft:#1f3624; --bad:#f4a582; --bad-soft:#3e2519;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1b1617; --surface:#262021; --ink:#f1ebe8; --muted:#b9afad; --line:#433a3b;
+  --maroon:#8f1a26; --maroon-ink:#e8858e; --gold:#cdb57a; --gold-soft:#3a3222; --teal:#7fa7ad; --teal-soft:#24363a;
+  --good:#8fd19b; --good-soft:#1f3624; --bad:#f4a582; --bad-soft:#3e2519;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:clamp(17px,1.35vw,22px);line-height:1.5;display:flex;flex-direction:column}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+
+header.bar{display:flex;align-items:center;justify-content:space-between;padding:12px clamp(16px,4vw,48px);border-bottom:4px solid var(--gold);background:var(--maroon);color:#fff}
+header.bar .course{font-family:var(--display);font-weight:700;letter-spacing:.01em}
+header.bar .tools{display:flex;gap:8px}
+header.bar button{background:transparent;border:1px solid rgba(255,255,255,.5);border-radius:6px;padding:4px 12px;font-size:.8em;color:#fff}
+
+main{flex:1;position:relative;overflow:hidden}
+.slide{position:absolute;inset:0;overflow-y:auto;padding:clamp(20px,4vh,48px) clamp(16px,5vw,72px) 32px;display:none}
+.slide.active{display:block}
+.inner{max-width:1120px;margin:0 auto}
+@media (prefers-reduced-motion:no-preference){.slide.active .inner{animation:in .35s ease-out}}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+h1,h2,h3{font-family:var(--display);line-height:1.1;margin:0 0 .4em}
+h1{font-size:clamp(40px,5.6vw,84px);font-weight:800;letter-spacing:-.02em}
+h2{font-size:clamp(30px,3.6vw,54px);font-weight:800;letter-spacing:-.01em;color:var(--maroon-ink)}
+h3{font-size:1.15em;font-weight:700}
+p{margin:0 0 .8em;max-width:68ch}
+.lede{font-size:1.2em;color:var(--muted)}
+.kicker{font-family:var(--display);font-weight:700;color:var(--teal);margin-bottom:.5em}
+
+/* title slide */
+.title-slide .inner{display:flex;flex-direction:column;justify-content:center;min-height:100%}
+.title-slide h1 span{display:block;color:var(--maroon-ink)}
+.agenda{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:1.5em}
+.agenda div{border-top:4px solid var(--gold);padding-top:8px}
+
+/* chips / poll */
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin:1em 0}
+.chip{border:2px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 18px}
+.chip[aria-pressed="true"]{border-color:var(--teal);background:var(--teal-soft);font-weight:700}
+.bignum{font-family:var(--display);font-weight:800;font-size:clamp(56px,7vw,110px);color:var(--maroon-ink);line-height:1}
+
+/* reveal cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:1em}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;text-align:left;width:100%}
+.card .back{display:none;margin-top:.5em;color:var(--muted)}
+.card[aria-expanded="true"] .back{display:block}
+.card[aria-expanded="true"]{border-color:var(--teal)}
+.card .hint{font-size:.8em;color:var(--teal);margin-top:.4em}
+.card[aria-expanded="true"] .hint{display:none}
+
+/* the framework band: signature visual */
+.band{margin:1.4em 0 .6em}
+.band-row{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.comp{background:var(--surface);border:2px solid var(--line);border-radius:8px;padding:14px 10px;text-align:center;font-family:var(--display);font-weight:700;font-size:1.05em}
+.comp small{display:block;font-family:var(--body);font-weight:400;font-size:.72em;color:var(--muted);margin-top:4px}
+.comp.tech{border-color:var(--teal)}
+.comp.human{border-color:var(--gold)}
+.brackets{display:grid;grid-template-columns:repeat(5,1fr);column-gap:6px;margin-top:10px}
+.brk{border:3px solid;border-top:none;height:22px;border-radius:0 0 8px 8px;position:relative;margin-bottom:34px}
+.brk span{position:absolute;left:50%;top:100%;transform:translateX(-50%);font-family:var(--display);font-weight:800;padding-top:4px}
+.it{grid-column:1 / span 3;grid-row:1;border-color:var(--teal);color:var(--teal)}
+.is{grid-column:1 / span 5;grid-row:2;border-color:var(--maroon-ink);color:var(--maroon-ink)}
+.toggle{display:flex;gap:8px;margin:1em 0}
+.toggle button{border:2px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 18px;font-weight:700}
+.toggle button[aria-pressed="true"]{background:var(--maroon);border-color:var(--maroon);color:#fff}
+.band.show-it .comp.human{opacity:.25}
+.band.show-it .is-l{visibility:hidden}
+.band.show-is .it-l{visibility:hidden}
+.band-detail{background:var(--surface);border-left:6px solid var(--gold);padding:14px 18px;border-radius:0 8px 8px 0;min-height:4em}
+.band-row .comp{cursor:pointer}
+.band-row .comp[aria-pressed="true"]{background:var(--gold-soft)}
+
+/* sort activity */
+.pool{display:flex;flex-wrap:wrap;gap:8px;min-height:56px;padding:12px;border:2px dashed var(--line);border-radius:10px;margin:1em 0}
+.item{background:var(--surface);border:2px solid var(--line);border-radius:8px;padding:8px 14px;font-size:.92em}
+.item[aria-pressed="true"]{border-color:var(--maroon-ink);box-shadow:0 0 0 3px var(--gold)}
+.item.right{border-color:var(--good);background:var(--good-soft)}
+.item.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.bins{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.bin{background:var(--surface);border:2px solid var(--line);border-radius:10px;padding:10px;min-height:170px;display:flex;flex-direction:column;gap:6px;text-align:left}
+.bin-title{font-family:var(--display);font-weight:800;text-align:center;padding-bottom:6px;border-bottom:3px solid var(--teal)}
+.bin.h .bin-title{border-color:var(--gold)}
+.bin.drop{background:var(--teal-soft)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:1em}
+.btn{background:var(--maroon);color:#fff;border:none;border-radius:8px;padding:10px 20px;font-weight:700}
+.btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--line)}
+.feedback{font-weight:700}
+@media (max-width:760px){.bins,.band-row{grid-template-columns:1fr 1fr}.brackets{display:none}}
+
+/* tabs */
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:1em 0 0}
+.tabs button{border:2px solid var(--line);border-bottom:none;background:var(--bg);border-radius:8px 8px 0 0;padding:8px 16px;font-weight:700}
+.tabs button[aria-selected="true"]{background:var(--surface);border-color:var(--teal)}
+.panel{background:var(--surface);border:2px solid var(--teal);border-radius:0 10px 10px 10px;padding:18px 22px}
+.panel dl{display:grid;grid-template-columns:max-content 1fr;gap:8px 20px;margin:0}
+.panel dt{font-family:var(--display);font-weight:700}
+.panel dd{margin:0}
+
+/* quiz + scenario */
+.q{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 22px;margin-bottom:16px}
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:.6em}
+.opt{border:2px solid var(--line);background:var(--bg);border-radius:8px;padding:8px 16px;text-align:left}
+.opt.right{border-color:var(--good);background:var(--good-soft);font-weight:700}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.explain{margin-top:.6em;display:none}
+.explain.on{display:block}
+.clock{font-family:var(--display);font-weight:800;color:var(--teal)}
+.stars{font-size:1.8em;letter-spacing:.1em;color:var(--gold)}
+.scene{background:var(--surface);border-radius:10px;border:1px solid var(--line);padding:22px 26px}
+.meter{height:10px;background:var(--line);border-radius:6px;overflow:hidden;margin:6px 0 16px}
+.meter span{display:block;height:100%;background:var(--gold);width:0;transition:width .3s}
+
+.strat{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:1em}
+.strat div{background:var(--surface);border-top:5px solid var(--teal);padding:16px;border-radius:0 0 8px 8px}
+.warn{background:var(--gold-soft);border-left:6px solid var(--gold);padding:14px 18px;border-radius:0 8px 8px 0;margin-top:1.2em}
+textarea{width:100%;min-height:110px;font:inherit;padding:12px;border-radius:8px;border:2px solid var(--line);background:var(--surface);color:var(--ink)}
+
+.logtop{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:20px;border-bottom:4px solid var(--gold);padding-bottom:16px}
+.logit{color:var(--maroon-ink);margin:0;font-size:clamp(56px,7vw,110px)}
+.logtop .lede{margin:0}
+.entryhead{background:var(--surface);border:2px solid var(--ink);border-radius:4px;padding:12px 18px;display:flex;flex-direction:column;gap:6px;min-width:280px}
+.blank{display:inline-block;width:150px;border-bottom:2px solid var(--muted);height:1.1em;vertical-align:bottom}
+.qstrip{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:18px 0}
+.qstrip div{font-family:var(--display);font-weight:800;text-align:center;padding:10px 6px;border-radius:6px;border:2px solid var(--line);color:var(--muted);opacity:.55}
+.qstrip div.on{border-color:var(--maroon);background:var(--maroon);color:#fff;opacity:1}
+.qstrip small{display:block;font-family:var(--body);font-weight:400;font-size:.7em;margin-top:2px}
+.prompts{display:flex;flex-direction:column;gap:12px}
+.prompts div{display:flex;gap:16px;align-items:baseline;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 18px}
+.prompts p{margin:0}
+.tag{font-family:var(--display);font-weight:800;color:var(--maroon-ink);min-width:5.5em}
+.note{color:var(--muted);margin-top:12px}
+@media (max-width:760px){.qstrip{grid-template-columns:1fr 1fr}.prompts div{flex-direction:column;gap:4px}}
+.weekgoals{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:1em}
+.wg{background:var(--surface);border:1px solid var(--line);border-top:6px solid var(--maroon);border-radius:0 0 10px 10px;padding:18px 22px}
+.wg.excel,.wg.analytics{border-top-color:var(--teal)}
+.wg h3{color:var(--maroon-ink)}
+.wg.excel h3,.wg.analytics h3{color:var(--teal)}
+.wg p{margin:0}
+@media (max-width:760px){.weekgoals{grid-template-columns:1fr}}
+.dilist{display:flex;flex-direction:column;gap:10px;margin-top:1em}
+.di{background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--line);border-radius:0 8px 8px 0;padding:12px 18px;display:grid;grid-template-columns:1fr auto;gap:6px 16px;align-items:center}
+.di p{margin:0}
+.di .diwhy{grid-column:1 / -1;color:var(--muted);display:none;font-size:.92em}
+.di.done .diwhy{display:block}
+.di.ok{border-left-color:var(--good)}
+.di.no{border-left-color:var(--bad)}
+.dibtns{display:flex;gap:6px}
+.dibtns button{border:2px solid var(--line);background:var(--bg);border-radius:6px;padding:6px 14px;font-weight:700}
+.dibtns button.picked{border-color:var(--ink)}
+.chip.right{border-color:var(--good);background:var(--good-soft)}
+.chip.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.chip.missed{border-style:dashed;border-color:var(--good)}
+.steps{display:flex;flex-direction:column;gap:8px}
+.steps label{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 14px;cursor:pointer}
+.steps input{width:22px;height:22px;flex:none;margin-top:3px;accent-color:var(--maroon)}
+.steps label:has(input:checked){opacity:.6}
+code{font-family:Consolas,'Courier New',monospace;background:var(--gold-soft);padding:1px 6px;border-radius:4px}
+.xl{border:2px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface);margin-top:1em;font-size:.85em}
+.xl .hs{background:transparent;border:2px solid transparent;border-radius:4px;cursor:pointer;text-align:left}
+.xl .hs:hover,.xl .hs.on{border-color:var(--gold);background:var(--gold-soft)}
+.xl-title{background:#1f6e43;color:#fff;padding:6px 10px}
+.xl-title .hs{color:#fff;font-weight:700}
+.xl-title .hs.on,.xl-title .hs:hover{color:var(--ink)}
+.xl-tabs{display:flex;gap:18px;width:100%;padding:6px 10px;flex-wrap:wrap}
+.xl-tabs .sel{font-weight:700;border-bottom:3px solid #1f6e43}
+.xl-ribbon{display:flex;gap:10px;width:100%;padding:10px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.xl-ribbon span{border:1px solid var(--line);border-radius:4px;padding:10px 14px;background:var(--bg)}
+.xl-fbar{display:flex;gap:8px;align-items:center;padding:6px 10px;border-bottom:1px solid var(--line)}
+.xl-fbar .nb{width:70px;border:1px solid var(--line)}
+.xl-fbar .fb{flex:1;border:1px solid var(--line);font-family:Consolas,'Courier New',monospace}
+.fx{font-style:italic;color:var(--muted)}
+.xl-grid{display:grid;grid-template-columns:44px repeat(4,1fr)}
+.xl-grid>*{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:4px 8px;min-height:32px}
+.xl-grid .xh{background:var(--bg);text-align:center;color:var(--muted);font-weight:700;border-radius:0}
+.xl-grid .n{text-align:right}
+.xl-grid .active{outline:3px solid #1f6e43;outline-offset:-3px}
+.xl-sheets{display:flex;gap:10px;align-items:center;padding:6px 10px;background:var(--bg)}
+.xl-sheets .hs{font-weight:700;border-bottom:3px solid #1f6e43}
+.xlsplit{display:grid;grid-template-columns:minmax(260px,1fr) 1.4fr;gap:24px;align-items:start}
+.dtab{border-collapse:collapse;background:var(--surface);width:100%}
+.dtab th,.dtab td{border:1px solid var(--line);padding:6px 12px;text-align:left}
+.dtab th{background:var(--teal-soft)}
+.dtab td:nth-child(n+2){text-align:right}
+.check{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:1.2em;background:var(--surface);border:2px solid var(--teal);border-radius:10px;padding:14px 18px}
+.check input{font:inherit;padding:8px 12px;border-radius:6px;border:2px solid var(--line);background:var(--bg);color:var(--ink);width:9em}
+.aibox{background:var(--surface);border:2px solid var(--line);border-radius:10px;padding:16px 20px;display:flex;flex-wrap:wrap;gap:4px;margin-top:1em}
+.ais{background:transparent;border:2px solid transparent;border-radius:6px;padding:4px 6px;text-align:left}
+.ais.flag{background:var(--gold-soft);border-color:var(--gold)}
+.ais.hit{background:var(--good-soft);border-color:var(--good)}
+.ais.miss{border-style:dashed;border-color:var(--bad)}
+.ais.false{background:var(--bad-soft);border-color:var(--bad)}
+#aiWhy p{background:var(--surface);border-left:6px solid var(--gold);padding:10px 16px;border-radius:0 8px 8px 0;margin-top:10px}
+.flow3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:1em}
+.flow3>div{background:var(--surface);border:1px solid var(--line);border-top:6px solid var(--maroon);border-radius:0 0 10px 10px;padding:16px 18px}
+.flow3>div:nth-child(2){border-top-color:var(--teal)}
+.flow3>div:nth-child(3){border-top-color:var(--gold)}
+.flow3 .steps label{font-size:.9em;padding:8px 10px}
+.prompt{font-family:Consolas,'Courier New',monospace;font-size:.85em;background:var(--bg);border:1px dashed var(--muted);border-radius:6px;padding:10px;margin:8px 0}
+@media (max-width:900px){.xlsplit,.flow3{grid-template-columns:1fr}.di{grid-template-columns:1fr}}
+.kbd-out{background:var(--gold-soft);border-left:6px solid var(--gold);border-radius:0 8px 8px 0;padding:12px 16px;margin:0 0 12px}
+kbd{font-family:Consolas,'Courier New',monospace;background:var(--surface);border:1px solid var(--muted);border-bottom-width:3px;border-radius:5px;padding:1px 8px;font-size:.95em}
+footer.nav{display:flex;align-items:center;gap:12px;padding:10px clamp(16px,4vw,48px);border-top:1px solid var(--line);background:var(--surface)}
+footer.nav .navbtn{background:var(--maroon);color:#fff;border:none;border-radius:8px;padding:8px 18px;font-weight:700;min-width:96px}
+footer.nav .navbtn:disabled{opacity:.35;cursor:default}
+.dots{flex:1;display:flex;justify-content:center;gap:6px;flex-wrap:wrap}
+.dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--muted);background:transparent;padding:0}
+.dot[aria-current="true"]{background:var(--maroon-ink);border-color:var(--maroon-ink)}
+.count{font-size:.8em;color:var(--muted);min-width:4em;text-align:right}
+
+/* ---- Day 2 additions ---- */
+.strat.three{grid-template-columns:repeat(3,1fr)}
+.bins.b3{grid-template-columns:repeat(3,1fr)}
+.di.five{grid-template-columns:1fr}
+.di.five .dibtns{flex-wrap:wrap}
+.stages{display:flex;flex-direction:column;gap:10px;margin-top:1em}
+.stage{background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--teal);border-radius:0 8px 8px 0;padding:12px 18px;display:none}
+.stage.on{display:block}
+.stage .tag{display:block;margin-bottom:4px}
+.stage p{margin:0 0 4px}
+.seq{display:flex;flex-wrap:wrap;gap:8px;margin:1em 0}
+.seq .item{text-align:left}
+.seq .item b{color:var(--maroon-ink);margin-right:6px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:1em}
+.stat{background:var(--surface);border:1px solid var(--line);border-top:6px solid var(--teal);border-radius:0 0 10px 10px;padding:16px 18px}
+.stat h3{font-size:1em}
+.stat .bignum{font-size:clamp(34px,4.2vw,60px)}
+.stat p{margin:.4em 0 0;color:var(--muted)}
+.stats.sys .stat{border-top-color:var(--maroon)}
+.pk{background:transparent;border:2px solid transparent;border-radius:4px;font:inherit;padding:2px 6px;text-align:left}
+.pk:hover,.pk.on{border-color:var(--gold);background:var(--gold-soft)}
+.dtab.xlike td:nth-child(n+2){text-align:left}
+.dtab.xlike td.n{text-align:right}
+.dtab.xlike td.n .ais,.dtab.xlike td.n .pk{text-align:right}
+#dtWhy p{background:var(--surface);border-left:6px solid var(--gold);padding:10px 16px;border-radius:0 8px 8px 0;margin-top:10px}
+@media (max-width:900px){.stats,.strat.three{grid-template-columns:1fr}}
+.steps label>span{flex:1}
+.xlsplit{grid-template-columns:auto 1fr}
+.xlsplit .dtab td,.xlsplit .dtab th{white-space:nowrap;padding:4px 10px}
+@media (max-width:900px){.xlsplit{grid-template-columns:1fr}}
+
+/* ---- Day 2 visual additions ---- */
+.flowrow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:stretch;margin-top:1em}
+.fcol{background:var(--surface);border-top:5px solid var(--teal);border-radius:0 0 10px 10px;padding:14px 18px}
+.fcol h3{margin:0 0 6px;color:var(--maroon-ink)}
+.fcol ul{margin:0;padding-left:1.1em}
+.farrow{display:flex;align-items:center;font-size:2em;color:var(--maroon);font-weight:700}
+.floop{margin-top:10px;border:2px dashed var(--gold);border-radius:10px;padding:10px 16px;background:var(--gold-soft);text-align:center}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:1em}
+.kpi{background:var(--surface);border-top:6px solid var(--line);border-radius:0 0 10px 10px;padding:14px 16px}
+.kpi.ok{border-top-color:var(--teal)}.kpi.warn{border-top-color:var(--gold)}.kpi.bad{border-top-color:var(--maroon)}
+.kpi h3{margin:0}
+.kpi .kv{font-size:2.2em;font-weight:800;color:var(--maroon-ink);line-height:1.1;margin:6px 0}
+.kpi input[type=range]{width:100%;accent-color:var(--maroon)}
+.kpi .ks{font-weight:700;margin:6px 0 0}
+.kpi.ok .ks{color:var(--teal)}.kpi.bad .ks{color:var(--maroon)}
+.kpi small{display:block;color:var(--muted)}
+.chevs4{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:1em}
+.chv{background:var(--maroon);color:#fff;font-weight:700;text-align:center;padding:16px 10px 16px 22px;clip-path:polygon(0 0,92% 0,100% 50%,92% 100%,0 100%,6% 50%)}
+.chv:first-child{clip-path:polygon(0 0,92% 0,100% 50%,92% 100%,0 100%)}
+.chvd{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.chvd div{background:var(--surface);border-top:4px solid var(--teal);padding:10px 12px;border-radius:0 0 8px 8px;font-size:.95em}
+.pyr{margin-top:1em;display:grid;grid-template-columns:1fr 1.3fr;gap:6px 18px;align-items:center}
+.pyslice{margin:0 auto;padding:14px 8px;text-align:center;color:#fff;font-weight:700}
+.pyslice.s1{width:46%;background:var(--maroon);clip-path:polygon(25% 0,75% 0,100% 100%,0 100%)}
+.pyslice.s2{width:73%;background:#8a2f35;clip-path:polygon(15% 0,85% 0,100% 100%,0 100%)}
+.pyslice.s3{width:100%;background:var(--teal);clip-path:polygon(7% 0,93% 0,100% 100%,0 100%)}
+.pydesc{background:var(--surface);border-left:6px solid var(--gold);padding:10px 16px;border-radius:0 8px 8px 0}
+.pydesc p{margin:2px 0}
+.hub{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:1em}
+.hn{background:var(--surface);border:2px solid var(--line);border-radius:10px;padding:10px 14px;font-size:.95em}
+.hn h3{margin:0;color:var(--maroon-ink)}
+.hn small{display:block;color:var(--muted);margin-bottom:4px}
+.hn p{margin:3px 0}
+.hn.mis{grid-column:2;grid-row:1}.hn.tps{grid-column:1;grid-row:2}.hn.erp{grid-column:2;grid-row:2;border:3px solid var(--maroon)}
+.hn.crm{grid-column:3;grid-row:2}.hn.scm{grid-column:2;grid-row:3}
+.bins.b4{grid-template-columns:repeat(4,1fr)}
+.bins.b5{grid-template-columns:repeat(5,1fr)}
+.stpgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:1em}
+.stp{background:var(--surface);border:2px solid var(--teal);border-radius:10px;padding:10px 12px;text-align:left;font:inherit;cursor:pointer;min-height:84px}
+.stp b{display:block;color:var(--maroon-ink)}
+.stp.broken{background:var(--maroon);border-color:var(--maroon);color:#fff}.stp.broken b{color:#fff}
+.stp.blocked{background:#e9d5d6;border-color:var(--maroon)}
+.stp.slow{background:var(--gold-soft);border-color:var(--gold)}
+.qrows{display:grid;gap:8px;margin-top:.8em}
+.qrow{display:grid;grid-template-columns:200px 220px 1fr;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 14px}
+.qrow b{color:var(--maroon-ink)}
+.qrow small{display:block;color:var(--muted)}
+.qrow .qc{color:var(--maroon);font-weight:600;min-height:1.2em}
+.seg{display:flex}
+.seg button{flex:1;padding:6px 0;border:2px solid var(--maroon);background:#fff;font:inherit;font-weight:600;cursor:pointer}
+.seg button:first-child{border-radius:8px 0 0 8px}.seg button:last-child{border-radius:0 8px 8px 0}
+.seg button+button{border-left:0}
+.seg button[aria-pressed="true"]{background:var(--maroon);color:#fff}
+.qmeter{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-top:10px}
+.pm2{height:18px;background:var(--line);border-radius:9px;overflow:hidden}
+.pm2 i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--maroon),var(--gold),var(--teal));transition:width .3s}
+@media (max-width:860px){.flowrow,.kpis,.chevs4,.chvd,.hub,.pyr,.stpgrid,.bins.b4,.bins.b5{grid-template-columns:1fr}.farrow{justify-content:center;transform:rotate(90deg)}.hn.mis,.hn.tps,.hn.erp,.hn.crm,.hn.scm{grid-column:1;grid-row:auto}.qrow{grid-template-columns:1fr}.chv{clip-path:none;border-radius:8px}}
+
+.dtab:not(.xlike) td{text-align:left}
+
+/* ---- Day 3 visual additions ---- */
+.mxwrap{display:grid;grid-template-columns:90px 1fr;gap:8px;margin-top:1em}
+.mxcols{display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:center;font-weight:700;color:var(--maroon-ink)}
+.mxrows{display:grid;grid-template-rows:1fr 1fr;gap:10px}
+.mxrows div{display:flex;align-items:center;justify-content:center;text-align:center;font-weight:700;color:var(--maroon-ink)}
+.bins.mx{grid-template-columns:1fr 1fr;gap:10px}
+.bins.mx .bin{min-height:120px}
+.bins.mx .bin small{display:block;color:var(--muted);margin-bottom:4px}
+.bins.mx .bin em{display:block;font-style:normal;font-weight:600;color:var(--maroon-ink);margin-bottom:4px}
+/* positioning map */
+.pmwrap{position:relative;margin-top:.8em}
+.ptray{display:flex;flex-wrap:wrap;gap:8px;min-height:92px;align-content:flex-start;margin-bottom:10px;padding:8px;border:2px dashed var(--line);border-radius:10px}
+.pchip{background:var(--surface);border:2px solid var(--maroon);border-radius:999px;padding:6px 14px;font-weight:600;cursor:grab;touch-action:none;user-select:none;white-space:nowrap}
+.pchip.placed{position:absolute;z-index:3;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.pchip.drag{cursor:grabbing;z-index:5;box-shadow:0 6px 14px rgba(0,0,0,.3)}
+.pchip.right{border-color:var(--teal);background:#e3eeee}
+.pchip.wrong{border-color:var(--gold);background:var(--gold-soft)}
+.fbadge{font-size:.72em;background:var(--teal);color:#fff;border-radius:999px;padding:1px 8px;margin-left:4px;text-transform:uppercase}
+.pmapbox{display:grid;grid-template-columns:28px 1fr;grid-template-rows:auto 24px}
+.ylab{writing-mode:vertical-rl;transform:rotate(180deg);text-align:center;font-weight:700;color:var(--maroon-ink)}
+.xlab{grid-column:2;text-align:center;font-weight:700;color:var(--maroon-ink)}
+.pmap{position:relative;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;height:360px;border:2px solid var(--line);border-radius:10px;overflow:hidden}
+.pz{padding:10px 14px;border:1px solid var(--line)}
+.pz b{display:block;color:var(--maroon-ink)}
+.pz small{color:var(--muted)}
+.pz.tr{background:#f3ecec}.pz.bl{background:#e8f0f0}.pz.tl,.pz.br{background:var(--surface)}
+#pmWhy p{background:var(--surface);border-left:6px solid var(--gold);padding:8px 14px;border-radius:0 8px 8px 0;margin:8px 0 0}
+/* five forces */
+.ffgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:.8em;align-items:stretch}
+.fbx{position:relative;background:var(--surface);border:2px solid var(--line);border-radius:10px;padding:12px 14px;text-align:left;font:inherit;color:inherit}
+.fbx h3{margin:0 0 2px;color:var(--maroon-ink)}
+.fbx .fq{margin:0 0 4px;font-weight:600}
+.fbx .fe{margin:0 0 8px;color:var(--muted);font-size:.9em}
+.fbx.entrants{grid-column:2;grid-row:1}
+.fbx.suppliers{grid-column:1;grid-row:2}
+.fbx.rivalry{grid-column:2;grid-row:2;border-color:var(--maroon);border-width:3px}
+.fbx.buyers{grid-column:3;grid-row:2}
+.fbx.subs{grid-column:2;grid-row:3}
+.fbx.entrants::after{content:"\25BC";position:absolute;bottom:-17px;left:50%;color:var(--maroon)}
+.fbx.subs::before{content:"\25B2";position:absolute;top:-17px;left:50%;color:var(--maroon)}
+.fbx.suppliers::after{content:"\25B6";position:absolute;right:-17px;top:50%;color:var(--maroon)}
+.fbx.buyers::before{content:"\25C0";position:absolute;left:-17px;top:50%;color:var(--maroon)}
+button.fbx{cursor:pointer}
+button.fbx:hover{border-color:var(--gold)}
+button.fbx:disabled{cursor:default}
+.fbx.hit{border-color:var(--teal);background:#e3eeee}
+.fbx.miss{border-color:var(--gold);background:var(--gold-soft)}
+.seg{display:flex;gap:0}
+.seg button{flex:1;padding:6px 0;border:2px solid var(--maroon);background:#fff;font:inherit;font-weight:600;cursor:pointer}
+.seg button:first-child{border-radius:8px 0 0 8px}.seg button:last-child{border-radius:0 8px 8px 0}
+.seg button+button{border-left:0}
+.seg button[aria-pressed="true"]{background:var(--maroon);color:#fff}
+.seg button.bm{outline:3px dashed var(--gold);outline-offset:2px}
+.fmeter{grid-column:1 / 4;grid-row:4;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-top:6px}
+.fmeter h3{margin:0 0 6px}
+.pm{height:18px;background:var(--line);border-radius:9px;overflow:hidden}
+.pm i{display:block;height:100%;width:50%;background:linear-gradient(90deg,var(--maroon),var(--gold),var(--teal));transition:width .3s}
+.fmeter p{margin:6px 0}
+.evcard{background:var(--gold-soft);border-left:6px solid var(--gold);border-radius:0 10px 10px 0;padding:10px 18px;margin-top:.6em}
+.evcard p{margin:4px 0 0;font-size:1.1em;font-weight:600}
+@media (max-width:860px){.ffgrid{grid-template-columns:1fr}.fbx.entrants,.fbx.suppliers,.fbx.rivalry,.fbx.buyers,.fbx.subs{grid-column:1;grid-row:auto}.fmeter{grid-column:1;grid-row:auto}.fbx::before,.fbx::after{display:none}.mxwrap{grid-template-columns:60px 1fr}}
+/* value chain */
+.vc{display:flex;flex-direction:column;gap:6px;margin-top:.8em}
+.vclabel{font-weight:700;color:var(--maroon-ink);margin-top:4px}
+.vb{background:var(--surface);border:2px solid var(--teal);border-radius:8px;padding:8px 14px;font:inherit;font-weight:600;text-align:left;cursor:pointer}
+.vprow{display:flex;gap:4px;align-items:stretch}
+.vp{flex:1;background:var(--maroon);color:#fff;border:0;font:inherit;font-weight:600;padding:18px 18px 18px 26px;cursor:pointer;clip-path:polygon(0 0,90% 0,100% 50%,90% 100%,0 100%,8% 50%);text-align:center}
+.vp:first-child{clip-path:polygon(0 0,90% 0,100% 50%,90% 100%,0 100%)}
+.vmargin{display:flex;align-items:center;justify-content:center;padding:0 16px;font-weight:700;color:var(--maroon-ink);border:2px dashed var(--gold);border-radius:8px}
+.vb.on{background:var(--gold-soft);border-color:var(--gold)}
+.vp.on{background:var(--gold);color:#1a1a1a}
+.vb:hover,.vp:hover{filter:brightness(1.08)}
+@media (max-width:860px){.vprow{flex-direction:column}.vp{clip-path:none;border-radius:8px}}
+
+/* ---- Day 4 ---- */
+.stack{display:grid;gap:6px;margin-top:1em}
+.stack>div{display:grid;grid-template-columns:140px 1fr;gap:12px;align-items:center;background:var(--surface);border-left:8px solid var(--teal);border-radius:0 8px 8px 0;padding:8px 14px}
+.stack>div:nth-child(odd){border-left-color:var(--maroon)}
+.stack b{color:var(--maroon-ink)}
+.chevs7{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:1em}
+.chevs7 .chv{font-size:.82em;padding:14px 6px 14px 16px}
+.chvd7{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.chvd7 div{background:var(--surface);border-top:4px solid var(--teal);padding:8px 8px;border-radius:0 0 8px 8px;font-size:.8em}
+.bbgrid{display:grid;grid-template-columns:1fr 1.3fr;gap:20px;margin-top:.8em}
+.bbsl label{display:grid;grid-template-columns:1fr 150px;gap:10px;align-items:center;margin-bottom:10px;font-weight:600}
+.bbsl input{accent-color:var(--maroon)}
+.bbo{margin-bottom:10px}
+.bar{height:22px;background:var(--line);border-radius:11px;overflow:hidden;margin-top:3px}
+.bar i{display:block;height:100%;width:0;background:var(--maroon);transition:width .3s}
+.bbo.best .bar i{background:var(--teal)}
+.bbo span{float:right;font-weight:700}
+#sbTopic{font:inherit;padding:6px 10px;border:2px solid var(--maroon);border-radius:8px;max-width:100%}
+.btn[aria-pressed="false"].ghost{}
+@media (max-width:860px){.chevs7,.chvd7,.bbgrid{grid-template-columns:1fr}.stack>div{grid-template-columns:1fr}.chevs7 .chv{clip-path:none;border-radius:8px}}
+
+.strat.five{grid-template-columns:repeat(5,1fr)}
+.dtab:not(.xlike) td{text-align:left}
+@media (max-width:900px){.strat.five{grid-template-columns:1fr}}
+
+/* ---- Day 5 ---- */
+.stpgrid.five{grid-template-columns:repeat(5,1fr)}
+.stpgrid.five .stp{min-height:110px}
+.stpgrid.five .stp b{margin-bottom:4px}
+.capwrap{display:grid;grid-template-columns:1.2fr 1fr;gap:20px;margin-top:.8em;align-items:start}
+.capside label{display:block;margin-bottom:10px}
+.capside input[type=range]{width:100%;accent-color:var(--maroon)}
+.chart{display:flex;align-items:flex-end;gap:10px;height:240px;position:relative;border-bottom:2px solid var(--ink);padding:18px 8px 0;background:var(--surface);border-radius:8px 8px 0 0}
+.cbar{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;position:relative}
+.cbar .seg1{width:100%;background:var(--teal);border-radius:4px 4px 0 0}
+.cbar .seg2{width:100%;background:var(--maroon)}
+.cbar span.v{font-size:.8em;font-weight:700;margin-bottom:2px}
+.cbar .lbl{position:absolute;bottom:-22px;font-size:.85em;font-weight:600}
+.capline{position:absolute;left:0;right:0;border-top:3px dashed var(--gold);z-index:2}
+.capline em{position:absolute;right:4px;top:-20px;font-style:normal;font-size:.8em;font-weight:700;background:var(--gold-soft);padding:0 6px;border-radius:4px}
+.chart{margin-bottom:26px}
+.chart.sales .cbar.hi .seg1{background:var(--gold)}
+.chart.sales .cbar.lo .seg1{background:var(--maroon)}
+.smwrap{display:grid;grid-template-columns:1fr 1.1fr;gap:20px;align-items:center;margin-top:.8em}
+.lay{display:grid;gap:4px}
+.lay div{padding:8px 14px;border-radius:6px;font-weight:600;transition:background .25s}
+.lay div.lyYou{background:var(--teal);color:#fff}
+.lay div.lyProv{background:#dfe6e8;color:#333}
+.smdesc{background:var(--surface);border-left:6px solid var(--gold);padding:12px 18px;border-radius:0 8px 8px 0}
+.key{display:inline-block;width:14px;height:14px;border-radius:3px;vertical-align:middle}
+.key.lyYou{background:var(--teal)}.key.lyProv{background:#dfe6e8;border:1px solid #bbb}
+.ifline{background:var(--surface);border:2px solid var(--maroon);border-radius:10px;padding:12px 18px;font-size:1.2em;margin:.6em 0}
+.ifline span{color:var(--maroon-ink);font-weight:700}
+.ifsl{display:block;margin:.6em 0}
+.ifsl input{width:100%;accent-color:var(--maroon)}
+.ifcode{margin:.4em 0}
+.ifrows{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.ifrows div{background:var(--surface);border-top:5px solid var(--line);border-radius:0 0 8px 8px;padding:8px;text-align:center}
+.ifrows div.busy{border-top-color:var(--gold);background:var(--gold-soft)}
+.ifrows b{display:block}
+@media (max-width:860px){.stpgrid.five,.capwrap,.smwrap,.ifrows{grid-template-columns:1fr}}
+.chart.sales .capline em{right:auto;left:4px}
+
+/* ---- Day 6 ---- */
+.silos{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:1em}
+.silos>div{background:var(--surface);border-top:6px solid var(--teal);border-radius:0 0 10px 10px;padding:12px 16px;transition:all .3s}
+.silos>div:nth-child(2){border-top-color:var(--gold)}
+.silos>div:nth-child(3){border-top-color:var(--maroon)}
+.silos h3{margin:0 0 4px}
+.silos .link{display:none;margin-top:6px;font-weight:700;color:var(--maroon-ink)}
+.silos.shared .link{display:block}
+.silos.shared>div{background:var(--gold-soft)}
+.axwrap{display:grid;grid-template-columns:1.1fr 1fr;gap:20px;margin-top:.8em;align-items:start}
+.axwrap .chart{height:260px}
+.axwrap label{display:block;margin-bottom:8px}
+.axwrap input[type=range]{width:100%;accent-color:var(--maroon)}
+.pbview{display:flex;gap:24px;align-items:center;min-height:250px;background:var(--surface);border-radius:10px;padding:14px 20px;margin-top:.8em}
+.pbpie{width:220px;height:220px;border-radius:50%;flex:none}
+.pbkey{list-style:none;margin:0;padding:0;columns:2;gap:20px}
+.pbkey li{margin:3px 0}
+.pbkey i{display:inline-block;width:14px;height:14px;border-radius:3px;margin-right:8px;vertical-align:middle}
+.pbbars{width:100%;display:grid;gap:5px}
+.pbbars div{display:grid;grid-template-columns:80px 1fr 44px;align-items:center;gap:8px}
+.pbbars i{display:block;height:18px;background:var(--teal);border-radius:0 4px 4px 0}
+.pbbars b{text-align:right}
+.three4{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:1em}
+@media (max-width:860px){.silos,.axwrap,.three4{grid-template-columns:1fr}.pbview{flex-direction:column}}
+
+.gal{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:.6em}
+.gcard{background:var(--surface);border-top:5px solid var(--teal);border-radius:0 0 10px 10px;padding:8px 14px}
+.gcard h3{margin:0 0 2px}
+.gcard p{margin:2px 0;font-size:.88em}
+.gcard .gw{color:var(--maroon-ink)}
+.gsvg svg{width:100%;height:auto;max-height:150px;display:block}
+@media (max-width:860px){.gal{grid-template-columns:1fr}}
+
+/* ---- Day 7 ---- */
+.fnrow{display:grid;grid-template-columns:200px 1fr 70px;gap:10px;align-items:center;margin:5px 0}
+.fnrow b{text-align:right}
+.fntrack{position:relative;background:#e7e9ea;border-radius:4px;height:22px;overflow:hidden}
+.fntrack i{display:block;height:100%;background:var(--teal);transition:width .25s}
+.fnwrap{display:grid;grid-template-columns:1fr 1.3fr;gap:20px;margin-top:.8em;align-items:start}
+.fnwrap label{display:block;margin-bottom:12px}
+.fnwrap input[type=range]{width:100%;accent-color:var(--maroon)}
+#spOut{position:relative;margin-top:.6em}
+#spOut .fnrow{grid-template-columns:100px 1fr 60px}
+.spline{position:absolute;top:0;bottom:0;border-left:3px dashed var(--gold);pointer-events:none}
+.spline em{position:absolute;top:-18px;left:4px;font-style:normal;font-size:.75em;font-weight:700;background:var(--gold-soft);padding:0 6px;border-radius:4px;white-space:nowrap}
+.vcgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:.5em 0}
+.vcgrid>div{background:var(--surface);border-top:5px solid var(--teal);padding:8px 12px;border-radius:0 0 8px 8px}
+.vcgrid>div:nth-child(4){border-top-color:var(--maroon)}
+.vcgrid .tag{display:block;margin-bottom:2px}
+#vcOut{margin-top:.6em;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 16px}
+#vcOut h3{margin:.2em 0}
+@media (max-width:860px){.fnwrap,.vcgrid{grid-template-columns:1fr}.fnrow{grid-template-columns:1fr}}
+
+/* ---- Days 8-10 ---- */
+.hot{cursor:pointer;border-radius:3px;transition:background .15s}
+.hot:hover{background:#f3e6b8}
+.hot.on{background:var(--gold-soft);outline:2px solid var(--gold)}
+.redact .hot.on{background:#111;color:#111;outline:none}
+.hot.ok{background:#cfe8d5!important;outline:2px solid #2e7d32;color:inherit}
+.redact .hot.ok{background:#111!important;color:#111}
+.hot.bad{background:#fde0c2!important;outline:2px solid #e07a00;color:inherit}
+.redact .hot.bad{background:#fde0c2!important}
+.hot.miss{outline:2px dashed var(--maroon)}
+.mail{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 18px;margin-top:.6em;line-height:1.8}
+.mail .hd{border-bottom:1px solid var(--line);margin-bottom:6px;padding-bottom:4px}
+.dirty td.hot,.dirty th.hot{cursor:pointer}
+.aitxt{background:#fff;border:1px solid var(--line);border-left:6px solid var(--teal);border-radius:0 10px 10px 0;padding:10px 18px;margin-top:.6em}
+.aitxt p{margin:.5em 0}
+.tempwrap{display:grid;grid-template-columns:1fr 1.2fr;gap:20px;margin-top:.8em;align-items:start}
+.tempwrap label{display:block;margin-bottom:12px}
+.tempwrap input[type=range]{width:100%;accent-color:var(--maroon)}
+.pbuild{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 18px;min-height:120px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:.6em 0}
+.csvbox{width:100%;height:210px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.78em;border:1px solid var(--line);border-radius:8px;padding:8px}
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:.6em}
+@media (max-width:860px){.tempwrap,.cols2{grid-template-columns:1fr}}
+
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="course">BUS 2110 / Week 2, Day 4</div>
+  <div class="tools">
+    <button id="fsBtn" type="button" title="Full screen (F)">Full screen</button>
+  </div>
+</header>
+
+<main id="deck">
+
+<section class="slide title-slide" data-title="Welcome">
+  <div class="inner">
+    <div class="kicker">Week 2 &middot; Responsibility &amp; Risk</div>
+    <h1>Data is an asset. Assets get stolen.<span>Today we protect the Copper Table's data and decide what is right to do with it.</span></h1>
+    <p class="lede">You will learn the common threats and defenses, the rules that govern payment and personal data, how to reason about business ethics, and what not to paste into an AI tool.</p>
+    <div class="agenda">
+      <div><h3>Security</h3>Why data needs protecting</div>
+      <div><h3>Threats</h3>Phishing, malware, ransomware, and more</div>
+      <div><h3>Defenses</h3>Layers that reduce risk</div>
+      <div><h3>Rules</h3>PCI, HIPAA, GDPR, and CCPA</div>
+      <div><h3>Privacy</h3>What people are entitled to</div>
+      <div><h3>Ethics</h3>Right to do vs. right to do</div>
+      <div><h3>Sensitive data and AI</h3>What to keep out of a prompt</div>
+      <div><h3>Excel and Log it</h3>Chapter 4 practice, entry #9</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-title="Warm-up">
+  <div class="inner">
+    <div class="kicker">Warm-up</div>
+    <h2>Quick review from Wednesday</h2>
+    <p>Tap an answer.</p>
+<div class="q" data-quiz>
+<p><b>1.</b> A burger priced at $1,600 in an order list is which kind of dirty data?</p>
+<div class="opts"><button class="opt">Duplicate</button><button class="opt" data-right>Outlier</button><button class="opt">Missing value</button></div>
+<p class="explain">An extreme value that does not fit the rest of the data is an outlier. Check the source before correcting it.</p>
+</div>
+<div class="q" data-quiz>
+<p><b>2.</b> Which Excel feature shows only the rows that match a condition?</p>
+<div class="opts"><button class="opt" data-right>Filter</button><button class="opt">Remove Duplicates</button><button class="opt">Freeze Panes</button></div>
+<p class="explain">A filter hides rows that do not match, without deleting them.</p>
+</div>
+<div class="q" data-quiz>
+<p><b>3.</b> Why does a table total row change when you filter?</p>
+<div class="opts"><button class="opt" data-right>It uses SUBTOTAL, which adds only visible rows</button><button class="opt">It recalculates the whole sheet</button><button class="opt">It is a different table</button></div>
+<p class="explain">SUBTOTAL ignores rows hidden by a filter, so the total follows what you can see.</p>
+</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Assignment 2: first decision">
+  <div class="inner">
+    <div class="kicker">Assignment 2 &middot; Audit 2</div>
+    <h2>Before we start: should the company do this?</h2>
+    <p><b>Management proposal.</b> A company wants to find customer groups that respond differently to marketing campaigns. The marketing team proposes uploading a customer dataset (purchase history, ZIP code, age, email address, and customer-service notes) into a publicly available generative AI system. They argue AI could analyze it much faster than employees and may find patterns the company has missed.</p>
+    <div class="strat three">
+      <div><h3>Proceed</h3>Go ahead as proposed.</div>
+      <div><h3>Proceed with conditions</h3>Go ahead only if certain things change.</div>
+      <div><h3>Do not proceed</h3>Stop until something is different.</div>
+    </div>
+    <div class="warn"><b>LOG IT now (5 minutes):</b> write your decision and your reasons. Do not change this entry later. Assignment 2 asks you to compare it with what you think after today.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Why security matters">
+  <div class="inner">
+    <div class="kicker">Security</div>
+    <h2>Data is one of the most valuable things an organization owns</h2>
+    <p>The Copper Table holds more valuable data than it might seem. Protecting it prevents financial loss and reputational damage, keeps the business running, and keeps it within the law.</p>
+    <div class="strat five">
+      <div><h3>Financial data</h3>Sales, bank details, and card transactions.</div>
+      <div><h3>Customer data</h3>Names, emails, phone numbers, and allergy notes.</div>
+      <div><h3>Employee data</h3>Pay records and personal identification numbers.</div>
+      <div><h3>Intellectual property</h3>Signature recipes and trade secrets.</div>
+      <div><h3>Business plans</h3>Information on your competitive advantage.</div>
+    </div>
+    <div class="warn">You protect other valuable things by locking doors, limiting who has keys, and buying insurance. Information deserves the same care.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Classify the data">
+  <div class="inner">
+    <div class="kicker">Sort</div>
+    <h2>Public, internal, or confidential?</h2>
+    <p>Organizations protect data according to how damaging it would be to expose. Select an item, then select a class.</p>
+    <div class="pool" id="poolS" aria-label="Items to sort">
+<button class="item" draggable="true" data-ans="Public" aria-pressed="false">The dinner menu and prices posted on the website</button>
+<button class="item" draggable="true" data-ans="Public" aria-pressed="false">The restaurant&#39;s opening hours</button>
+<button class="item" draggable="true" data-ans="Internal" aria-pressed="false">Weekly sales totals by day</button>
+<button class="item" draggable="true" data-ans="Internal" aria-pressed="false">The staff schedule</button>
+<button class="item" draggable="true" data-ans="Internal" aria-pressed="false">The supplier list</button>
+<button class="item" draggable="true" data-ans="Confidential" aria-pressed="false">Guests&#39; card numbers</button>
+<button class="item" draggable="true" data-ans="Confidential" aria-pressed="false">Employee Social Security numbers</button>
+<button class="item" draggable="true" data-ans="Confidential" aria-pressed="false">The secret recipe for the signature sauce</button>
+<button class="item" draggable="true" data-ans="Confidential" aria-pressed="false">Employee pay records</button>
+    </div>
+    <div class="bins b3" id="binsS"><div class="bin" data-bin="Public" role="button" tabindex="0"><div class="bin-title">Public</div></div><div class="bin" data-bin="Internal" role="button" tabindex="0"><div class="bin-title">Internal</div></div><div class="bin" data-bin="Confidential" role="button" tabindex="0"><div class="bin-title">Confidential</div></div></div>
+    <div class="actions"><button class="btn" id="sortCheckS" type="button">Check my sort</button><button class="btn ghost" id="sortResetS" type="button">Start over</button><span class="feedback" id="sortFbS" aria-live="polite"></span></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Common threats">
+  <div class="inner">
+    <div class="kicker">Threats</div>
+    <h2>Five common ways attackers get in</h2>
+    <div class="strat five">
+      <div><h3>Phishing</h3>Fake emails, sites, or calls that trick people into giving up data or money.</div>
+      <div><h3>Malware</h3>Software built to damage systems or gain access to them.</div>
+      <div><h3>Ransomware</h3>Malware that locks files until a ransom is paid.</div>
+      <div><h3>Social engineering</h3>Manipulating people into revealing confidential information.</div>
+      <div><h3>Tampering</h3>Physically altering devices to steal money, data, or identities.</div>
+    </div>
+    <div class="warn">Other tricks include fake Wi-Fi hotspots, stolen cookies, misleading file names, and malicious ads. No set of products makes an organization fully safe. The goal is to be a harder target than the next one.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Which threat?">
+  <div class="inner">
+    <div class="kicker">Threats</div>
+    <h2>Name the threat</h2>
+<div class="dilist"><div class="di five" data-ans="Phishing"><p>An email says the payroll account is locked and asks the manager to click a link to sign in.</p><div class="dibtns"><button type="button" data-pick="Phishing">Phishing</button><button type="button" data-pick="Malware">Malware</button><button type="button" data-pick="Ransomware">Ransomware</button><button type="button" data-pick="Social">Social engineering</button><button type="button" data-pick="Tampering">Tampering</button></div><p class="diwhy">A fake message designed to steal sign-in details is phishing.</p></div><div class="di five" data-ans="Ransomware"><p>Files on the office computer are locked, and a note demands payment to unlock them.</p><div class="dibtns"><button type="button" data-pick="Phishing">Phishing</button><button type="button" data-pick="Malware">Malware</button><button type="button" data-pick="Ransomware">Ransomware</button><button type="button" data-pick="Social">Social engineering</button><button type="button" data-pick="Tampering">Tampering</button></div><p class="diwhy">Locking files until a ransom is paid is ransomware.</p></div><div class="di five" data-ans="Social"><p>A caller claims to be from the card company and asks the manager to read out a security code.</p><div class="dibtns"><button type="button" data-pick="Phishing">Phishing</button><button type="button" data-pick="Malware">Malware</button><button type="button" data-pick="Ransomware">Ransomware</button><button type="button" data-pick="Social">Social engineering</button><button type="button" data-pick="Tampering">Tampering</button></div><p class="diwhy">Talking a person into revealing information is social engineering.</p></div><div class="di five" data-ans="Tampering"><p>A small extra device is found attached to the card reader at the register.</p><div class="dibtns"><button type="button" data-pick="Phishing">Phishing</button><button type="button" data-pick="Malware">Malware</button><button type="button" data-pick="Ransomware">Ransomware</button><button type="button" data-pick="Social">Social engineering</button><button type="button" data-pick="Tampering">Tampering</button></div><p class="diwhy">Physically altering a device to steal data is tampering.</p></div><div class="di five" data-ans="Malware"><p>A free menu-maker download secretly installs a program that records keystrokes.</p><div class="dibtns"><button type="button" data-pick="Phishing">Phishing</button><button type="button" data-pick="Malware">Malware</button><button type="button" data-pick="Ransomware">Ransomware</button><button type="button" data-pick="Social">Social engineering</button><button type="button" data-pick="Tampering">Tampering</button></div><p class="diwhy">Software designed to gain access to a system is malware.</p></div></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Inspect the email">
+  <div class="inner">
+    <div class="kicker">Interactive</div>
+    <h2>Inspect this email</h2>
+    <p>The manager received this message. Select the details that look suspicious, then check. Some parts are fine.</p>
+    <div class="mail" id="mailBox">
+      <div class="hd"><b>From:</b> Copper Table Payroll &lt;<span class="hot" data-hot="1">payroll@copper-table-secure.example</span>&gt;<br><b>Subject:</b> <span class="hot" data-hot="1">URGENT: Your account will be closed in 24 hours</span></div>
+      <div><span class="hot" data-hot="1">Dear user,</span></div>
+      <div>We noticed a problem with this month&#39;s payroll run. <span class="hot">Payroll for the week of January 4 is ready for review.</span> To avoid a delay, <span class="hot" data-hot="1">click here to verify your sign-in: http://coppertable-login.example/verify</span> and confirm your password.</div>
+      <div><span class="hot" data-hot="1">Attachment: PayrollDetails.zip</span></div>
+      <div><span class="hot">Thank you, Payroll Department</span></div>
+    </div>
+    <div class="actions"><button class="btn" id="mailCheck" type="button">Check</button><button class="btn ghost" id="mailReset" type="button">Start over</button><span class="feedback" id="mailFb" aria-live="polite"></span></div>
+    <div class="warn" id="mailRev" hidden><b>Red flags:</b> an unusual sender domain, urgent and threatening language, a generic greeting, a link that goes to an unfamiliar site and asks for a password, and an unexpected zip attachment. The rest is ordinary wording. When unsure, do not click. Contact the sender through a channel you already trust.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Defenses">
+  <div class="inner">
+    <div class="kicker">Defenses</div>
+    <h2>No single defense is enough, so use layers</h2>
+    <div class="strat three">
+      <div><h3>People</h3>Training staff to spot phishing and social engineering.</div>
+      <div><h3>Access control</h3>Strong passwords, multi-factor sign-in, and access only for those who need it.</div>
+      <div><h3>Software</h3>Keeping systems updated so known holes are closed.</div>
+      <div><h3>Backups</h3>Copies kept safely apart so a locked system can be restored.</div>
+      <div><h3>EMV and tokenization</h3>Chip cards and replacing card numbers with tokens that are worthless if stolen.</div>
+      <div><h3>Cyber insurance</h3>Helps cover costs like recovery, legal fees, and public relations after an incident.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-title="Which defense?">
+  <div class="inner">
+    <div class="kicker">Defenses</div>
+    <h2>Match the defense to the problem</h2>
+<div class="dilist"><div class="di five" data-ans="Backup"><p>Ransomware locked every file on the office computer. What best limits the damage?</p><div class="dibtns"><button type="button" data-pick="Backup">Offline backups</button><button type="button" data-pick="Training">Staff training</button><button type="button" data-pick="Token">Tokenization</button><button type="button" data-pick="Access">Limit access</button><button type="button" data-pick="Insurance">Cyber insurance</button></div><p class="diwhy">Clean backups stored apart from the system let you restore without paying.</p></div><div class="di five" data-ans="Training"><p>Staff keep clicking links in fake emails. What helps most?</p><div class="dibtns"><button type="button" data-pick="Backup">Offline backups</button><button type="button" data-pick="Training">Staff training</button><button type="button" data-pick="Token">Tokenization</button><button type="button" data-pick="Access">Limit access</button><button type="button" data-pick="Insurance">Cyber insurance</button></div><p class="diwhy">Phishing works on people, so training is the key defense.</p></div><div class="di five" data-ans="Token"><p>The restaurant does not want real card numbers stored in its own systems. What helps?</p><div class="dibtns"><button type="button" data-pick="Backup">Offline backups</button><button type="button" data-pick="Training">Staff training</button><button type="button" data-pick="Token">Tokenization</button><button type="button" data-pick="Access">Limit access</button><button type="button" data-pick="Insurance">Cyber insurance</button></div><p class="diwhy">Tokenization replaces card numbers with tokens that have no value if stolen.</p></div><div class="di five" data-ans="Access"><p>A vendor needs to fix the kitchen printers but has access to the whole network. What fits?</p><div class="dibtns"><button type="button" data-pick="Backup">Offline backups</button><button type="button" data-pick="Training">Staff training</button><button type="button" data-pick="Token">Tokenization</button><button type="button" data-pick="Access">Limit access</button><button type="button" data-pick="Insurance">Cyber insurance</button></div><p class="diwhy">Limit third-party access to only what the job needs.</p></div><div class="di five" data-ans="Insurance"><p>Even with defenses, a breach could cost more than the restaurant can pay. What helps?</p><div class="dibtns"><button type="button" data-pick="Backup">Offline backups</button><button type="button" data-pick="Training">Staff training</button><button type="button" data-pick="Token">Tokenization</button><button type="button" data-pick="Access">Limit access</button><button type="button" data-pick="Insurance">Cyber insurance</button></div><p class="diwhy">Cyber insurance acts as a financial buffer after an incident.</p></div></div>
+  </div>
+</section>
+
+<section class="slide" data-title="The rules">
+  <div class="inner">
+    <div class="kicker">Compliance</div>
+    <h2>Some security is required by rule</h2>
+    <div class="strat five">
+      <div><h3>PCI DSS</h3>Payment cards. Applies to anyone who processes, stores, or transmits card data.</div>
+      <div><h3>HIPAA</h3>Health information held by healthcare organizations.</div>
+      <div><h3>Sarbanes-Oxley</h3>Financial reporting by public companies.</div>
+      <div><h3>GDPR</h3>Personal data of people in the European Union.</div>
+      <div><h3>CCPA</h3>Privacy rights of California residents.</div>
+    </div>
+    <div class="warn">The card brands cannot fine you like a government, but they can raise your processing fees or stop you from accepting cards. For most restaurants that is as strong as a law.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Which rule applies?">
+  <div class="inner">
+    <div class="kicker">Compliance</div>
+    <h2>Which rule applies?</h2>
+<div class="dilist"><div class="di five" data-ans="PCI"><p>The Copper Table accepts Visa and Mastercard at the register and online.</p><div class="dibtns"><button type="button" data-pick="PCI">PCI DSS</button><button type="button" data-pick="HIPAA">HIPAA</button><button type="button" data-pick="GDPR">GDPR</button><button type="button" data-pick="SOX">Sarbanes-Oxley</button><button type="button" data-pick="CCPA">CCPA</button></div><p class="diwhy">Anyone who handles branded cards must follow PCI DSS.</p></div><div class="di five" data-ans="HIPAA"><p>A medical clinic stores patient records electronically.</p><div class="dibtns"><button type="button" data-pick="PCI">PCI DSS</button><button type="button" data-pick="HIPAA">HIPAA</button><button type="button" data-pick="GDPR">GDPR</button><button type="button" data-pick="SOX">Sarbanes-Oxley</button><button type="button" data-pick="CCPA">CCPA</button></div><p class="diwhy">Health information is covered by HIPAA.</p></div><div class="di five" data-ans="GDPR"><p>A restaurant website takes orders from customers living in Germany.</p><div class="dibtns"><button type="button" data-pick="PCI">PCI DSS</button><button type="button" data-pick="HIPAA">HIPAA</button><button type="button" data-pick="GDPR">GDPR</button><button type="button" data-pick="SOX">Sarbanes-Oxley</button><button type="button" data-pick="CCPA">CCPA</button></div><p class="diwhy">Offering goods to people in the EU brings GDPR into play.</p></div><div class="di five" data-ans="SOX"><p>A publicly traded company prepares its financial statements.</p><div class="dibtns"><button type="button" data-pick="PCI">PCI DSS</button><button type="button" data-pick="HIPAA">HIPAA</button><button type="button" data-pick="GDPR">GDPR</button><button type="button" data-pick="SOX">Sarbanes-Oxley</button><button type="button" data-pick="CCPA">CCPA</button></div><p class="diwhy">Public company financial reporting is covered by Sarbanes-Oxley.</p></div><div class="di five" data-ans="CCPA"><p>A website collects personal data from California residents.</p><div class="dibtns"><button type="button" data-pick="PCI">PCI DSS</button><button type="button" data-pick="HIPAA">HIPAA</button><button type="button" data-pick="GDPR">GDPR</button><button type="button" data-pick="SOX">Sarbanes-Oxley</button><button type="button" data-pick="CCPA">CCPA</button></div><p class="diwhy">California residents have privacy rights under the CCPA.</p></div></div>
+  </div>
+</section>
+
+<section class="slide" data-title="A real breach">
+  <div class="inner">
+    <div class="kicker">Case study</div>
+    <h2>How a heating contractor&#39;s network access led to 40 million stolen cards</h2>
+    <p>In 2013, malicious software was planted on Target&#39;s point-of-sale systems. The way in was a third-party vendor whose access to the network was not properly limited.</p>
+    <div class="chevs4" style="grid-template-columns:repeat(3,1fr)"><div class="chv">1. Vendor given broad access</div><div class="chv">2. Malware reaches the registers</div><div class="chv">3. 40 million cards and 70 million customer records exposed</div></div>
+    <div class="strat three">
+      <div><h3>Total expenses</h3>$61 million in that quarter, from the investigation, credit monitoring, call center staffing, and legal costs.</div>
+      <div><h3>Insurance offset</h3>$44 million expected back from insurance.</div>
+      <div><h3>Net expense</h3>$17 million, which is $61 million minus $44 million.</div>
+    </div>
+    <div class="warn">The breach was not only a technology failure. A vendor&#39;s access was left too wide. Limiting what outsiders can reach is one of the most valuable controls.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Security vs. privacy">
+  <div class="inner">
+    <div class="kicker">Privacy</div>
+    <h2>Security protects data. Privacy governs how it is used.</h2>
+    <div class="strat three" style="grid-template-columns:1fr 1fr">
+      <div><h3>Security</h3><p>Keeping data safe from unauthorized access.</p><p><b>Ex:</b> locking the guest database with strong sign-in.</p></div>
+      <div><h3>Privacy</h3><p>Rules about what organizations may collect, store, and do with personal data.</p><p><b>Ex:</b> a guest asks to have their data deleted.</p></div>
+    </div>
+    <p>Two early laws set the pattern. The <b>GDPR</b> covers organizations that handle personal data of people in the EU, and the <b>CCPA</b> gives California residents data privacy rights. Both cover any data that relates to an identifiable person, including names, email addresses, and IP addresses. Breaking these rules can bring fines or the loss of the right to do business with the people covered.</p>
+  </div>
+</section>
+
+<section class="slide" data-title="Data subject rights">
+  <div class="inner">
+    <div class="kicker">Privacy</div>
+    <h2>Which right is being used?</h2>
+<div class="dilist"><div class="di five" data-ans="Forgotten"><p>A guest asks the restaurant to delete everything it has stored about them.</p><div class="dibtns"><button type="button" data-pick="Forgotten">Be forgotten</button><button type="button" data-pick="Access">Access</button><button type="button" data-pick="Rectify">Rectification</button><button type="button" data-pick="Object">Object</button><button type="button" data-pick="Portability">Portability</button></div><p class="diwhy">The right to be forgotten lets people request deletion of their personal data.</p></div><div class="di five" data-ans="Access"><p>A guest asks to see what data the restaurant holds about them.</p><div class="dibtns"><button type="button" data-pick="Forgotten">Be forgotten</button><button type="button" data-pick="Access">Access</button><button type="button" data-pick="Rectify">Rectification</button><button type="button" data-pick="Object">Object</button><button type="button" data-pick="Portability">Portability</button></div><p class="diwhy">The right of access lets people view the data an organization holds.</p></div><div class="di five" data-ans="Rectify"><p>A guest asks the restaurant to fix a wrong email address in the system.</p><div class="dibtns"><button type="button" data-pick="Forgotten">Be forgotten</button><button type="button" data-pick="Access">Access</button><button type="button" data-pick="Rectify">Rectification</button><button type="button" data-pick="Object">Object</button><button type="button" data-pick="Portability">Portability</button></div><p class="diwhy">The right to rectification lets people correct inaccurate data.</p></div><div class="di five" data-ans="Object"><p>A guest asks the restaurant to stop using their data for marketing.</p><div class="dibtns"><button type="button" data-pick="Forgotten">Be forgotten</button><button type="button" data-pick="Access">Access</button><button type="button" data-pick="Rectify">Rectification</button><button type="button" data-pick="Object">Object</button><button type="button" data-pick="Portability">Portability</button></div><p class="diwhy">The right to object lets people stop processing for purposes like marketing.</p></div><div class="di five" data-ans="Portability"><p>A guest asks for a copy of their data to move to another service.</p><div class="dibtns"><button type="button" data-pick="Forgotten">Be forgotten</button><button type="button" data-pick="Access">Access</button><button type="button" data-pick="Rectify">Rectification</button><button type="button" data-pick="Object">Object</button><button type="button" data-pick="Portability">Portability</button></div><p class="diwhy">The right to data portability lets people transfer their data.</p></div></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Staff table and subtotals">
+  <div class="inner">
+    <div class="kicker">Excel: Chapter 4</div>
+    <h2>Staff table and subtotals</h2>
+    <p>Staff pay is confidential data. Enter it in A1:D9 and make a table, then practice with subtotals.</p>
+    <div class="xlsplit"><div><table class="dtab xlike"><tr><th>A</th><th>B</th><th>C</th><th>D</th></tr><tr><td>Name</td><td>Role</td><td>Hours</td><td>Rate</td></tr><tr><td>Ana</td><td>Server</td><td class="n">30</td><td class="n">14</td></tr><tr><td>Ben</td><td>Server</td><td class="n">25</td><td class="n">14</td></tr><tr><td>Cara</td><td>Server</td><td class="n">35</td><td class="n">15</td></tr><tr><td>Dev</td><td>Cook</td><td class="n">40</td><td class="n">18</td></tr><tr><td>Eli</td><td>Cook</td><td class="n">32</td><td class="n">17</td></tr><tr><td>Fay</td><td>Host</td><td class="n">20</td><td class="n">13</td></tr><tr><td>Gus</td><td>Host</td><td class="n">24</td><td class="n">13</td></tr><tr><td>Hana</td><td>Dishwasher</td><td class="n">28</td><td class="n">12</td></tr></table></div><div class="steps"><label><input type="checkbox"><span>Press <b>Ctrl+T</b> to make a table named <code>Staff</code>.</span></label><label><input type="checkbox"><span>In <b>E1</b> type Pay. In <b>E2</b> enter <code>=[@Hours]*[@Rate]</code>.</span></label><label><input type="checkbox"><span>Turn on the <b>Total Row</b> and set the Pay total to <b>Sum</b>.</span></label><label><input type="checkbox"><span>Filter <b>Role</b> to Server and read the total again. Then clear the filter.</span></label><label><input type="checkbox"><span>Select the Hours column and use <b>Conditional Formatting</b>, <b>Highlight Cells Rules</b>, <b>Greater Than</b> 32.</span></label></div></div>
+    <div class="check">
+      <label for="st1"><b>What is the total pay for all staff?</b></label>
+      <input id="st1" type="text" inputmode="decimal" placeholder="a number">
+      <button class="btn" id="st1Btn" type="button">Check</button>
+      <span class="feedback" id="st1Fb" aria-live="polite"></span>
+    </div>
+    <div class="check">
+      <label for="st2"><b>Filter to Server. What is the Pay total now?</b></label>
+      <input id="st2" type="text" inputmode="decimal" placeholder="a number">
+      <button class="btn" id="st2Btn" type="button">Check</button>
+      <span class="feedback" id="st2Fb" aria-live="polite"></span>
+    </div>
+    <div class="check">
+      <label for="st3"><b>How many employees are highlighted for Hours above 32?</b></label>
+      <input id="st3" type="text" inputmode="decimal" placeholder="a number">
+      <button class="btn" id="st3Btn" type="button">Check</button>
+      <span class="feedback" id="st3Fb" aria-live="polite"></span>
+    </div>
+<div class="warn">Before emailing this sheet, ask who truly needs it. Share only the columns required, and never send pay records to people who do not need them.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Sort and highlight">
+  <div class="inner">
+    <div class="kicker">Excel: Chapter 4</div>
+    <h2>Sort and highlight</h2>
+    <p>Use the same Staff table. Sorting and highlighting help you see where the biggest numbers are.</p>
+    <div class="xlsplit"><div><table class="dtab xlike"><tr><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr><tr><td>Name</td><td>Role</td><td>Hours</td><td>Rate</td><td>Pay</td></tr><tr><td>Ana</td><td>Server</td><td class="n">30</td><td class="n">14</td><td class="n">420</td></tr><tr><td>Ben</td><td>Server</td><td class="n">25</td><td class="n">14</td><td class="n">350</td></tr><tr><td>Cara</td><td>Server</td><td class="n">35</td><td class="n">15</td><td class="n">525</td></tr><tr><td>Dev</td><td>Cook</td><td class="n">40</td><td class="n">18</td><td class="n">720</td></tr><tr><td>Eli</td><td>Cook</td><td class="n">32</td><td class="n">17</td><td class="n">544</td></tr><tr><td>Fay</td><td>Host</td><td class="n">20</td><td class="n">13</td><td class="n">260</td></tr><tr><td>Gus</td><td>Host</td><td class="n">24</td><td class="n">13</td><td class="n">312</td></tr><tr><td>Hana</td><td>Dishwasher</td><td class="n">28</td><td class="n">12</td><td class="n">336</td></tr></table></div><div class="steps"><label><input type="checkbox"><span>Clear any filters. Click the <b>Pay</b> filter arrow and choose <b>Sort Largest to Smallest</b>.</span></label><label><input type="checkbox"><span>Select the Pay column. Choose <b>Conditional Formatting</b>, <b>Top/Bottom Rules</b>, <b>Top 10 Items</b>, and change 10 to <b>3</b>.</span></label><label><input type="checkbox"><span>Open <b>Data</b>, <b>Sort</b>. Sort by <b>Role</b> A to Z, then add a level to sort by <b>Pay</b> Largest to Smallest.</span></label></div></div>
+    <div class="check">
+      <label for="so1"><b>What is the highest pay amount?</b></label>
+      <input id="so1" type="text" inputmode="decimal" placeholder="a number">
+      <button class="btn" id="so1Btn" type="button">Check</button>
+      <span class="feedback" id="so1Fb" aria-live="polite"></span>
+    </div>
+    <div class="check">
+      <label for="so2"><b>What is the third-highest pay amount (the last cell the Top 3 rule highlights)?</b></label>
+      <input id="so2" type="text" inputmode="decimal" placeholder="a number">
+      <button class="btn" id="so2Btn" type="button">Check</button>
+      <span class="feedback" id="so2Fb" aria-live="polite"></span>
+    </div>
+<div class="warn">A table remembers its sort and filters, but a multi-level sort lets you group by Role and still see the biggest Pay first within each group.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Pearson simulation: Chapter 4">
+  <div class="inner">
+    <div class="kicker">Pearson MyLab IT</div>
+    <h2>Simulation lab: Excel Chapter 4</h2>
+    <p>About 40 minutes, in class. The simulation practices tables, sorting, filtering, total rows, and conditional formatting, in the same task-by-task format the certification exam uses.</p>
+    <div class="steps"><label><input type="checkbox"><span>Open <b>Pearson MyLab IT</b> from the link in Canvas and sign in.</span></label><label><input type="checkbox"><span>Start the <b>Chapter 4 simulation</b>.</span></label><label><input type="checkbox"><span>Try every task yourself first. Use the built-in hints only after a real attempt.</span></label><label><input type="checkbox"><span>No AI on simulations. The certification exam is AI-free, so this is where you find out what you can do alone.</span></label><label><input type="checkbox"><span>Stuck for more than two minutes? Raise your hand. If you run out of time, finish the simulation tonight.</span></label></div>
+    <div class="warn"><b>Outside class:</b> the Chapter 4 Pearson project. The due date is in Canvas.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="What is ethics?">
+  <div class="inner">
+    <div class="kicker">Business ethics</div>
+    <h2>Knowing what you have a right to do and what is right to do</h2>
+    <p>Ethics are rules of behavior based on ideas about what is morally good and bad. Something can be legal and still be wrong. Ultimately, ethics are about character, and that means yours.</p>
+    <div class="strat">
+      <div><h3>Trust</h3>Ethical behavior builds credibility with customers, employees, and stakeholders.</div>
+      <div><h3>Compliance</h3>It helps you avoid legal penalties.</div>
+      <div><h3>Reputation</h3>Ethical companies attract loyal customers and talent.</div>
+      <div><h3>Sustainability</h3>It supports long-term success through responsible practices.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-title="Two sides of a case">
+  <div class="inner">
+    <div class="kicker">Sort</div>
+    <h2>The Denver Police case: who says what?</h2>
+    <p>A police department licensed software that collects public social media posts to help prevent violence and track events affecting public safety. Privacy advocates raised alarms. Sort the arguments.</p>
+    <div class="pool" id="poolP" aria-label="Items to sort">
+<button class="item" draggable="true" data-ans="Pro" aria-pressed="false">Public posts can reveal threats and help prevent violence.</button>
+<button class="item" draggable="true" data-ans="Pro" aria-pressed="false">Open posts are already visible to anyone.</button>
+<button class="item" draggable="true" data-ans="Pro" aria-pressed="false">Real-time awareness of events helps protect the public.</button>
+<button class="item" draggable="true" data-ans="Privacy" aria-pressed="false">People did not expect police to track their posts.</button>
+<button class="item" draggable="true" data-ans="Privacy" aria-pressed="false">Monitoring could lead to unfair targeting of some groups.</button>
+<button class="item" draggable="true" data-ans="Privacy" aria-pressed="false">People may stop speaking freely if they feel watched.</button>
+    </div>
+    <div class="bins mx" id="binsP"><div class="bin" data-bin="Pro" role="button" tabindex="0"><div class="bin-title">Pro</div></div><div class="bin" data-bin="Privacy" role="button" tabindex="0"><div class="bin-title">Privacy</div></div></div>
+    <div class="actions"><button class="btn" id="sortCheckP" type="button">Check my sort</button><button class="btn ghost" id="sortResetP" type="button">Start over</button><span class="feedback" id="sortFbP" aria-live="polite"></span></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Ask before you act">
+  <div class="inner">
+    <div class="kicker">Business ethics</div>
+    <h2>Questions that test a decision</h2>
+    <p>Business ethics scholar Laura Nash offered a list of questions to ask before acting. A few of them, in our own words:</p>
+    <div class="strat three">
+      <div><h3>Define the problem</h3>Have you described it accurately? How would it look from the other side?</div>
+      <div><h3>Think about people</h3>Who could this decision hurt? Can you talk with those affected first?</div>
+      <div><h3>Test the decision</h3>Could you explain it without qualms to your boss, your family, or the public? Would it still look right years from now?</div>
+    </div>
+    <div class="warn">Try them on the Denver case: Is the goal good? Could the method harm someone? Could the department explain it openly?</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Sensitive data and AI">
+  <div class="inner">
+    <div class="kicker">AI and data</div>
+    <h2>What you type into an AI tool may not stay private</h2>
+    <p>AI tools are useful for working with data, and they are also a new way for data to leak. Once information is pasted into a tool, you may not control where it goes. Treat a prompt as a message to an outside party until you know the tool&#39;s rules.</p>
+    <div class="strat three">
+      <div><h3>Check the tool</h3>Use the tools your school or employer approves, and learn what they say about storing your data.</div>
+      <div><h3>Share only what is needed</h3>Ask your question with the minimum data. Often a made-up example works just as well.</div>
+      <div><h3>Mask first</h3>Remove names, contact details, and ID numbers before you paste anything.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-title="Safe to paste?">
+  <div class="inner">
+    <div class="kicker">Sort</div>
+    <h2>Paste it, mask it first, or never paste it?</h2>
+    <p>You are using an AI tool to help with a Copper Table task. Sort each item.</p>
+    <div class="pool" id="poolA" aria-label="Items to sort">
+<button class="item" draggable="true" data-ans="OK" aria-pressed="false">The public dinner menu text</button>
+<button class="item" draggable="true" data-ans="OK" aria-pressed="false">A general question about how the SDLC phases work</button>
+<button class="item" draggable="true" data-ans="OK" aria-pressed="false">A made-up sample of ten orders</button>
+<button class="item" draggable="true" data-ans="Mask" aria-pressed="false">Order history after removing guest names and emails</button>
+<button class="item" draggable="true" data-ans="Mask" aria-pressed="false">A guest complaint with the name and phone number replaced</button>
+<button class="item" draggable="true" data-ans="Never" aria-pressed="false">A list of guests&#39; names and email addresses</button>
+<button class="item" draggable="true" data-ans="Never" aria-pressed="false">Employee pay records with names</button>
+<button class="item" draggable="true" data-ans="Never" aria-pressed="false">The secret sauce recipe</button>
+    </div>
+    <div class="bins b3" id="binsA"><div class="bin" data-bin="OK" role="button" tabindex="0"><div class="bin-title">OK</div></div><div class="bin" data-bin="Mask" role="button" tabindex="0"><div class="bin-title">Mask</div></div><div class="bin" data-bin="Never" role="button" tabindex="0"><div class="bin-title">Never</div></div></div>
+    <div class="actions"><button class="btn" id="sortCheckA" type="button">Check my sort</button><button class="btn ghost" id="sortResetA" type="button">Start over</button><span class="feedback" id="sortFbA" aria-live="polite"></span></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Redact it">
+  <div class="inner">
+    <div class="kicker">Interactive</div>
+    <h2>Black out what must not be pasted</h2>
+    <p>A manager wants an AI tool to draft a reply to this complaint. Select every detail that should be removed first, then check. Leave the parts the AI needs.</p>
+    <div class="mail redact" id="redBox">
+      <div>Hi, I&#39;m <span class="hot" data-hot="1">Jordan Reyes</span> (<span class="hot" data-hot="1">jreyes88@mailhub.example</span>, <span class="hot" data-hot="1">336-555-0142</span>). On <span class="hot">Saturday</span> my card <span class="hot" data-hot="1">5555 0000 1111 2222</span> was <span class="hot">charged twice</span> for <span class="hot">order 1042</span>. I live at <span class="hot" data-hot="1">214 Maple Court</span> and would like the <span class="hot">duplicate charge</span> refunded.</div>
+    </div>
+    <div class="actions"><button class="btn" id="redCheck" type="button">Check</button><button class="btn ghost" id="redReset" type="button">Start over</button><span class="feedback" id="redFb" aria-live="polite"></span></div>
+    <div class="warn" id="redRev" hidden>The AI only needs the problem: a duplicate charge on a Saturday order. The name, email, phone, full card number, and address are personal or financial identifiers and stay out. You can add them back yourself when you send the reply.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Your call">
+  <div class="inner">
+    <div class="kicker">Decide</div>
+    <h2>A server asks for a shortcut</h2>
+    <p>A server suggests pasting the full guest email list, with names and dietary notes, into a free AI tool to write personalized promotions. What should the manager say?</p>
+<div class="q" data-quiz>
+<p></p>
+<div class="opts"><button class="opt">Go ahead. It saves a lot of time.</button><button class="opt" data-right>Do not paste the list. Write the promotion from a made-up sample or from general categories, using only an approved tool.</button><button class="opt">Paste only the allergy notes, since they are the most useful.</button><button class="opt">Paste it into several tools and compare the results.</button></div>
+<p class="explain">Customer names, contact details, and dietary notes are personal data. A made-up example gives the AI what it needs without exposing real guests, and an approved tool has known data rules.</p>
+</div>
+    <p class="lede">Discuss: which rights would those guests have if their data were used this way?</p>
+  </div>
+</section>
+
+<section class="slide" data-title="Log it">
+  <div class="inner">
+    <div class="logtop">
+      <div>
+        <div class="kicker">Consultant Log</div>
+        <h1 class="logit">LOG IT</h1>
+        <p class="lede">Laptops closed. Notebook only.</p>
+      </div>
+      <div class="entryhead" aria-label="Entry heading">
+        <div><b>Date:</b> <span class="blank"></span></div>
+        <div><b>Log #:</b> <span class="blank"></span></div>
+        <div><b>Topic:</b> Security, Privacy, Ethics, and AI Data</div>
+      </div>
+    </div>
+    <div class="qstrip" aria-label="Today's questions">
+      <div class="on">KNOW<small>What do I understand?</small></div>
+      <div class="on">DO<small>What can I do?</small></div>
+      <div class="on">DECIDE<small>What decision could this support?</small></div>
+      <div class="on">VERIFY<small>How do I know?</small></div>
+      <div class="on">DEFEND<small>Could I explain and defend this?</small></div>
+    </div>
+    <div class="prompts"><div><span class="tag">KNOW</span><p>Explain the difference between security and privacy, with one Copper Table example of each.</p></div><div><span class="tag">DO</span><p>Describe how to build a table in Excel, total a column, and filter so the total shows only one role.</p></div><div><span class="tag">DECIDE</span><p>Choose one defense the Copper Table should add first, and name the threat it addresses.</p></div><div><span class="tag">VERIFY</span><p>You receive an email asking you to sign in. How do you check whether it is real without clicking it?</p></div><div><span class="tag">DEFEND</span><p>A classmate says, "If I remove the names, anything is safe to paste into AI." Defend or challenge that claim.</p></div><div><span class="tag">AUDIT</span><p>Reread the decision you logged at the start of class without changing it. Would you decide the same way now? Name the specific concept, example, or discussion from today that changed your mind or made your reasoning stronger. (Assignment 2, reflection)</p></div></div>
+    <div class="warn"><b>Looking ahead:</b> tomorrow is certification day. The practice exam and the Excel certification exam come first, then AI in business. Bring your laptop charged, your Pearson sign-in, and anything your exam instructions in Canvas ask for.</div>
+  </div>
+</section>
+
+
+</main>
+
+<footer class="nav">
+  <button class="navbtn" id="prev" type="button">Back</button>
+  <div class="dots" id="dots" role="tablist" aria-label="Slides"></div>
+  <span class="count" id="count"></span>
+  <button class="navbtn" id="next" type="button">Next</button>
+</footer>
+
+<script>
+(function(){
+  const slides=[...document.querySelectorAll('.slide')];
+  const dots=document.getElementById('dots');
+  let cur=0;
+  slides.forEach((s,i)=>{
+    const d=document.createElement('button');
+    d.className='dot';d.type='button';d.setAttribute('aria-label',(i+1)+': '+s.dataset.title);d.title=s.dataset.title;
+    d.onclick=()=>go(i);dots.appendChild(d);
+  });
+  function go(i){
+    cur=Math.max(0,Math.min(slides.length-1,i));
+    slides.forEach((s,j)=>s.classList.toggle('active',j===cur));
+    [...dots.children].forEach((d,j)=>d.setAttribute('aria-current',j===cur?'true':'false'));
+    document.getElementById('prev').disabled=cur===0;
+    document.getElementById('next').disabled=cur===slides.length-1;
+    document.getElementById('count').textContent=(cur+1)+' / '+slides.length;
+    slides[cur].scrollTop=0;
+    try{history.replaceState(null,'','#'+(cur+1))}catch(e){}
+  }
+  document.getElementById('prev').onclick=()=>go(cur-1);
+  document.getElementById('next').onclick=()=>go(cur+1);
+  document.addEventListener('keydown',e=>{
+    if(e.target.matches('textarea,input'))return;
+    if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();go(cur+1)}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur-1)}
+    else if(e.key==='f'||e.key==='F'){toggleFs()}
+  });
+  let tx=null;
+  document.getElementById('deck').addEventListener('touchstart',e=>{tx=e.touches[0].clientX},{passive:true});
+  document.getElementById('deck').addEventListener('touchend',e=>{
+    if(tx===null||e.target.closest('.item,.bin,.pool'))return;
+    const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>70)go(cur+(dx<0?1:-1));tx=null;
+  });
+  function toggleFs(){
+    try{if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen();}catch(e){}
+  }
+  document.getElementById('fsBtn').onclick=toggleFs;
+  const start=parseInt(location.hash.slice(1),10);
+  go(isNaN(start)?0:start-1);
+  document.querySelectorAll('.reveal .card').forEach(c=>c.onclick=()=>c.setAttribute('aria-expanded',c.getAttribute('aria-expanded')==='true'?'false':'true'));
+  document.querySelectorAll('[data-quiz]').forEach(q=>{
+    q.querySelectorAll('.opt').forEach(o=>o.onclick=()=>{
+      if(o.hasAttribute('data-right')){o.classList.add('right');q.querySelector('.explain').classList.add('on')}
+      else o.classList.add('wrong');
+    });
+  });
+  document.querySelectorAll('.di').forEach(d=>d.querySelectorAll('[data-pick]').forEach(b=>b.onclick=()=>{
+    d.querySelectorAll('[data-pick]').forEach(x=>x.classList.toggle('picked',x===b));
+    const ok=b.dataset.pick===d.dataset.ans;d.classList.add('done');d.classList.toggle('ok',ok);d.classList.toggle('no',!ok);
+  }));
+  function makeSort(poolId,binsId,checkId,resetId,fbId,total){
+    const pool=document.getElementById(poolId),bins=document.getElementById(binsId),fb=document.getElementById(fbId);
+    const original=[...pool.children];
+    let sel=null;
+    function select(it){
+      if(sel)sel.setAttribute('aria-pressed','false');
+      sel=(sel===it)?null:it;
+      if(sel)sel.setAttribute('aria-pressed','true');
+    }
+    function place(it,bin){it.classList.remove('right','wrong');bin.appendChild(it);it.setAttribute('aria-pressed','false');sel=null;fb.textContent=''}
+    pool.addEventListener('click',e=>{const it=e.target.closest('.item');if(it)select(it)});
+    bins.addEventListener('click',e=>{
+      const it=e.target.closest('.item');
+      if(it){select(it);return}
+      const bin=e.target.closest('.bin');if(bin&&sel)place(sel,bin);
+    });
+    bins.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.classList.contains('bin')&&sel){e.preventDefault();place(sel,e.target)}});
+    original.forEach(it=>it.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain','x');sel=it}));
+    bins.querySelectorAll('.bin').forEach(b=>{
+      b.addEventListener('dragover',e=>{e.preventDefault();b.classList.add('drop')});
+      b.addEventListener('dragleave',()=>b.classList.remove('drop'));
+      b.addEventListener('drop',e=>{e.preventDefault();b.classList.remove('drop');if(sel)place(sel,b)});
+    });
+    pool.addEventListener('dragover',e=>e.preventDefault());
+    pool.addEventListener('drop',e=>{e.preventDefault();if(sel)place(sel,pool)});
+    document.getElementById(checkId).onclick=()=>{
+      let right=0;
+      bins.querySelectorAll('.item').forEach(it=>{const ok=it.dataset.ans===it.parentElement.dataset.bin;it.classList.toggle('right',ok);it.classList.toggle('wrong',!ok);if(ok)right++});
+      const left=pool.querySelectorAll('.item').length;
+      fb.textContent=right+' of '+total+' correct'+(left?' ('+left+' still to sort)':'')+(right===total?'. Nice work.':'. Orange items are in the wrong place; move them and check again.');
+    };
+    document.getElementById(resetId).onclick=()=>{original.forEach(it=>{it.classList.remove('right','wrong');it.setAttribute('aria-pressed','false');pool.appendChild(it)});sel=null;fb.textContent=''};
+  }
+
+  function numCheck(inp,btn,fb,answers,ok,bad){
+    document.getElementById(btn).onclick=()=>{
+      const v=parseFloat(document.getElementById(inp).value.replace(/[$,%\s]/g,''));const f=document.getElementById(fb);
+      if(isNaN(v))f.textContent='Type a number first.';
+      else if(answers.some(a=>Math.abs(v-a)<0.051))f.textContent=ok;
+      else f.textContent=bad;
+    };
+  }
+
+
+  // click-to-flag game
+  function hotGame(boxId,checkId,resetId,fbId,revealId){
+    const box=document.getElementById(boxId),fb=document.getElementById(fbId),rev=revealId?document.getElementById(revealId):null;
+    const all=()=>[...box.querySelectorAll('.hot')];
+    box.addEventListener('click',e=>{const h=e.target.closest('.hot');if(h){h.classList.toggle('on');h.classList.remove('ok','bad')}});
+    document.getElementById(checkId).onclick=()=>{
+      let found=0,extra=0;const total=all().filter(h=>h.dataset.hot).length;
+      all().forEach(h=>{const on=h.classList.contains('on'),want=!!h.dataset.hot;h.classList.remove('ok','bad','miss');
+        if(on&&want){found++;h.classList.add('ok')}else if(on&&!want){extra++;h.classList.add('bad')}else if(!on&&want){h.classList.add('miss')}});
+      fb.textContent='Found '+found+' of '+total+(extra?'. '+extra+' selected '+(extra===1?'item is':'items are')+' actually fine (shown in orange).':'.')+(found===total&&!extra?' Nice work.':'');
+      if(rev)rev.hidden=false;
+    };
+    document.getElementById(resetId).onclick=()=>{all().forEach(h=>h.classList.remove('on','ok','bad','miss'));fb.textContent='';if(rev)rev.hidden=true};
+  }
+
+
+  makeSort('poolS','binsS','sortCheckS','sortResetS','sortFbS',9);
+  makeSort('poolP','binsP','sortCheckP','sortResetP','sortFbP',6);
+  makeSort('poolA','binsA','sortCheckA','sortResetA','sortFbA',8);
+  hotGame('mailBox','mailCheck','mailReset','mailFb','mailRev');
+  hotGame('redBox','redCheck','redReset','redFb','redRev');
+  numCheck('st1','st1Btn','st1Fb',[3467],'Correct: 3,467 in total pay.','Not quite. Add the Pay column: Hours times Rate for each person, then sum.');
+  numCheck('st2','st2Btn','st2Fb',[1295],'Correct: 1,295 for the three servers (420 + 350 + 525).','Not quite. With the filter on Server, add the Pay of Ana, Ben, and Cara.');
+  numCheck('st3','st3Btn','st3Fb',[2],'Correct: 2. Cara (35) and Dev (40). Eli has exactly 32, which is not greater than 32.','Not quite. Count the Hours values that are greater than 32, not equal to it.');
+  numCheck('so1','so1Btn','so1Fb',[720],'Correct: 720, Dev.','Not quite. Sort Pay from largest to smallest and read the first row.');
+  numCheck('so2','so2Btn','so2Fb',[525],'Correct: 525. The top three are 720, 544, and 525.','Not quite. The three largest are 720, 544, and one more. Read the third row after sorting.');
+
+})();
+</script>
+</body>
+</html>
