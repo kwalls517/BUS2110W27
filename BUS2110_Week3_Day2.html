@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Day 12: Where Data Comes From</title>
+<title>Day 12: From Data to Business Intelligence</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
@@ -599,9 +599,9 @@ button.fbx:disabled{cursor:default}
 
 <section class="slide title-slide" data-title="Welcome">
   <div class="inner">
-    <div class="kicker">Week 3 &middot; Where Data Comes From</div>
+    <div class="kicker">Week 3 &middot; From Data to Business Intelligence</div>
     <h1>Every number starts as an event.<span>Someone ordered, someone clicked, someone paid.</span></h1>
-    <p class="lede">Today you will trace the Copper Table&#39;s data back to the systems that record it, learn how data is organized and described, open the data for your final project, and write the prompt you will use to ask AI for a cleaning plan.</p>
+    <p class="lede">Today you will trace the Copper Table&#39;s data back to the systems that record it, learn how data is organized, stored in a warehouse, and turned into business intelligence, then clean the data for your final project and add the profit columns.</p>
     <div class="agenda">
       <div><h3>Source systems</h3>Where records are created</div>
       <div><h3>Big Data</h3>Volume, velocity, variety</div>
@@ -691,36 +691,6 @@ button.fbx:disabled{cursor:default}
   </div>
 </section>
 
-<section class="slide" data-title="Which V?">
-  <div class="inner">
-    <div class="kicker">Sort</div>
-    <h2>Volume, velocity, or variety?</h2>
-    <p>Select a situation, then select the V that it describes best.</p>
-    <div class="pool" id="poolV" aria-label="Items to sort">
-<button class="item" draggable="true" data-ans="Volume" aria-pressed="false">A chain stores ten years of receipts from every location.</button>
-<button class="item" draggable="true" data-ans="Volume" aria-pressed="false">A delivery company holds billions of order records.</button>
-<button class="item" draggable="true" data-ans="Volume" aria-pressed="false">A loyalty program tracks 40 million members.</button>
-<button class="item" draggable="true" data-ans="Velocity" aria-pressed="false">Kitchen screens must show new orders within a second.</button>
-<button class="item" draggable="true" data-ans="Velocity" aria-pressed="false">A fraud system checks each card swipe as it happens.</button>
-<button class="item" draggable="true" data-ans="Velocity" aria-pressed="false">Delivery drivers&#39; locations update every few seconds.</button>
-<button class="item" draggable="true" data-ans="Variety" aria-pressed="false">Data arrives as tables, photos, voice messages, and reviews.</button>
-<button class="item" draggable="true" data-ans="Variety" aria-pressed="false">Sales data is combined with weather, social media, and maps.</button>
-<button class="item" draggable="true" data-ans="Variety" aria-pressed="false">Spreadsheets, PDFs, and emails all hold relevant facts.</button>
-    </div>
-    <div class="bins b3" id="binsV"><div class="bin" data-bin="Volume" role="button" tabindex="0"><div class="bin-title">Volume</div></div><div class="bin" data-bin="Velocity" role="button" tabindex="0"><div class="bin-title">Velocity</div></div><div class="bin" data-bin="Variety" role="button" tabindex="0"><div class="bin-title">Variety</div></div></div>
-    <div class="actions"><button class="btn" id="sortCheckV" type="button">Check my sort</button><button class="btn ghost" id="sortResetV" type="button">Start over</button><span class="feedback" id="sortFbV" aria-live="polite"></span></div>
-  </div>
-</section>
-
-<section class="slide" data-title="Structured or unstructured?">
-  <div class="inner">
-    <div class="kicker">Data types</div>
-    <h2>Structured data fits in rows and columns</h2>
-    <p><b>Structured data</b> has a fixed layout, like an order table. <b>Unstructured data</b> has no fixed layout, like a review or a photo. Most business data is unstructured, but most analysis in Excel uses structured data.</p>
-<div class="dilist"><div class="di five" data-ans="Structured"><p>Table of orders: date, item, quantity, price.</p><div class="dibtns"><button type="button" data-pick="Structured">Structured</button><button type="button" data-pick="Unstructured">Unstructured</button></div><p class="diwhy">Fixed columns, so it is structured.</p></div><div class="di five" data-ans="Unstructured"><p>A guest&#39;s 200-word online review of the pasta.</p><div class="dibtns"><button type="button" data-pick="Structured">Structured</button><button type="button" data-pick="Unstructured">Unstructured</button></div><p class="diwhy">Free text has no fixed layout.</p></div><div class="di five" data-ans="Structured"><p>A column of daily sales totals.</p><div class="dibtns"><button type="button" data-pick="Structured">Structured</button><button type="button" data-pick="Unstructured">Unstructured</button></div><p class="diwhy">Numbers in fixed columns are structured.</p></div><div class="di five" data-ans="Unstructured"><p>A photo of the plated salmon.</p><div class="dibtns"><button type="button" data-pick="Structured">Structured</button><button type="button" data-pick="Unstructured">Unstructured</button></div><p class="diwhy">Images are unstructured.</p></div><div class="di five" data-ans="Unstructured"><p>A recorded voice message asking about a reservation.</p><div class="dibtns"><button type="button" data-pick="Structured">Structured</button><button type="button" data-pick="Unstructured">Unstructured</button></div><p class="diwhy">Audio is unstructured.</p></div></div>
-  </div>
-</section>
-
 <section class="slide" data-title="Data modeling">
   <div class="inner">
     <div class="kicker">Data modeling</div>
@@ -733,26 +703,6 @@ button.fbx:disabled{cursor:default}
       <div><h3>Foreign key</h3>A field that points to another table&#39;s primary key, such as ItemID in Orders.</div>
     </div>
     <div class="warn">Why bother? If the price of Salmon changes, you update one row in Menu instead of thousands of orders.</div>
-  </div>
-</section>
-
-<section class="slide" data-title="Follow the key">
-  <div class="inner">
-    <div class="kicker">Interactive</div>
-    <h2>Follow the key from an order to the menu</h2>
-    <p>Select an order. The ItemID in the Orders table matches the ItemID in the Menu table.</p>
-    <div class="joingrid">
-      <div><b>Orders</b><table class="jointbl" id="jOrders"><tr><th>OrderID</th><th>Qty</th><th>ItemID</th></tr>
-        <tr data-k="S1"><td>7001</td><td>2</td><td>S1</td></tr>
-        <tr data-k="T3"><td>7002</td><td>1</td><td>T3</td></tr>
-        <tr data-k="B2"><td>7003</td><td>3</td><td>B2</td></tr>
-        <tr data-k="S1"><td>7004</td><td>1</td><td>S1</td></tr></table></div>
-      <div><b>Menu</b><table class="jointbl" id="jMenu"><tr><th>ItemID</th><th>Item</th><th>Price</th></tr>
-        <tr data-k="S1"><td>S1</td><td>Salmon</td><td>28</td></tr>
-        <tr data-k="B2"><td>B2</td><td>Burger</td><td>16</td></tr>
-        <tr data-k="T3"><td>T3</td><td>Tacos</td><td>15</td></tr></table></div>
-      <div><b>What you have found</b><div class="warn" id="jMsg" aria-live="polite">Select an order.</div></div>
-    </div>
   </div>
 </section>
 
@@ -777,6 +727,36 @@ button.fbx:disabled{cursor:default}
   </div>
 </section>
 
+<section class="slide" data-title="Data warehouse">
+  <div class="inner">
+    <div class="kicker">Data warehouse</div>
+    <h2>A data warehouse collects clean history from many systems</h2>
+    <p>The POS, delivery app, inventory, and payroll systems each hold only their own piece. A <b>data warehouse</b> is a central store that combines data from many source systems, cleaned and organized for analysis.</p>
+    <div class="chevs4"><div class="chv">Source systems</div><div class="chv">Extract</div><div class="chv">Transform</div><div class="chv">Load into warehouse</div></div>
+    <div class="strat three">
+      <div><h3>Extract</h3>Pull data out of each source system.</div>
+      <div><h3>Transform</h3>Clean it: fix formats, remove duplicates, and match fields.</div>
+      <div><h3>Load</h3>Save it in the warehouse, ready for reports.</div>
+    </div>
+    <div class="warn">You already did a small version of ETL: you took the order export, cleaned it in Excel, and prepared it for analysis.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Business intelligence">
+  <div class="inner">
+    <div class="kicker">Business intelligence</div>
+    <h2>Business intelligence turns stored data into decisions</h2>
+    <p><b>Business intelligence (BI)</b> is the set of tools and practices that turn data into reports, dashboards, and insights for decision-makers.</p>
+    <div class="strat">
+      <div><h3>Report</h3>A fixed summary, such as last month&#39;s sales by channel.</div>
+      <div><h3>Dashboard</h3>An interactive screen of key charts and KPIs, updated from the data.</div>
+      <div><h3>Self-service BI</h3>Managers explore data themselves without waiting for an analyst.</div>
+      <div><h3>Alerts</h3>The system tells you when a measure crosses a limit.</div>
+    </div>
+    <div class="warn">BI tools like Tableau and Power BI show what happened and why. They do not decide what to do. People still decide.</div>
+  </div>
+</section>
+
 <section class="slide" data-title="Data dictionary">
   <div class="inner">
     <div class="kicker">Data dictionary</div>
@@ -790,24 +770,6 @@ button.fbx:disabled{cursor:default}
   </div>
 </section>
 
-<section class="slide" data-title="Build the dictionary">
-  <div class="inner">
-    <div class="kicker">Interactive</div>
-    <h2>Choose the right type for each field</h2>
-    <p>For each field in the Copper Table file, pick the data type that fits.</p>
-    <table class="dtab xlike" id="ddT">
-      <tr><th>Field</th><th>Example</th><th>Data type</th></tr>
-      <tr><td>OrderID</td><td>5001</td><td><select class="sel" data-a="Identifier"><option value="">Choose</option><option>Identifier</option><option>Quantity</option><option>Currency</option><option>Date</option><option>Category (text)</option></select></td></tr>
-      <tr><td>Date</td><td>10/6/25</td><td><select class="sel" data-a="Date"><option value="">Choose</option><option>Identifier</option><option>Quantity</option><option>Currency</option><option>Date</option><option>Category (text)</option></select></td></tr>
-      <tr><td>Channel</td><td>Delivery</td><td><select class="sel" data-a="Category (text)"><option value="">Choose</option><option>Identifier</option><option>Quantity</option><option>Currency</option><option>Date</option><option>Category (text)</option></select></td></tr>
-      <tr><td>Qty</td><td>2</td><td><select class="sel" data-a="Quantity"><option value="">Choose</option><option>Identifier</option><option>Quantity</option><option>Currency</option><option>Date</option><option>Category (text)</option></select></td></tr>
-      <tr><td>Price</td><td>28</td><td><select class="sel" data-a="Currency"><option value="">Choose</option><option>Identifier</option><option>Quantity</option><option>Currency</option><option>Date</option><option>Category (text)</option></select></td></tr>
-    </table>
-    <div class="actions"><button class="btn" id="ddCheck" type="button">Check</button><span class="feedback" id="ddFb" aria-live="polite"></span></div>
-    <div class="warn">An ID is a label, not a quantity. You would never add up order numbers.</div>
-  </div>
-</section>
-
 <section class="slide" data-title="The project">
   <div class="inner">
     <div class="kicker">Final project</div>
@@ -818,7 +780,7 @@ button.fbx:disabled{cursor:default}
       <div><h3>The data</h3>Three months of orders: date, channel, item, quantity, price, and cost.</div>
       <div><h3>The deliverable</h3>A management deliverable and a five-minute team presentation, with a recommendation you can defend. This is Assignment 3.</div>
     </div>
-    <div class="warn">Today you prepare the data. Tomorrow and Thursday you analyze and visualize it. Friday you present.</div>
+    <div class="warn">Today you prepare the data and add profit. Thursday you visualize it and build your case. Friday, during the final exam period, you present.</div>
   </div>
 </section>
 
@@ -966,22 +928,6 @@ button.fbx:disabled{cursor:default}
   </div>
 </section>
 
-<section class="slide" data-title="Prompting, deeper">
-  <div class="inner">
-    <div class="kicker">Prompting</div>
-    <h2>A strong prompt has parts</h2>
-    <p>On Day 3 you improved a weak prompt and on Day 4 you built a study prompt. The same pieces work for business tasks, including the cleaning plan you are about to ask AI for. The more of them you give, the less the model has to guess.</p>
-    <div class="strat">
-      <div><h3>Role</h3>Whose perspective to take.</div>
-      <div><h3>Context</h3>Who the audience is and what matters.</div>
-      <div><h3>Task</h3>The clear, specific job to do.</div>
-      <div><h3>Format</h3>How the answer should be organized.</div>
-      <div><h3>Constraints</h3>Length, tone, and what to avoid.</div>
-      <div><h3>Example</h3>A sample of the style you want.</div>
-    </div>
-  </div>
-</section>
-
 <section class="slide" data-title="Build a prompt">
   <div class="inner">
     <div class="kicker">Interactive</div>
@@ -996,48 +942,6 @@ button.fbx:disabled{cursor:default}
     </div>
     <div class="pbuild" id="pbOut" aria-live="polite"></div>
     <div class="warn" id="pbMsg" aria-live="polite"></div>
-  </div>
-</section>
-
-<section class="slide" data-title="Which technique?">
-  <div class="inner">
-    <div class="kicker">Sort</div>
-    <h2>Which prompting technique is it?</h2>
-    <p>Select a prompt, then select the technique it uses.</p>
-    <div class="pool" id="poolT" aria-label="Items to sort">
-<button class="item" draggable="true" data-ans="Role" aria-pressed="false">You are a customer service representative replying to a late-delivery complaint.</button>
-<button class="item" draggable="true" data-ans="Role" aria-pressed="false">Act as a food-cost analyst reviewing this week&#39;s purchases.</button>
-<button class="item" draggable="true" data-ans="Examples" aria-pressed="false">Here is a sample tone: &quot;We&#39;re thrilled to share this!&quot; Write the announcement in the same tone.</button>
-<button class="item" draggable="true" data-ans="Examples" aria-pressed="false">Here are two past replies. Write a third in the same style.</button>
-<button class="item" draggable="true" data-ans="Steps" aria-pressed="false">First define the problem, then give two solutions, then list the expected benefits.</button>
-<button class="item" draggable="true" data-ans="Steps" aria-pressed="false">Explain the process in five numbered steps.</button>
-<button class="item" draggable="true" data-ans="Constraints" aria-pressed="false">Answer in 100 words or fewer.</button>
-<button class="item" draggable="true" data-ans="Constraints" aria-pressed="false">List three ideas and do not mention prices.</button>
-    </div>
-    <div class="bins b4" id="binsT"><div class="bin" data-bin="Role" role="button" tabindex="0"><div class="bin-title">Role</div></div><div class="bin" data-bin="Examples" role="button" tabindex="0"><div class="bin-title">Examples</div></div><div class="bin" data-bin="Steps" role="button" tabindex="0"><div class="bin-title">Steps</div></div><div class="bin" data-bin="Constraints" role="button" tabindex="0"><div class="bin-title">Constraints</div></div></div>
-    <div class="actions"><button class="btn" id="sortCheckT" type="button">Check my sort</button><button class="btn ghost" id="sortResetT" type="button">Start over</button><span class="feedback" id="sortFbT" aria-live="polite"></span></div>
-  </div>
-</section>
-
-<section class="slide" data-title="Measure a screener">
-  <div class="inner">
-    <div class="kicker">If time allows &middot; AI and Excel</div>
-    <h2>Measure a screener for bias</h2>
-    <p>Last Friday you named four sources of AI bias. Excel can measure one. An AI tool screens applicants for server jobs. Enter its results in A1:C4 and find each group&#39;s selection rate.</p>
-    <div class="xlsplit"><div><table class="dtab xlike"><tr><th>A</th><th>B</th><th>C</th></tr><tr><td>Group</td><td>Applied</td><td>Selected</td></tr><tr><td>A</td><td class="n">120</td><td class="n">48</td></tr><tr><td>B</td><td class="n">80</td><td class="n">20</td></tr><tr><td>C</td><td class="n">50</td><td class="n">20</td></tr></table></div><div class="steps"><label><input type="checkbox"><span>In <b>D1</b> type Rate. In <b>D2</b> enter <code>=C2/B2</code> and fill down. Format as <b>Percent</b>.</span></label><label><input type="checkbox"><span>In <b>F1</b> type Ratio. In <b>F2</b> enter <code>=MIN(D2:D4)/MAX(D2:D4)</code> and format as a percent.</span></label><label><input type="checkbox"><span>Insert a <b>Clustered Column</b> chart of the Group and Rate columns. Start the axis at zero.</span></label></div></div>
-    <div class="check" data-num="25" data-ok="Correct: 25%. Group B: 20 selected out of 80 applied." data-bad="Not quite. Selection rate is Selected divided by Applied, so 20 / 80 for Group B.">
-      <label for="bi1"><b>What is Group B&#39;s selection rate? (Type the number only.)</b></label>
-      <input id="bi1" type="text" inputmode="decimal" placeholder="a percent">
-      <button class="btn" type="button">Check</button>
-      <span class="feedback" aria-live="polite"></span>
-    </div>
-    <div class="check" data-num="62.5" data-ok="Correct: 62.5%. The lowest rate (25%) divided by the highest (40%)." data-bad="Not quite. The rates are 40%, 25%, and 40%. Divide the lowest by the highest.">
-      <label for="bi2"><b>What is the ratio of the lowest rate to the highest? (One decimal place.)</b></label>
-      <input id="bi2" type="text" inputmode="decimal" placeholder="a percent">
-      <button class="btn" type="button">Check</button>
-      <span class="feedback" aria-live="polite"></span>
-    </div>
-    <div class="warn">In hiring, a common rule of thumb flags a ratio below 80% for a closer look. A low ratio does not prove unfairness, but it tells you where to ask questions.</div>
   </div>
 </section>
 
@@ -1107,7 +1011,63 @@ button.fbx:disabled{cursor:default}
       <button class="btn" id="fl3Btn" type="button">Check</button>
       <span class="feedback" id="fl3Fb" aria-live="polite"></span>
     </div>
-<div class="warn">Delivery is $1,075 of revenue from 41 orders. Hold that thought. Tomorrow you will see how much of that is left after the delivery commission.</div>
+<div class="warn">Delivery is $1,075 of revenue from 41 orders. Hold that thought. Later today you will see how much of that is left after the delivery commission.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Excel project work: profit columns">
+  <div class="inner">
+    <div class="kicker">Excel project work</div>
+    <h2>Excel project work: profit columns</h2>
+    <p>Add four columns to your cleaned order file. Delivery apps charge the Copper Table an 18% commission on each delivery order.</p>
+    <div class="xlsplit"><div><table class="dtab xlike"><tr><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>H</th><th>I</th></tr><tr><td>OrderID</td><td>Date</td><td>Day</td><td>Channel</td><td>Item</td><td>Category</td><td>Qty</td><td>Price</td><td>Cost</td></tr><tr><td class="n">5001</td><td>10/6/25</td><td>Mon</td><td>Dine-in</td><td>Salmon</td><td>Entree</td><td class="n">2</td><td class="n">28</td><td class="n">11</td></tr><tr><td class="n">5005</td><td>10/9/25</td><td>Thu</td><td>Delivery</td><td>Tacos</td><td>Entree</td><td class="n">1</td><td class="n">15</td><td class="n">4</td></tr><tr><td class="n">5012</td><td>10/13/25</td><td>Mon</td><td>Delivery</td><td>Pasta</td><td>Entree</td><td class="n">2</td><td class="n">18</td><td class="n">5</td></tr></table></div><div class="steps"><label><input type="checkbox"><span>In <b>J1</b> type Revenue. In <b>J2</b> enter <code>=G2*H2</code> and fill down.</span></label><label><input type="checkbox"><span>In <b>K1</b> type Gross profit. In <b>K2</b> enter <code>=G2*(H2-I2)</code> and fill down.</span></label><label><input type="checkbox"><span>In <b>L1</b> type Commission. In <b>L2</b> enter <code>=IF(D2=&quot;Delivery&quot;,0.18*J2,0)</code> and fill down.</span></label><label><input type="checkbox"><span>In <b>M1</b> type Profit after commission. In <b>M2</b> enter <code>=K2-L2</code> and fill down.</span></label><label><input type="checkbox"><span>Use <code>=SUM()</code> to total columns K, L and M.</span></label></div></div>
+    <div class="check">
+      <label for="pf1"><b>What is total gross profit? (Number only.)</b></label>
+      <input id="pf1" type="text" inputmode="decimal" placeholder="a dollar amount">
+      <button class="btn" id="pf1Btn" type="button">Check</button>
+      <span class="feedback" id="pf1Fb" aria-live="polite"></span>
+    </div>
+    <div class="check">
+      <label for="pf2"><b>What is total commission? (Number only.)</b></label>
+      <input id="pf2" type="text" inputmode="decimal" placeholder="a dollar amount">
+      <button class="btn" id="pf2Btn" type="button">Check</button>
+      <span class="feedback" id="pf2Fb" aria-live="polite"></span>
+    </div>
+    <div class="check">
+      <label for="pf3"><b>What is total profit after commission? (Number only.)</b></label>
+      <input id="pf3" type="text" inputmode="decimal" placeholder="a dollar amount">
+      <button class="btn" id="pf3Btn" type="button">Check</button>
+      <span class="feedback" id="pf3Fb" aria-live="polite"></span>
+    </div>
+<div class="warn">Gross profit is $3,152, but commission takes $193.50 of it. Profit after commission is what the owner keeps.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Excel project work: profit per order">
+  <div class="inner">
+    <div class="kicker">Excel project work</div>
+    <h2>Excel project work: profit per order</h2>
+    <p>Compare channels on profit per order, not just total profit. Use your table, its filter arrow, and the Total Row.</p>
+    <div class="xlsplit"><div><table class="dtab xlike"><tr><th>A</th><th>B</th><th>C</th><th>D</th></tr><tr><td>Channel</td><td>Orders</td><td>Profit after commission</td><td>Profit per order</td></tr><tr><td>Dine-in</td><td>?</td><td>?</td><td>?</td></tr><tr><td>Delivery</td><td>?</td><td>?</td><td>?</td></tr><tr><td>Pickup</td><td>?</td><td>?</td><td>?</td></tr></table></div><div class="steps"><label><input type="checkbox"><span>Filter Channel to <b>Dine-in</b>. Read the row count and the Total Row for column M.</span></label><label><input type="checkbox"><span>Repeat for Delivery and Pickup.</span></label><label><input type="checkbox"><span>In D2 enter <code>=C2/B2</code> for each channel.</span></label><label><input type="checkbox"><span>Format profit per order as <b>Currency</b> with 2 decimals.</span></label></div></div>
+    <div class="check">
+      <label for="pp1"><b>What is the profit per order for Dine-in? (Number only.)</b></label>
+      <input id="pp1" type="text" inputmode="decimal" placeholder="a dollar amount">
+      <button class="btn" id="pp1Btn" type="button">Check</button>
+      <span class="feedback" id="pp1Fb" aria-live="polite"></span>
+    </div>
+    <div class="check">
+      <label for="pp2"><b>What is the profit per order for Delivery? (Number only.)</b></label>
+      <input id="pp2" type="text" inputmode="decimal" placeholder="a dollar amount">
+      <button class="btn" id="pp2Btn" type="button">Check</button>
+      <span class="feedback" id="pp2Fb" aria-live="polite"></span>
+    </div>
+    <div class="check">
+      <label for="pp3"><b>What is the profit per order for Pickup? (Number only.)</b></label>
+      <input id="pp3" type="text" inputmode="decimal" placeholder="a dollar amount">
+      <button class="btn" id="pp3Btn" type="button">Check</button>
+      <span class="feedback" id="pp3Fb" aria-live="polite"></span>
+    </div>
+<div class="warn">A dine-in order earns about $33. A delivery order earns about $13. Delivery is growing, so profit per order is being pulled down.</div>
   </div>
 </section>
 
@@ -1159,7 +1119,7 @@ button.fbx:disabled{cursor:default}
       <div class="entryhead" aria-label="Entry heading">
         <div><b>Date:</b> <span class="blank"></span></div>
         <div><b>Log #:</b> <span class="blank"></span></div>
-        <div><b>Topic:</b> Where Data Comes From</div>
+        <div><b>Topic:</b> From Data to Business Intelligence</div>
       </div>
     </div>
     <div class="qstrip" aria-label="Today's questions">
@@ -1170,7 +1130,7 @@ button.fbx:disabled{cursor:default}
       <div class="on">DEFEND<small>Could I explain and defend this?</small></div>
     </div>
     <div class="prompts"><div><span class="tag">KNOW</span><p>Name three source systems at the Copper Table and one thing each records.</p></div><div><span class="tag">DO</span><p>Describe how you cleaned the project data in Excel, step by step.</p></div><div><span class="tag">DECIDE</span><p>Order 5015 shows Qty 40. What did you do and why?</p></div><div><span class="tag">VERIFY</span><p>How did you check that your cleaned total of $4,916 is right?</p></div><div><span class="tag">DEFEND</span><p>A classmate says, "Dirty data is fine because the totals are close." Defend or challenge that claim.</p></div></div>
-    <div class="warn"><b>Looking ahead:</b> tomorrow we build the data warehouse idea, turn data into business intelligence, and use Tableau. Save your cleaned data as an Excel workbook, and make sure Tableau opens on your laptop tonight.</div>
+    <div class="warn"><b>Looking ahead:</b> tomorrow we use Tableau and run the project lab. Save your cleaned data with the profit columns as an Excel workbook, and make sure Tableau opens on your laptop tonight.</div>
   </div>
 </section>
 
@@ -1184,7 +1144,8 @@ button.fbx:disabled{cursor:default}
   <button class="navbtn" id="next" type="button">Next</button>
 </footer>
 
-<script>
+<script>(function(){var g=document.getElementById.bind(document);document.getElementById=function(i){return g(i)||document.createElement('div')}})();
+
 (function(){
   const slides=[...document.querySelectorAll('.slide')];
   const dots=document.getElementById('dots');
@@ -1339,6 +1300,14 @@ button.fbx:disabled{cursor:default}
     render();
   })();
 
+
+numCheck('pf1','pf1Btn','pf1Fb',[3152],'Correct: $3,152.','Not quite. Sum the Gross profit column, Qty times (Price minus Cost).');
+numCheck('pf2','pf2Btn','pf2Fb',[193.5],'Correct: $193.50. That is 18% of $1,075 in delivery revenue.','Not quite. Sum the Commission column. Only Delivery orders have commission.');
+numCheck('pf3','pf3Btn','pf3Fb',[2958.5],'Correct: $2,958.50.','Not quite. Gross profit minus commission.');
+
+numCheck('pp1','pp1Btn','pp1Fb',[33.09],'Correct: $33.09. That is $2,184 over 66 orders.','Not quite. Filter to Dine-in. Divide profit after commission by the number of orders.');
+numCheck('pp2','pp2Btn','pp2Fb',[13.23],'Correct: $13.23. That is $542.50 over 41 orders.','Not quite. Filter to Delivery. Divide profit after commission by the number of orders.');
+numCheck('pp3','pp3Btn','pp3Fb',[17.85],'Correct: $17.85. That is $232 over 13 orders.','Not quite. Filter to Pickup. Divide profit after commission by the number of orders.');
 })();
 </script>
 <script>
