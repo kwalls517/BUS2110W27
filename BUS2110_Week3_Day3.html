@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Day 13: From Data to Business Intelligence</title>
+<title>Day 13: Tableau and Project Lab</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
@@ -592,12 +592,21 @@ button.fbx:disabled{cursor:default}
 .tbhint{color:var(--muted);padding:40px 10px;text-align:center}
 .shelf .rm{margin-left:auto;font-size:.75em;color:var(--muted)}
 .tbtop{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.prog{height:16px;background:#eee7e1;border-radius:8px;overflow:hidden;margin:8px 0}
+.prog i{display:block;height:100%;background:var(--maroon);width:0;transition:width .3s}
+.rub{width:100%;border-collapse:collapse;margin-top:.6em}
+.rub th,.rub td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left}
+.rub th{background:var(--surface)}
+.rub td.n{text-align:right;font-weight:700;width:70px}
+.recout{background:#fff;border:1px solid var(--line);border-left:6px solid var(--gold);border-radius:0 10px 10px 0;padding:10px 16px;margin-top:8px}
+.hotlist{display:grid;gap:6px;margin-top:.5em}
+.hotlist .hot{display:block;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:#fff;cursor:pointer}
 
 </style>
 </head>
 <body>
 <header class="bar">
-  <div class="course">BUS 2110 / Week 3, Day 3</div>
+  <div class="course">BUS 2110 / Week 3, Day 4</div>
   <div class="tools">
     <button id="fsBtn" type="button" title="Full screen (F)">Full screen</button>
   </div>
@@ -607,17 +616,17 @@ button.fbx:disabled{cursor:default}
 
 <section class="slide title-slide" data-title="Welcome">
   <div class="inner">
-    <div class="kicker">Week 3 &middot; From Data to Business Intelligence</div>
-    <h1>Data becomes intelligence<span>when the right person sees the right picture.</span></h1>
-    <p class="lede">Today you will learn how data moves from source systems into a data warehouse, how business intelligence turns it into dashboards, and how to build views in Tableau from your own cleaned file.</p>
+    <div class="kicker">Week 3 &middot; Tableau and Project Lab</div>
+    <h1>Today you build the case.<span>Tableau views, tested claims, and a recommendation you can stand behind.</span></h1>
+    <p class="lede">You will warm up in Excel, test claims against the data, let AI argue against your recommendation, and build your team&#39;s deliverable for the Copper Table.</p>
     <div class="agenda">
-      <div><h3>Data warehouse</h3>One place for clean history</div>
-      <div><h3>ETL</h3>Extract, transform, load</div>
-      <div><h3>Business intelligence</h3>Reports and dashboards</div>
-      <div><h3>Excel project work</h3>Profit by channel</div>
-      <div><h3>Tableau</h3>Dimensions, measures, shelves</div>
-      <div><h3>Build a view</h3>Drag fields to make a chart</div>
-      <div><h3>What-if</h3>Test the shift to delivery</div>
+      <div><h3>Excel warm-up</h3>The skills your project uses</div>
+      <div><h3>Project lab</h3>Plan, analyze, visualize</div>
+      <div><h3>Evidence</h3>Which claims does the data support?</div>
+      <div><h3>Recommendation</h3>Finding, so what, action</div>
+      <div><h3>Challenge and evidence</h3>AI as skeptic, then your Evidence Trail</div>
+      <div><h3>Verify</h3>Check before you present</div>
+      <div><h3>Your call</h3>When numbers disagree</div>
       <div><h3>Log it</h3>Consultant Log entry #13</div>
     </div>
   </div>
@@ -625,148 +634,24 @@ button.fbx:disabled{cursor:default}
 
 <section class="slide" data-title="Warm-up">
   <div class="inner">
-    <div class="kicker">Warm-up</div>
-    <h2>Yesterday in three questions</h2>
+    <div class="kicker">Excel review</div>
+    <h2>Excel skills in three questions</h2>
     <p>Tap an answer.</p>
 <div class="q" data-quiz>
-<p><b>1.</b> Which field points to a record in another table?</p>
-<div class="opts"><button class="opt">Primary key</button><button class="opt" data-right>Foreign key</button><button class="opt">Data type</button></div>
-<p class="explain">A foreign key holds the primary key value of a record in another table.</p>
+<p><b>1.</b> You enter a markup rate in F1 and write <code>=B2*(1+F1)</code> in C2, then fill down. The results go wrong. What fixes it?</p>
+<div class="opts"><button class="opt" data-right>Use <code>$F$1</code> so the reference stays fixed</button><button class="opt">Retype the formula in every row</button><button class="opt">Move the rate to column A</button></div>
+<p class="explain">An absolute reference ($F$1) stays fixed when you copy the formula down.</p>
 </div>
 <div class="q" data-quiz>
-<p><b>2.</b> Where is a delivery commission first recorded?</p>
-<div class="opts"><button class="opt" data-right>Delivery app</button><button class="opt">Payroll</button><button class="opt">Reservations</button></div>
-<p class="explain">The delivery app records the order and the fee charged on it.</p>
+<p><b>2.</b> Which function shows one result when a condition is true and another when it is false?</p>
+<div class="opts"><button class="opt">SUM</button><button class="opt" data-right>IF</button><button class="opt">AVERAGE</button></div>
+<p class="explain">IF tests a condition and returns a value for each outcome.</p>
 </div>
 <div class="q" data-quiz>
-<p><b>3.</b> Why do we document a change like fixing Qty 40 to 2?</p>
-<div class="opts"><button class="opt" data-right>So others can follow what was changed and why</button><button class="opt">To make the file larger</button><button class="opt">No reason; it is optional</button></div>
-<p class="explain">A documented change can be reviewed and trusted.</p>
+<p><b>3.</b> You want to see only the Delivery rows in your table. Which feature do you use?</p>
+<div class="opts"><button class="opt">Sort</button><button class="opt" data-right>Filter</button><button class="opt">Total Row</button></div>
+<p class="explain">A filter hides rows that do not meet your condition. Nothing is deleted.</p>
 </div>
-  </div>
-</section>
-
-<section class="slide" data-title="Data warehouse">
-  <div class="inner">
-    <div class="kicker">Data warehouse</div>
-    <h2>A data warehouse collects clean history from many systems</h2>
-    <p>The POS, delivery app, inventory, and payroll systems each hold only their own piece. A <b>data warehouse</b> is a central store that combines data from many source systems, cleaned and organized for analysis.</p>
-    <div class="chevs4"><div class="chv">Source systems</div><div class="chv">Extract</div><div class="chv">Transform</div><div class="chv">Load into warehouse</div></div>
-    <div class="strat three">
-      <div><h3>Extract</h3>Pull data out of each source system.</div>
-      <div><h3>Transform</h3>Clean it: fix formats, remove duplicates, and match fields.</div>
-      <div><h3>Load</h3>Save it in the warehouse, ready for reports.</div>
-    </div>
-    <div class="warn">You already did a small version of ETL: you took the order export, cleaned it in Excel, and prepared it for analysis.</div>
-  </div>
-</section>
-
-<section class="slide" data-title="Operational or warehouse?">
-  <div class="inner">
-    <div class="kicker">Check understanding</div>
-    <h2>Operational system or data warehouse?</h2>
-    <p>An <b>operational system</b> runs daily business, like the POS. A warehouse is built to analyze it.</p>
-<div class="dilist"><div class="di five" data-ans="Operational"><p>Records a new order the moment a guest pays.</p><div class="dibtns"><button type="button" data-pick="Operational">Operational system</button><button type="button" data-pick="Warehouse">Data warehouse</button></div><p class="diwhy">Saving today&#39;s transactions is an operational job.</p></div><div class="di five" data-ans="Warehouse"><p>Holds three years of orders from every system, side by side.</p><div class="dibtns"><button type="button" data-pick="Operational">Operational system</button><button type="button" data-pick="Warehouse">Data warehouse</button></div><p class="diwhy">Combined history for analysis is a warehouse.</p></div><div class="di five" data-ans="Operational"><p>A cashier uses it all shift to ring up orders.</p><div class="dibtns"><button type="button" data-pick="Operational">Operational system</button><button type="button" data-pick="Warehouse">Data warehouse</button></div><p class="diwhy">Daily work uses the operational system.</p></div><div class="di five" data-ans="Warehouse"><p>An analyst compares profit by channel across all months.</p><div class="dibtns"><button type="button" data-pick="Operational">Operational system</button><button type="button" data-pick="Warehouse">Data warehouse</button></div><p class="diwhy">Analysis across history uses the warehouse.</p></div><div class="di five" data-ans="Warehouse"><p>Data is cleaned and standardized before it is stored.</p><div class="dibtns"><button type="button" data-pick="Operational">Operational system</button><button type="button" data-pick="Warehouse">Data warehouse</button></div><p class="diwhy">Cleaning and standardizing is done on the way into the warehouse.</p></div></div>
-  </div>
-</section>
-
-<section class="slide" data-title="ETL step">
-  <div class="inner">
-    <div class="kicker">Sort</div>
-    <h2>Extract, transform, or load?</h2>
-    <p>Select an action, then select the ETL step it belongs to.</p>
-    <div class="pool" id="poolE" aria-label="Items to sort">
-<button class="item" draggable="true" data-ans="Extract" aria-pressed="false">Export last week&#39;s orders from the POS.</button>
-<button class="item" draggable="true" data-ans="Extract" aria-pressed="false">Pull delivery orders from the app.</button>
-<button class="item" draggable="true" data-ans="Extract" aria-pressed="false">Copy inventory counts out of the stock system.</button>
-<button class="item" draggable="true" data-ans="Transform" aria-pressed="false">Change &quot;DINE-IN&quot; and &quot;dine-in&quot; to &quot;Dine-in&quot;.</button>
-<button class="item" draggable="true" data-ans="Transform" aria-pressed="false">Remove duplicate order rows.</button>
-<button class="item" draggable="true" data-ans="Transform" aria-pressed="false">Convert dates to one format.</button>
-<button class="item" draggable="true" data-ans="Load" aria-pressed="false">Save the cleaned orders into the warehouse tables.</button>
-<button class="item" draggable="true" data-ans="Load" aria-pressed="false">Add this month&#39;s data to the existing history.</button>
-<button class="item" draggable="true" data-ans="Load" aria-pressed="false">Refresh the table the dashboard reads from.</button>
-    </div>
-    <div class="bins b3" id="binsE"><div class="bin" data-bin="Extract" role="button" tabindex="0"><div class="bin-title">Extract</div></div><div class="bin" data-bin="Transform" role="button" tabindex="0"><div class="bin-title">Transform</div></div><div class="bin" data-bin="Load" role="button" tabindex="0"><div class="bin-title">Load</div></div></div>
-    <div class="actions"><button class="btn" id="sortCheckE" type="button">Check my sort</button><button class="btn ghost" id="sortResetE" type="button">Start over</button><span class="feedback" id="sortFbE" aria-live="polite"></span></div>
-  </div>
-</section>
-
-<section class="slide" data-title="Business intelligence">
-  <div class="inner">
-    <div class="kicker">Business intelligence</div>
-    <h2>Business intelligence turns stored data into decisions</h2>
-    <p><b>Business intelligence (BI)</b> is the set of tools and practices that turn data into reports, dashboards, and insights for decision-makers.</p>
-    <div class="strat">
-      <div><h3>Report</h3>A fixed summary, such as last month&#39;s sales by channel.</div>
-      <div><h3>Dashboard</h3>An interactive screen of key charts and KPIs, updated from the data.</div>
-      <div><h3>Self-service BI</h3>Managers explore data themselves without waiting for an analyst.</div>
-      <div><h3>Alerts</h3>The system tells you when a measure crosses a limit.</div>
-    </div>
-    <div class="warn">BI tools like Tableau and Power BI show what happened and why. They do not decide what to do. People still decide.</div>
-  </div>
-</section>
-
-<section class="slide" data-title="Which chart?">
-  <div class="inner">
-    <div class="kicker">Visualization</div>
-    <h2>Pick the chart that fits the question</h2>
-<div class="dilist"><div class="di five" data-ans="Line"><p>How have monthly orders changed from October to December?</p><div class="dibtns"><button type="button" data-pick="Line">Line</button><button type="button" data-pick="Bar">Bar</button><button type="button" data-pick="Scatter">Scatter</button></div><p class="diwhy">Change over time is a line chart.</p></div><div class="di five" data-ans="Bar"><p>Which channel has the highest revenue?</p><div class="dibtns"><button type="button" data-pick="Line">Line</button><button type="button" data-pick="Bar">Bar</button><button type="button" data-pick="Scatter">Scatter</button></div><p class="diwhy">Comparing categories is a bar chart.</p></div><div class="di five" data-ans="Scatter"><p>Do items with higher prices also earn higher profit per plate?</p><div class="dibtns"><button type="button" data-pick="Line">Line</button><button type="button" data-pick="Bar">Bar</button><button type="button" data-pick="Scatter">Scatter</button></div><p class="diwhy">Two numeric measures compared are a scatter plot.</p></div><div class="di five" data-ans="Bar"><p>Which day of the week earns the most?</p><div class="dibtns"><button type="button" data-pick="Line">Line</button><button type="button" data-pick="Bar">Bar</button><button type="button" data-pick="Scatter">Scatter</button></div><p class="diwhy">Seven categories compared is a bar chart.</p></div><div class="di five" data-ans="Line"><p>How has delivery profit moved month to month?</p><div class="dibtns"><button type="button" data-pick="Line">Line</button><button type="button" data-pick="Bar">Bar</button><button type="button" data-pick="Scatter">Scatter</button></div><p class="diwhy">A measure over time is a line chart.</p></div></div>
-  </div>
-</section>
-
-<section class="slide" data-title="Excel project work: profit columns">
-  <div class="inner">
-    <div class="kicker">Excel project work</div>
-    <h2>Excel project work: profit columns</h2>
-    <p>Add four columns to your cleaned order file. Delivery apps charge the Copper Table an 18% commission on each delivery order.</p>
-    <div class="xlsplit"><div><table class="dtab xlike"><tr><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>H</th><th>I</th></tr><tr><td>OrderID</td><td>Date</td><td>Day</td><td>Channel</td><td>Item</td><td>Category</td><td>Qty</td><td>Price</td><td>Cost</td></tr><tr><td class="n">5001</td><td>10/6/25</td><td>Mon</td><td>Dine-in</td><td>Salmon</td><td>Entree</td><td class="n">2</td><td class="n">28</td><td class="n">11</td></tr><tr><td class="n">5005</td><td>10/9/25</td><td>Thu</td><td>Delivery</td><td>Tacos</td><td>Entree</td><td class="n">1</td><td class="n">15</td><td class="n">4</td></tr><tr><td class="n">5012</td><td>10/13/25</td><td>Mon</td><td>Delivery</td><td>Pasta</td><td>Entree</td><td class="n">2</td><td class="n">18</td><td class="n">5</td></tr></table></div><div class="steps"><label><input type="checkbox"><span>In <b>J1</b> type Revenue. In <b>J2</b> enter <code>=G2*H2</code> and fill down.</span></label><label><input type="checkbox"><span>In <b>K1</b> type Gross profit. In <b>K2</b> enter <code>=G2*(H2-I2)</code> and fill down.</span></label><label><input type="checkbox"><span>In <b>L1</b> type Commission. In <b>L2</b> enter <code>=IF(D2=&quot;Delivery&quot;,0.18*J2,0)</code> and fill down.</span></label><label><input type="checkbox"><span>In <b>M1</b> type Profit after commission. In <b>M2</b> enter <code>=K2-L2</code> and fill down.</span></label><label><input type="checkbox"><span>Use <code>=SUM()</code> to total columns K, L and M.</span></label></div></div>
-    <div class="check">
-      <label for="pf1"><b>What is total gross profit? (Number only.)</b></label>
-      <input id="pf1" type="text" inputmode="decimal" placeholder="a dollar amount">
-      <button class="btn" id="pf1Btn" type="button">Check</button>
-      <span class="feedback" id="pf1Fb" aria-live="polite"></span>
-    </div>
-    <div class="check">
-      <label for="pf2"><b>What is total commission? (Number only.)</b></label>
-      <input id="pf2" type="text" inputmode="decimal" placeholder="a dollar amount">
-      <button class="btn" id="pf2Btn" type="button">Check</button>
-      <span class="feedback" id="pf2Fb" aria-live="polite"></span>
-    </div>
-    <div class="check">
-      <label for="pf3"><b>What is total profit after commission? (Number only.)</b></label>
-      <input id="pf3" type="text" inputmode="decimal" placeholder="a dollar amount">
-      <button class="btn" id="pf3Btn" type="button">Check</button>
-      <span class="feedback" id="pf3Fb" aria-live="polite"></span>
-    </div>
-<div class="warn">Gross profit is $3,152, but commission takes $193.50 of it. Profit after commission is what the owner keeps.</div>
-  </div>
-</section>
-
-<section class="slide" data-title="Excel project work: profit per order">
-  <div class="inner">
-    <div class="kicker">Excel project work</div>
-    <h2>Excel project work: profit per order</h2>
-    <p>Compare channels on profit per order, not just total profit. Use your table, its filter arrow, and the Total Row.</p>
-    <div class="xlsplit"><div><table class="dtab xlike"><tr><th>A</th><th>B</th><th>C</th><th>D</th></tr><tr><td>Channel</td><td>Orders</td><td>Profit after commission</td><td>Profit per order</td></tr><tr><td>Dine-in</td><td>?</td><td>?</td><td>?</td></tr><tr><td>Delivery</td><td>?</td><td>?</td><td>?</td></tr><tr><td>Pickup</td><td>?</td><td>?</td><td>?</td></tr></table></div><div class="steps"><label><input type="checkbox"><span>Filter Channel to <b>Dine-in</b>. Read the row count and the Total Row for column M.</span></label><label><input type="checkbox"><span>Repeat for Delivery and Pickup.</span></label><label><input type="checkbox"><span>In D2 enter <code>=C2/B2</code> for each channel.</span></label><label><input type="checkbox"><span>Format profit per order as <b>Currency</b> with 2 decimals.</span></label></div></div>
-    <div class="check">
-      <label for="pp1"><b>What is the profit per order for Dine-in? (Number only.)</b></label>
-      <input id="pp1" type="text" inputmode="decimal" placeholder="a dollar amount">
-      <button class="btn" id="pp1Btn" type="button">Check</button>
-      <span class="feedback" id="pp1Fb" aria-live="polite"></span>
-    </div>
-    <div class="check">
-      <label for="pp2"><b>What is the profit per order for Delivery? (Number only.)</b></label>
-      <input id="pp2" type="text" inputmode="decimal" placeholder="a dollar amount">
-      <button class="btn" id="pp2Btn" type="button">Check</button>
-      <span class="feedback" id="pp2Fb" aria-live="polite"></span>
-    </div>
-    <div class="check">
-      <label for="pp3"><b>What is the profit per order for Pickup? (Number only.)</b></label>
-      <input id="pp3" type="text" inputmode="decimal" placeholder="a dollar amount">
-      <button class="btn" id="pp3Btn" type="button">Check</button>
-      <span class="feedback" id="pp3Fb" aria-live="polite"></span>
-    </div>
-<div class="warn">A dine-in order earns about $33. A delivery order earns about $13. Delivery is growing, so profit per order is being pulled down.</div>
   </div>
 </section>
 
@@ -783,43 +668,6 @@ button.fbx:disabled{cursor:default}
   </div>
 </section>
 
-<section class="slide" data-title="Dimension or measure?">
-  <div class="inner">
-    <div class="kicker">Check understanding</div>
-    <h2>Dimension or measure?</h2>
-<div class="dilist"><div class="di five" data-ans="Dimension"><p>Channel</p><div class="dibtns"><button type="button" data-pick="Dimension">Dimension</button><button type="button" data-pick="Measure">Measure</button></div><p class="diwhy">A category that groups the data is a dimension.</p></div><div class="di five" data-ans="Measure"><p>Profit</p><div class="dibtns"><button type="button" data-pick="Dimension">Dimension</button><button type="button" data-pick="Measure">Measure</button></div><p class="diwhy">A number you add up is a measure.</p></div><div class="di five" data-ans="Dimension"><p>Month</p><div class="dibtns"><button type="button" data-pick="Dimension">Dimension</button><button type="button" data-pick="Measure">Measure</button></div><p class="diwhy">Month is a category used to group.</p></div><div class="di five" data-ans="Measure"><p>Qty</p><div class="dibtns"><button type="button" data-pick="Dimension">Dimension</button><button type="button" data-pick="Measure">Measure</button></div><p class="diwhy">A count you can sum is a measure.</p></div><div class="di five" data-ans="Dimension"><p>Item</p><div class="dibtns"><button type="button" data-pick="Dimension">Dimension</button><button type="button" data-pick="Measure">Measure</button></div><p class="diwhy">Item is a category.</p></div><div class="di five" data-ans="Measure"><p>Revenue</p><div class="dibtns"><button type="button" data-pick="Dimension">Dimension</button><button type="button" data-pick="Measure">Measure</button></div><p class="diwhy">Dollars you add up are a measure.</p></div></div>
-  </div>
-</section>
-
-<section class="slide" data-title="Build a view">
-  <div class="inner">
-    <div class="kicker">Tableau warm-up</div>
-    <h2>Build a view like you would in Tableau</h2>
-    <p>Select a field, then select a shelf to drop it there. Select a field already on a shelf to remove it. All values are totals (SUM) from the Copper Table project data. Practice the idea here, then build the real thing in Tableau on the next two slides.</p>
-    <div class="tbx">
-      <div class="tbpane"><h4>Dimensions</h4>
-        <button class="pill dim" data-f="Month" data-i="0" data-t="d" type="button">Month</button>
-        <button class="pill dim" data-f="Day" data-i="1" data-t="d" type="button">Day</button>
-        <button class="pill dim" data-f="Channel" data-i="2" data-t="d" type="button">Channel</button>
-        <button class="pill dim" data-f="Item" data-i="3" data-t="d" type="button">Item</button>
-        <button class="pill dim" data-f="Category" data-i="4" data-t="d" type="button">Category</button>
-        <h4>Measures</h4>
-        <button class="pill mea" data-f="Qty" data-i="5" data-t="m" type="button">Qty</button>
-        <button class="pill mea" data-f="Revenue" data-i="6" data-t="m" type="button">Revenue</button>
-        <button class="pill mea" data-f="Profit" data-i="7" data-t="m" type="button">Profit</button>
-      </div>
-      <div>
-        <div class="shelf" id="shCols" tabindex="0" role="button"><b>Columns</b></div>
-        <div class="shelf" id="shRows" tabindex="0" role="button"><b>Rows</b></div>
-        <div class="tbtop"><div class="shelf" id="shColor" tabindex="0" role="button"><b>Color</b></div>
-        <div class="shelf"><b>Filter</b><select class="sel" id="tbFilter" aria-label="Filter channel"><option value="">All channels</option><option>Dine-in</option><option>Delivery</option><option>Pickup</option></select></div></div>
-        <div class="tbcanvas" id="tbCanvas"></div>
-      </div>
-    </div>
-    <div class="actions"><button class="btn" id="tbSwap" type="button">Swap rows and columns</button><button class="btn" id="tbClear" type="button">Clear</button></div>
-  </div>
-</section>
-
 <section class="slide" data-title="Connect Tableau">
   <div class="inner">
     <div class="kicker">Tableau</div>
@@ -827,6 +675,14 @@ button.fbx:disabled{cursor:default}
     <p>Now do it for real. Tableau reads the workbook you cleaned and extended today, so the profit columns come along with it.</p>
     <div class="steps"><label><input type="checkbox"><span>Save your cleaned order workbook as an <b>.xlsx</b> file and close it in Excel.</span></label><label><input type="checkbox"><span>Open Tableau. Under <b>Connect</b>, choose <b>Microsoft Excel</b> and select your workbook.</span></label><label><input type="checkbox"><span>Drag the sheet that holds your cleaned orders onto the canvas, then open <b>Sheet 1</b>.</span></label><label><input type="checkbox"><span>Check the Data pane. Channel, Item, Category, and Day should be dimensions. Qty, Revenue, and Profit after commission should be measures. If OrderID is listed as a measure, right-click it and choose <b>Convert to Dimension</b>.</span></label><label><input type="checkbox"><span>Drag <b>Channel</b> to Columns and <b>Profit after commission</b> to Rows. You should see three bars.</span></label><label><input type="checkbox"><span>For months: drag <b>Date</b> to Columns, click the pill, and choose <b>Month</b>.</span></label></div>
     <div class="warn">One laptop per team is enough to keep moving if an install fails. Whoever is not driving checks each number against Excel.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Dimension or measure?">
+  <div class="inner">
+    <div class="kicker">Check understanding</div>
+    <h2>Dimension or measure?</h2>
+<div class="dilist"><div class="di five" data-ans="Dimension"><p>Channel</p><div class="dibtns"><button type="button" data-pick="Dimension">Dimension</button><button type="button" data-pick="Measure">Measure</button></div><p class="diwhy">A category that groups the data is a dimension.</p></div><div class="di five" data-ans="Measure"><p>Profit</p><div class="dibtns"><button type="button" data-pick="Dimension">Dimension</button><button type="button" data-pick="Measure">Measure</button></div><p class="diwhy">A number you add up is a measure.</p></div><div class="di five" data-ans="Dimension"><p>Month</p><div class="dibtns"><button type="button" data-pick="Dimension">Dimension</button><button type="button" data-pick="Measure">Measure</button></div><p class="diwhy">Month is a category used to group.</p></div><div class="di five" data-ans="Measure"><p>Qty</p><div class="dibtns"><button type="button" data-pick="Dimension">Dimension</button><button type="button" data-pick="Measure">Measure</button></div><p class="diwhy">A count you can sum is a measure.</p></div><div class="di five" data-ans="Dimension"><p>Item</p><div class="dibtns"><button type="button" data-pick="Dimension">Dimension</button><button type="button" data-pick="Measure">Measure</button></div><p class="diwhy">Item is a category.</p></div><div class="di five" data-ans="Measure"><p>Revenue</p><div class="dibtns"><button type="button" data-pick="Dimension">Dimension</button><button type="button" data-pick="Measure">Measure</button></div><p class="diwhy">Dollars you add up are a measure.</p></div></div>
   </div>
 </section>
 
@@ -857,34 +713,218 @@ button.fbx:disabled{cursor:default}
   </div>
 </section>
 
-<section class="slide" data-title="What-if">
+<section class="slide" data-title="Project lab plan">
   <div class="inner">
-    <div class="kicker">Interactive</div>
-    <h2>What if more dine-in guests move to delivery?</h2>
-    <p>The data shows dine-in orders falling and delivery orders rising. Suppose some dine-in orders turn into delivery orders. Each dine-in order earns about $33.09 and each delivery order about $13.23.</p>
-    <div class="slbl"><b>Orders that move</b><input id="wiN" type="range" min="0" max="30" value="10"><span id="wiV"></span></div>
-    <div id="wiBars"></div>
-    <div class="warn" id="wiMsg" aria-live="polite"></div>
+    <div class="kicker">Project lab</div>
+    <h2>Plan the lab</h2>
+    <p>Tick each step as you finish it. Your progress bar updates.</p>
+    <div class="steps" id="labSteps">
+      <label><input type="checkbox"><span>Cleaned the data and documented what I changed</span></label>
+      <label><input type="checkbox"><span>Added Revenue, Gross profit, Commission, and Profit after commission</span></label>
+      <label><input type="checkbox"><span>Found profit per order for each channel</span></label>
+      <label><input type="checkbox"><span>Built at least two Tableau views</span></label>
+      <label><input type="checkbox"><span>Wrote a draft recommendation</span></label>
+      <label><input type="checkbox"><span>Verified my numbers against a second method</span></label>
+    </div>
+    <div class="prog"><i id="labBar"></i></div>
+    <div class="feedback" id="labMsg" aria-live="polite">0 of 6 steps done.</div>
   </div>
 </section>
 
-<section class="slide" data-title="Good design">
+<section class="slide" data-title="Which analysis?">
   <div class="inner">
-    <div class="kicker">Visualization</div>
-    <h2>Good dashboard design or a problem?</h2>
-<div class="dilist"><div class="di five" data-ans="Good"><p>A chart title that says what is shown: &quot;Profit per order by channel&quot;.</p><div class="dibtns"><button type="button" data-pick="Good">Good practice</button><button type="button" data-pick="Problem">Problem</button></div><p class="diwhy">Titles that state the point help every reader.</p></div><div class="di five" data-ans="Problem"><p>A 3D pie chart with twelve thin slices.</p><div class="dibtns"><button type="button" data-pick="Good">Good practice</button><button type="button" data-pick="Problem">Problem</button></div><p class="diwhy">Too many slices and 3D distortion make comparison hard.</p></div><div class="di five" data-ans="Good"><p>One color used to highlight the channel that matters.</p><div class="dibtns"><button type="button" data-pick="Good">Good practice</button><button type="button" data-pick="Problem">Problem</button></div><p class="diwhy">Color for emphasis guides the eye.</p></div><div class="di five" data-ans="Problem"><p>A bar chart whose axis starts at 900 instead of 0.</p><div class="dibtns"><button type="button" data-pick="Good">Good practice</button><button type="button" data-pick="Problem">Problem</button></div><p class="diwhy">A truncated axis exaggerates differences.</p></div><div class="di five" data-ans="Problem"><p>Fifteen charts on one screen.</p><div class="dibtns"><button type="button" data-pick="Good">Good practice</button><button type="button" data-pick="Problem">Problem</button></div><p class="diwhy">Too much hides the message. Focus on a few.</p></div></div>
+    <div class="kicker">Project analysis</div>
+    <h2>Match the question to the analysis</h2>
+<div class="dilist"><div class="di five" data-ans="Compare"><p>Is delivery profit per order lower than dine-in?</p><div class="dibtns"><button type="button" data-pick="Compare">Compare groups</button><button type="button" data-pick="Trend">Trend over time</button><button type="button" data-pick="Breakdown">Breakdown</button><button type="button" data-pick="Pattern">Pattern</button></div><p class="diwhy">Comparing channels is a comparison.</p></div><div class="di five" data-ans="Trend"><p>Are delivery orders growing over the three months?</p><div class="dibtns"><button type="button" data-pick="Compare">Compare groups</button><button type="button" data-pick="Trend">Trend over time</button><button type="button" data-pick="Breakdown">Breakdown</button><button type="button" data-pick="Pattern">Pattern</button></div><p class="diwhy">Change over time is a trend.</p></div><div class="di five" data-ans="Breakdown"><p>Which dishes make up delivery orders?</p><div class="dibtns"><button type="button" data-pick="Compare">Compare groups</button><button type="button" data-pick="Trend">Trend over time</button><button type="button" data-pick="Breakdown">Breakdown</button><button type="button" data-pick="Pattern">Pattern</button></div><p class="diwhy">Looking inside a group is a breakdown.</p></div><div class="di five" data-ans="Pattern"><p>Do some days of the week earn much more than others?</p><div class="dibtns"><button type="button" data-pick="Compare">Compare groups</button><button type="button" data-pick="Trend">Trend over time</button><button type="button" data-pick="Breakdown">Breakdown</button><button type="button" data-pick="Pattern">Pattern</button></div><p class="diwhy">A repeating cycle is a pattern.</p></div><div class="di five" data-ans="Trend"><p>Is total profit going up or down by month?</p><div class="dibtns"><button type="button" data-pick="Compare">Compare groups</button><button type="button" data-pick="Trend">Trend over time</button><button type="button" data-pick="Breakdown">Breakdown</button><button type="button" data-pick="Pattern">Pattern</button></div><p class="diwhy">A measure over months is a trend.</p></div></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Explore the data">
+  <div class="inner">
+    <div class="kicker">Tableau</div>
+    <h2>Explore the project data</h2>
+    <p>Look for evidence in your own Tableau workbook. This builder holds the same project data, so use it as a quick second check. Next you will decide which claims the data supports.</p>
+    <div class="tbx">
+      <div class="tbpane"><h4>Dimensions</h4>
+        <button class="pill dim" data-f="Month" data-i="0" data-t="d" type="button">Month</button>
+        <button class="pill dim" data-f="Day" data-i="1" data-t="d" type="button">Day</button>
+        <button class="pill dim" data-f="Channel" data-i="2" data-t="d" type="button">Channel</button>
+        <button class="pill dim" data-f="Item" data-i="3" data-t="d" type="button">Item</button>
+        <button class="pill dim" data-f="Category" data-i="4" data-t="d" type="button">Category</button>
+        <h4>Measures</h4>
+        <button class="pill mea" data-f="Qty" data-i="5" data-t="m" type="button">Qty</button>
+        <button class="pill mea" data-f="Revenue" data-i="6" data-t="m" type="button">Revenue</button>
+        <button class="pill mea" data-f="Profit" data-i="7" data-t="m" type="button">Profit</button>
+      </div>
+      <div>
+        <div class="shelf" id="shCols" tabindex="0" role="button"><b>Columns</b></div>
+        <div class="shelf" id="shRows" tabindex="0" role="button"><b>Rows</b></div>
+        <div class="tbtop"><div class="shelf" id="shColor" tabindex="0" role="button"><b>Color</b></div>
+        <div class="shelf"><b>Filter</b><select class="sel" id="tbFilter" aria-label="Filter channel"><option value="">All channels</option><option>Dine-in</option><option>Delivery</option><option>Pickup</option></select></div></div>
+        <div class="tbcanvas" id="tbCanvas"></div>
+      </div>
+    </div>
+    <div class="actions"><button class="btn" id="tbSwap" type="button">Swap rows and columns</button><button class="btn" id="tbClear" type="button">Clear</button></div>
+  </div>
+</section>
+
+
+<section class="slide" data-title="Test the claims">
+  <div class="inner">
+    <div class="kicker">Evidence</div>
+    <h2>Which claims does the data support?</h2>
+    <p>Use the builder or Excel to check. Select every claim that is <b>true</b>, then check.</p>
+    <div class="hotlist" id="claimBox">
+      <span class="hot" data-hot="1">Total profit fell from October to December.</span>
+      <span class="hot">Delivery is the largest channel by revenue.</span>
+      <span class="hot" data-hot="1">Delivery orders rose every month.</span>
+      <span class="hot" data-hot="1">Dine-in orders fell every month.</span>
+      <span class="hot">Revenue grew every month.</span>
+      <span class="hot" data-hot="1">Delivery earns less profit per order than dine-in.</span>
+      <span class="hot">Pickup earns more profit per order than dine-in.</span>
+      <span class="hot" data-hot="1">Thursday through Sunday earn more revenue than Monday through Wednesday.</span>
+      <span class="hot">Salad is the top profit item.</span>
+    </div>
+    <div class="actions"><button class="btn" id="claimCheck" type="button">Check</button><button class="btn" id="claimReset" type="button">Reset</button><span class="feedback" id="claimFb" aria-live="polite"></span></div>
+    <div class="warn" id="claimRev" hidden>Revenue fell slightly from $1,690 in October to $1,537 in December. Dine-in is the largest channel at $3,499. Salmon earns the most profit. Pickup earns $17.85 per order, well below dine-in at $33.09.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Finding to recommendation">
+  <div class="inner">
+    <div class="kicker">Recommendation</div>
+    <h2>A recommendation has four parts</h2>
+    <div class="chain">
+      <div class="strat" style="display:block"><h3>1. Finding</h3>What the data shows, with a number.</div>
+      <div class="strat" style="display:block"><h3>2. So what</h3>Why it matters to the owner.</div>
+      <div class="strat" style="display:block"><h3>3. Action</h3>What to do, specific enough to carry out.</div>
+      <div class="strat" style="display:block"><h3>4. Risk</h3>What could go wrong and how you would check.</div>
+    </div>
+    <div class="warn"><b>Example of a weak one:</b> &quot;Delivery is bad.&quot; <b>Better:</b> &quot;Delivery earns $13.23 per order versus $33.09 dine-in, so each order that moves to delivery costs about $20. Add a minimum order and track profit per order for a month.&quot;</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Build a recommendation">
+  <div class="inner">
+    <div class="kicker">Interactive</div>
+    <h2>Assemble a recommendation</h2>
+    <p>Pick a finding and an action. There is no single right answer, but some choices are better supported than others.</p>
+    <div class="frame">Because
+      <select class="sel" id="rcF"><option value="">choose a finding</option><option value="f1">delivery earns $13.23 per order versus $33.09 for dine-in</option><option value="f2">delivery orders are growing</option><option value="f3">weekends are our busiest days</option></select>,
+      the Copper Table should
+      <select class="sel" id="rcA"><option value="">choose an action</option><option value="a1">add a minimum order and a delivery fee</option><option value="a2">promote dine-in and pickup with weekday offers</option><option value="a3">stop offering delivery</option><option value="a4">raise delivery menu prices to cover the commission</option></select>.</div>
+    <div class="recout" id="rcOut" aria-live="polite">Make both choices to see how well your recommendation is supported.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Challenge your recommendation">
+  <div class="inner">
+    <div class="kicker">Assignment 3 &middot; Challenge</div>
+    <h2>Let AI argue against you</h2>
+    <p>First, each team member writes the team&#39;s current recommendation in one sentence in the Consultant Log. Then one person opens Gemini with an Elon account, pastes the prompt, and adds your recommendation and key numbers. Use only the sample project data.</p>
+    <textarea class="csvbox" id="skepticPrompt" readonly style="height:150px">Act as a skeptical member of management. Based on the evidence and recommendation I provide, make the strongest reasonable argument against my recommendation. Identify weaknesses, unsupported assumptions, missing evidence, and alternative explanations I should consider.
+
+Our recommendation: [one sentence]
+Our evidence: [your key numbers and what they come from]</textarea>
+    <div class="actions"><button class="btn" type="button" data-copy="skepticPrompt">Copy the prompt</button><span class="feedback" aria-live="polite"></span></div>
+    <div class="steps"><label><input type="checkbox"><span>What is the AI&#39;s strongest objection?</span></label><label><input type="checkbox"><span>Is that objection supported by the data you have?</span></label><label><input type="checkbox"><span>Does your current analysis already answer it?</span></label><label><input type="checkbox"><span>Decide as a team: <b>keep</b>, <b>modify</b>, or <b>reconsider</b> your recommendation, and write down why.</span></label></div>
+    <div class="warn">Do not ask AI to make the decision. Its job here is to attack your reasoning. Yours is to judge whether the attack lands.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Evidence Trail">
+  <div class="inner">
+    <div class="kicker">Assignment 3 &middot; Evidence Trail</div>
+    <h2>Show where every important claim came from</h2>
+    <p>Your deliverable ends with an Evidence Trail. Pick the claims and decisions your recommendation depends on. This is not a list of every calculation.</p>
+    <table class="dtab"><tr><th>Claim or decision</th><th>Evidence</th><th>Source or tool</th><th>How we verified it</th></tr><tr><td>Delivery earns less per order than dine-in</td><td>$13.23 versus $33.09 profit after commission</td><td>Excel table, filter and total row</td><td>Rebuilt in Tableau and the totals matched</td></tr><tr><td>Order 5015 corrected from Qty 40 to 2</td><td>No other order above 4; would add $684 of revenue</td><td>Sorted Qty in Excel</td><td>Flagged to confirm against the POS record</td></tr><tr><td>Your next claim</td><td>?</td><td>?</td><td>?</td></tr></table>
+    <div class="warn">Add at least three rows of your own in lab today. Include one row for something AI suggested and how you checked it.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Final analysis in Excel">
+  <div class="inner">
+    <div class="kicker">Final analysis</div>
+    <h2>Final analysis in Excel</h2>
+    <p>Use your cleaned file with profit columns. These three numbers are the core of the story.</p>
+    <div class="xlsplit"><div><table class="dtab xlike"><tr><th>A</th><th>B</th></tr><tr><td>Measure</td><td>Value</td></tr><tr><td>Total orders</td><td class="n">120</td></tr><tr><td>Delivery orders</td><td class="n">41</td></tr><tr><td>Total profit after commission</td><td class="n">2958.50</td></tr><tr><td>Delivery profit after commission</td><td class="n">542.50</td></tr><tr><td>Profit per dine-in order</td><td class="n">33.09</td></tr><tr><td>Profit per delivery order</td><td class="n">13.23</td></tr></table></div><div class="steps"><label><input type="checkbox"><span>Enter the measures in A1:B7.</span></label><label><input type="checkbox"><span>In <b>D1</b> find overall profit per order: <code>=B4/B2</code>.</span></label><label><input type="checkbox"><span>In <b>D2</b> enter delivery share of orders: <code>=B3/B2</code>. Format as <b>Percent</b>.</span></label><label><input type="checkbox"><span>In <b>D3</b> enter delivery share of profit: <code>=B5/B4</code>. Format as <b>Percent</b>.</span></label><label><input type="checkbox"><span>In <b>D4</b> estimate profit if 10 delivery orders had been dine-in orders: <code>=B4+10*(B6-B7)</code>.</span></label></div></div>
+    <div class="check">
+      <label for="fa1"><b>What percent of all orders are Delivery? (One decimal place, number only.)</b></label>
+      <input id="fa1" type="text" inputmode="decimal" placeholder="a percent">
+      <button class="btn" id="fa1Btn" type="button">Check</button>
+      <span class="feedback" id="fa1Fb" aria-live="polite"></span>
+    </div>
+    <div class="check">
+      <label for="fa2"><b>What percent of profit after commission comes from Delivery? (One decimal place, number only.)</b></label>
+      <input id="fa2" type="text" inputmode="decimal" placeholder="a percent">
+      <button class="btn" id="fa2Btn" type="button">Check</button>
+      <span class="feedback" id="fa2Fb" aria-live="polite"></span>
+    </div>
+    <div class="check">
+      <label for="fa3"><b>What is the estimated profit if 10 delivery orders had been dine-in? (Number only.)</b></label>
+      <input id="fa3" type="text" inputmode="decimal" placeholder="a dollar amount">
+      <button class="btn" id="fa3Btn" type="button">Check</button>
+      <span class="feedback" id="fa3Fb" aria-live="polite"></span>
+    </div>
+<div class="warn">Delivery is about 34% of orders but only about 18% of profit. That one comparison is the heart of your recommendation.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="What your team hands in">
+  <div class="inner">
+    <div class="kicker">Assignment 3 &middot; Deliverable</div>
+    <h2>What your team hands in</h2>
+    <p>Write for a manager, not for your professor. A manager should be able to tell quickly what you investigated, what you found, what to do, and why to trust you.</p>
+    <div class="strat">
+      <div><h3>1. Executive summary</h3>The answer in a few sentences.</div>
+      <div><h3>2. Business question</h3>The question you kept, modified, or replaced, and why.</div>
+      <div><h3>3. Data and approach</h3>Your data dictionary, what you changed, and which tool did what.</div>
+      <div><h3>4. Findings and visuals</h3>Each finding: what you saw, the evidence, what it does not establish, why it matters.</div>
+      <div><h3>5. Recommendation</h3>What to do and why, with the numbers.</div>
+      <div><h3>6. Limitations</h3>What you know, what you believe, and what you still do not know.</div>
+      <div><h3>7. Evidence Trail</h3>Where each key claim came from and how you verified it.</div>
+    </div>
+    <div class="warn">Your work is scored with the Assignment 3 rubric in Canvas. Read it with your team before you leave today.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Verify before you present">
+  <div class="inner">
+    <div class="kicker">Verify</div>
+    <h2>Verify before you present</h2>
+    <p>Tick each check you have done.</p>
+    <div class="steps" id="verSteps">
+      <label><input type="checkbox"><span>Every number on a slide matches Excel</span></label>
+      <label><input type="checkbox"><span>Every chart has a title and labeled axes</span></label>
+      <label><input type="checkbox"><span>The recommendation names a number from the data</span></label>
+      <label><input type="checkbox"><span>I checked at least one AI-suggested formula by hand</span></label>
+      <label><input type="checkbox"><span>I can state one limitation of this data</span></label>
+      <label><input type="checkbox"><span>I can explain every cleaning change I made</span></label>
+    </div>
+    <div class="prog"><i id="verBar"></i></div>
+    <div class="feedback" id="verMsg" aria-live="polite">0 of 6 checks done.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Team lab">
+  <div class="inner">
+    <div class="kicker">Project lab</div>
+    <h2>Team lab: build the deliverable</h2>
+    <p>About 50 minutes. Split the work, then come back together. I will visit each team and ask one member to explain one number.</p>
+    <div class="steps"><label><input type="checkbox"><span><b>Analyst:</b> finish profit per order by channel and one more finding the team needs.</span></label><label><input type="checkbox"><span><b>Visualizer:</b> build two Tableau views and write the three-line frame for each.</span></label><label><input type="checkbox"><span><b>Checker:</b> fill in the Evidence Trail and verify each number a second way.</span></label><label><input type="checkbox"><span><b>Writer:</b> draft the executive summary and the recommendation with its four parts.</span></label><label><input type="checkbox"><span><b>Everyone, last ten minutes:</b> read the draft aloud once and agree on who presents which part tomorrow.</span></label></div>
+    <div class="warn">Leave class with every number verified and the slide order agreed. Polishing the deliverable and slides is tonight&#39;s work.</div>
   </div>
 </section>
 
 <section class="slide" data-title="Your call">
   <div class="inner">
     <div class="kicker">Decide</div>
-    <h2>The owner wants a dashboard with every chart you can think of</h2>
-    <p>What do you do?</p>
+    <h2>Excel says $542.50 and Tableau says $560 for delivery profit</h2>
+    <p>You will present in a day. What do you do?</p>
 <div class="q" data-quiz>
 <p></p>
-<div class="opts"><button class="opt">Build all of them so nothing is missing.</button><button class="opt" data-right>Ask what decision the dashboard supports, then include only the charts that answer it.</button><button class="opt">Use the most colorful charts to impress her.</button><button class="opt">Tell her dashboards are not useful.</button></div>
-<p class="explain">A dashboard should serve a decision. More charts rarely mean more insight.</p>
+<div class="opts"><button class="opt">Use the larger number. It looks better.</button><button class="opt">Average the two numbers.</button><button class="opt" data-right>Find why they differ. Check for duplicates, the commission, and filters in each tool, then use the verified figure.</button><button class="opt">Skip the number from your presentation.</button></div>
+<p class="explain">A mismatch is a signal that something in the data or the steps differs. Trace it before presenting either number.</p>
 </div>
   </div>
 </section>
@@ -900,7 +940,7 @@ button.fbx:disabled{cursor:default}
       <div class="entryhead" aria-label="Entry heading">
         <div><b>Date:</b> <span class="blank"></span></div>
         <div><b>Log #:</b> <span class="blank"></span></div>
-        <div><b>Topic:</b> Data to Business Intelligence</div>
+        <div><b>Topic:</b> Tableau and Project Lab</div>
       </div>
     </div>
     <div class="qstrip" aria-label="Today's questions">
@@ -910,8 +950,8 @@ button.fbx:disabled{cursor:default}
       <div class="on">VERIFY<small>How do I know?</small></div>
       <div class="on">DEFEND<small>Could I explain and defend this?</small></div>
     </div>
-    <div class="prompts"><div><span class="tag">KNOW</span><p>Explain what a data warehouse is and what ETL stands for, using the Copper Table.</p></div><div><span class="tag">DO</span><p>List the Excel formulas you used to find profit after commission.</p></div><div><span class="tag">DECIDE</span><p>Which chart will you use to show channel performance in your presentation, and why?</p></div><div><span class="tag">VERIFY</span><p>How did you check that your profit totals are right before charting them?</p></div><div><span class="tag">DEFEND</span><p>A classmate says, "Delivery is growing, so it is good for business." Defend or challenge that claim using your data.</p></div><div><span class="tag">CHART</span><p>For that chart, write the three lines from Day 6: the question it answers, what you want management to notice, and what management should NOT conclude. (Assignment 3, Part 4)</p></div></div>
-    <div class="warn"><b>Looking ahead:</b> tomorrow is project lab day. Bring your cleaned file, your profit columns, your Tableau workbook, and one chart idea.</div>
+    <div class="prompts"><div><span class="tag">KNOW</span><p>List the Excel skills you practiced today and one you still need to review.</p></div><div><span class="tag">DO</span><p>Which two views did you build for the project and what does each show?</p></div><div><span class="tag">DECIDE</span><p>Write your draft recommendation in one sentence with a number.</p></div><div><span class="tag">VERIFY</span><p>Describe a second method you used to check one number.</p></div><div><span class="tag">DEFEND</span><p>Someone asks, "Why not just stop offering delivery?" Write your answer.</p></div></div>
+    <div class="warn"><b>Looking ahead:</b> Friday, during the final exam period, you present. Bring your recommendation, two visuals, one number you can defend, and your Consultant Log.</div>
   </div>
 </section>
 
@@ -925,7 +965,8 @@ button.fbx:disabled{cursor:default}
   <button class="navbtn" id="next" type="button">Next</button>
 </footer>
 
-<script>
+<script>(function(){var g=document.getElementById.bind(document);document.getElementById=function(i){return g(i)||document.createElement('div')}})();
+
 (function(){
   const slides=[...document.querySelectorAll('.slide')];
   const dots=document.getElementById('dots');
@@ -1037,17 +1078,7 @@ button.fbx:disabled{cursor:default}
 
 
 const TD=[["Oct","Mon","Dine-in","Salmon","Entree",2,56,34.0],["Oct","Mon","Dine-in","Soup","Starter",3,27,21.0],["Oct","Wed","Dine-in","Steak","Entree",2,68,38.0],["Oct","Wed","Dine-in","Soup","Starter",3,27,21.0],["Oct","Thu","Delivery","Tacos","Entree",1,15,8.3],["Oct","Fri","Dine-in","Cake","Dessert",2,20,14.0],["Oct","Fri","Dine-in","Salad","Starter",2,24,18.0],["Oct","Sat","Delivery","Tacos","Entree",1,15,8.3],["Oct","Sat","Delivery","Burger","Entree",1,16,8.12],["Oct","Sun","Dine-in","Steak","Entree",4,136,76.0],["Oct","Sun","Dine-in","Salad","Starter",1,12,9.0],["Oct","Mon","Delivery","Pasta","Entree",2,36,19.52],["Oct","Tue","Dine-in","Soup","Starter",3,27,21.0],["Oct","Wed","Dine-in","Burger","Entree",4,64,44.0],["Oct","Thu","Dine-in","Pasta","Entree",2,36,26.0],["Oct","Thu","Dine-in","Steak","Entree",2,68,38.0],["Oct","Fri","Dine-in","Salad","Starter",2,24,18.0],["Oct","Fri","Delivery","Tacos","Entree",1,15,8.3],["Oct","Sat","Dine-in","Steak","Entree",2,68,38.0],["Oct","Sat","Dine-in","Salad","Starter",2,24,18.0],["Oct","Tue","Dine-in","Cake","Dessert",4,40,28.0],["Oct","Wed","Delivery","Tacos","Entree",1,15,8.3],["Oct","Wed","Delivery","Pasta","Entree",2,36,19.52],["Oct","Wed","Pickup","Steak","Entree",1,34,19.0],["Oct","Thu","Dine-in","Salmon","Entree",4,112,68.0],["Oct","Thu","Dine-in","Steak","Entree",2,68,38.0],["Oct","Thu","Delivery","Tacos","Entree",3,45,24.9],["Oct","Fri","Pickup","Tacos","Entree",3,45,33.0],["Oct","Fri","Delivery","Soup","Starter",1,9,5.38],["Oct","Sat","Pickup","Salmon","Entree",1,28,17.0],["Oct","Sat","Dine-in","Cake","Dessert",2,20,14.0],["Oct","Sun","Dine-in","Burger","Entree",3,48,33.0],["Oct","Sun","Dine-in","Salmon","Entree",2,56,34.0],["Oct","Mon","Dine-in","Salad","Starter",3,36,27.0],["Oct","Tue","Dine-in","Salad","Starter",1,12,9.0],["Oct","Tue","Dine-in","Salmon","Entree",4,112,68.0],["Oct","Thu","Delivery","Burger","Entree",1,16,8.12],["Oct","Fri","Dine-in","Salmon","Entree",1,28,17.0],["Oct","Fri","Dine-in","Salmon","Entree",3,84,51.0],["Oct","Fri","Dine-in","Steak","Entree",2,68,38.0],["Nov","Sat","Dine-in","Salmon","Entree",4,112,68.0],["Nov","Sat","Dine-in","Salmon","Entree",2,56,34.0],["Nov","Sat","Pickup","Soup","Starter",1,9,7.0],["Nov","Sat","Dine-in","Soup","Starter",3,27,21.0],["Nov","Sun","Dine-in","Tacos","Entree",2,30,22.0],["Nov","Sun","Delivery","Burger","Entree",2,32,16.24],["Nov","Tue","Dine-in","Salad","Starter",2,24,18.0],["Nov","Thu","Dine-in","Steak","Entree",2,68,38.0],["Nov","Thu","Pickup","Salad","Starter",2,24,18.0],["Nov","Fri","Dine-in","Soup","Starter",2,18,14.0],["Nov","Fri","Dine-in","Steak","Entree",3,102,57.0],["Nov","Fri","Delivery","Pasta","Entree",2,36,19.52],["Nov","Fri","Dine-in","Salmon","Entree",2,56,34.0],["Nov","Sat","Delivery","Salad","Starter",1,12,6.84],["Nov","Sat","Dine-in","Salmon","Entree",2,56,34.0],["Nov","Sun","Dine-in","Salmon","Entree",2,56,34.0],["Nov","Sun","Dine-in","Steak","Entree",2,68,38.0],["Nov","Sun","Dine-in","Salad","Starter",3,36,27.0],["Nov","Mon","Delivery","Tacos","Entree",1,15,8.3],["Nov","Tue","Delivery","Burger","Entree",1,16,8.12],["Nov","Wed","Dine-in","Burger","Entree",2,32,22.0],["Nov","Thu","Delivery","Cake","Dessert",2,20,10.4],["Nov","Thu","Dine-in","Salmon","Entree",4,112,68.0],["Nov","Sun","Dine-in","Steak","Entree",3,102,57.0],["Nov","Sun","Dine-in","Cake","Dessert",4,40,28.0],["Nov","Sun","Dine-in","Salmon","Entree",4,112,68.0],["Nov","Wed","Dine-in","Cake","Dessert",2,20,14.0],["Nov","Thu","Delivery","Pasta","Entree",1,18,9.76],["Nov","Thu","Delivery","Pasta","Entree",1,18,9.76],["Nov","Fri","Delivery","Burger","Entree",1,16,8.12],["Nov","Fri","Delivery","Salad","Starter",3,36,20.52],["Nov","Fri","Delivery","Burger","Entree",1,16,8.12],["Nov","Sat","Dine-in","Steak","Entree",3,102,57.0],["Nov","Sat","Dine-in","Salmon","Entree",2,56,34.0],["Nov","Sun","Delivery","Burger","Entree",1,16,8.12],["Nov","Sun","Pickup","Steak","Entree",1,34,19.0],["Nov","Mon","Dine-in","Salad","Starter",2,24,18.0],["Nov","Thu","Dine-in","Burger","Entree",2,32,22.0],["Nov","Sun","Delivery","Tacos","Entree",2,30,16.6],["Dec","Tue","Pickup","Burger","Entree",3,48,33.0],["Dec","Tue","Dine-in","Pasta","Entree",2,36,26.0],["Dec","Thu","Pickup","Pasta","Entree",2,36,26.0],["Dec","Fri","Pickup","Pasta","Entree",2,36,26.0],["Dec","Fri","Dine-in","Salmon","Entree",2,56,34.0],["Dec","Fri","Delivery","Burger","Entree",1,16,8.12],["Dec","Sat","Delivery","Steak","Entree",2,68,25.76],["Dec","Sun","Delivery","Salmon","Entree",3,84,35.88],["Dec","Tue","Dine-in","Salad","Starter",3,36,27.0],["Dec","Thu","Dine-in","Pasta","Entree",2,36,26.0],["Dec","Thu","Pickup","Cake","Dessert",1,10,7.0],["Dec","Thu","Delivery","Salad","Starter",2,24,13.68],["Dec","Fri","Delivery","Burger","Entree",1,16,8.12],["Dec","Sat","Dine-in","Steak","Entree",1,34,19.0],["Dec","Sat","Pickup","Salad","Starter",1,12,9.0],["Dec","Sat","Dine-in","Salad","Starter",1,12,9.0],["Dec","Sun","Dine-in","Soup","Starter",2,18,14.0],["Dec","Sun","Delivery","Tacos","Entree",2,30,16.6],["Dec","Mon","Dine-in","Steak","Entree",4,136,76.0],["Dec","Mon","Delivery","Salmon","Entree",1,28,11.96],["Dec","Tue","Delivery","Pasta","Entree",2,36,19.52],["Dec","Wed","Delivery","Tacos","Entree",2,30,16.6],["Dec","Thu","Dine-in","Steak","Entree",4,136,76.0],["Dec","Thu","Delivery","Tacos","Entree",1,15,8.3],["Dec","Thu","Delivery","Steak","Entree",3,102,38.64],["Dec","Fri","Dine-in","Salmon","Entree",1,28,17.0],["Dec","Fri","Delivery","Burger","Entree",1,16,8.12],["Dec","Sat","Delivery","Tacos","Entree",2,30,16.6],["Dec","Sat","Delivery","Soup","Starter",1,9,5.38],["Dec","Sat","Dine-in","Soup","Starter",1,9,7.0],["Dec","Sun","Dine-in","Salmon","Entree",2,56,34.0],["Dec","Sun","Pickup","Burger","Entree",1,16,11.0],["Dec","Mon","Pickup","Cake","Dessert",1,10,7.0],["Dec","Wed","Delivery","Tacos","Entree",2,30,16.6],["Dec","Wed","Delivery","Salad","Starter",1,12,6.84],["Dec","Sat","Delivery","Tacos","Entree",1,15,8.3],["Dec","Sat","Dine-in","Soup","Starter",3,27,21.0],["Dec","Sat","Dine-in","Salmon","Entree",4,112,68.0],["Dec","Sat","Delivery","Tacos","Entree",1,15,8.3],["Dec","Sun","Dine-in","Burger","Entree",1,16,11.0],["Dec","Sun","Dine-in","Tacos","Entree",3,45,33.0]];
-  makeSort('poolE','binsE','sortCheckE','sortResetE','sortFbE',9);
-  numCheck('pf1','pf1Btn','pf1Fb',[3152],'Correct: $3,152.','Not quite. Sum the Gross profit column, Qty times (Price minus Cost).');
-  numCheck('pf2','pf2Btn','pf2Fb',[193.5],'Correct: $193.50. That is 18% of $1,075 in delivery revenue.','Not quite. Sum the Commission column. Only Delivery orders have commission.');
-  numCheck('pf3','pf3Btn','pf3Fb',[2958.5],'Correct: $2,958.50.','Not quite. Gross profit minus commission.');
-  numCheck('pp1','pp1Btn','pp1Fb',[33.09],'Correct: $33.09. That is $2,184 over 66 orders.','Not quite. Filter to Dine-in. Divide profit after commission by the number of orders.');
-  numCheck('pp2','pp2Btn','pp2Fb',[13.23],'Correct: $13.23. That is $542.50 over 41 orders.','Not quite. Filter to Delivery. Divide profit after commission by the number of orders.');
-  numCheck('pp3','pp3Btn','pp3Fb',[17.85],'Correct: $17.85. That is $232 over 13 orders.','Not quite. Filter to Pickup. Divide profit after commission by the number of orders.');
-  numCheck('tb1','tb1Btn','tb1Fb',[542.5],'Correct: $542.50.','Not quite. Put Channel on Columns and Profit on Rows, then read the Delivery bar.');
-  numCheck('tb2','tb2Btn','tb2Fb',[944],'Correct: $944.','Not quite. Put Day on Columns and Revenue on Rows, then read Sat.');
-  numCheck('tb3','tb3Btn','tb3Fb',[273.32],'Correct: $273.32. Delivery profit is rising even as dine-in profit falls.','Not quite. Month on Columns, Profit on Rows, Channel on Color. Then read the Delivery part of Dec.');
-  (function(){
+(function(){
     const F=['Month','Day','Channel','Item','Category','Qty','Revenue','Profit'];
     const ORD={Month:['Oct','Nov','Dec'],Day:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],Category:['Entree','Starter','Dessert'],Channel:['Dine-in','Delivery','Pickup']};
     const PAL=['#7a1f2b','#d4a037','#5b7fa6','#6aa57a','#a0a0a0','#c46a3a','#8a5aa5','#3f8f8f'];
@@ -1109,17 +1140,55 @@ const TD=[["Oct","Mon","Dine-in","Salmon","Entree",2,56,34.0],["Oct","Mon","Dine
     render();
     window.__tb=st;window.__tbRender=render;
   })();
+  
+  makeSort('poolR','binsR','sortCheckR','sortResetR','sortFbR',9);
+  hotGame('chartBox','chartCheck','chartReset','chartFb',null);
+  hotGame('claimBox','claimCheck','claimReset','claimFb','claimRev');
+  numCheck('cp1','cp1Btn','cp1Fb',[37.5],'Correct: $37.50. That is 15 times (1 + 1.5).','Not quite. Steak cost is 15. Price = 15 times (1 + 1.5).');
+  numCheck('cp2','cp2Btn','cp2Fb',[20],'Correct: $20. The prices are 27.50, 37.50, 12.50, 12.50, and 10.','Not quite. Fill the Price column down first, then AVERAGE it.');
+  numCheck('cp3','cp3Btn','cp3Fb',[2],'Correct: 2. Salmon at 27.50 and Steak at 37.50 are 25 or more.','Not quite. Count prices that are 25 or more.');
+  function prog(box,bar,msg,total){const b=document.getElementById(box),bb=document.getElementById(bar),m=document.getElementById(msg);
+    b.addEventListener('change',()=>{const n=b.querySelectorAll('input:checked').length;bb.style.width=(n/total*100)+'%';m.textContent=n+' of '+total+(box==='labSteps'?' steps':' checks')+' done.'+(n===total?' Ready.':'')})}
+  prog('labSteps','labBar','labMsg',6);prog('verSteps','verBar','verMsg',6);
   (function(){
-    const n=document.getElementById('wiN'),bars=document.getElementById('wiBars'),msg=document.getElementById('wiMsg');
-    const D=2184/66,V=542.5/41,base=2958.5;
-    function r(){const k=+n.value,tot=base-k*(D-V);document.getElementById('wiV').textContent=k;
-      const pct=tot/base*100;
-      bars.innerHTML='<div class="scorebar"><span>Profit now</span><div class="fntrack"><i style="width:100%"></i></div><b>$'+base.toLocaleString(undefined,{minimumFractionDigits:2})+'</b></div>'+
-       '<div class="scorebar win"><span>Profit after the shift</span><div class="fntrack"><i style="width:'+pct+'%"></i></div><b>$'+tot.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})+'</b></div>';
-      msg.innerHTML=k===0?'No orders have moved. Move the slider.':'Moving '+k+' orders changes profit by <b>&minus;$'+(k*(D-V)).toFixed(2)+'</b>, even though the number of orders stays the same. Total orders are not the goal. Profit per order is.'}
-    n.oninput=r;r();
+    const f=document.getElementById('rcF'),a=document.getElementById('rcA'),o=document.getElementById('rcOut');
+    const FN={f1:['Strong evidence.','It names profit per order, the measure that explains why more orders can mean less profit.'],f2:['Weak by itself.','Growth alone does not show whether the orders are profitable. Pair it with profit per order.'],f3:['Relevant, but not about delivery.','It describes when guests come, not why profit is falling.']};
+    const AN={a1:['Practical.','Raises what small delivery orders earn. Risk: some guests may order less. Check by tracking order count and profit per order for a month.'],a2:['Plausible.','Shifts the mix toward higher-profit orders. Risk: discounts cut margin, so test the offer on slow weekdays only.'],a3:['Extreme.','It gives up $542.50 of profit and the guests who only order delivery. The data shows delivery earns less per order, not that it loses money.'],a4:['Direct.','Covers the commission. Risk: guests compare menu prices with dine-in and may order elsewhere.']};
+    function r(){if(!f.value||!a.value){o.textContent='Make both choices to see how well your recommendation is supported.';return}
+      o.innerHTML='<b>Your recommendation:</b> Because '+f.options[f.selectedIndex].text+', the Copper Table should '+a.options[a.selectedIndex].text+'.<br><br><b>Finding: '+FN[f.value][0]+'</b> '+FN[f.value][1]+'<br><b>Action: '+AN[a.value][0]+'</b> '+AN[a.value][1]}
+    f.onchange=r;a.onchange=r;
   })();
 
+
+numCheck('tb1','tb1Btn','tb1Fb',[542.5],'Correct: $542.50.','Not quite. Put Channel on Columns and Profit on Rows, then read the Delivery bar.');
+numCheck('tb2','tb2Btn','tb2Fb',[944],'Correct: $944.','Not quite. Put Day on Columns and Revenue on Rows, then read Sat.');
+numCheck('tb3','tb3Btn','tb3Fb',[273.32],'Correct: $273.32. Delivery profit is rising even as dine-in profit falls.','Not quite. Month on Columns, Profit on Rows, Channel on Color. Then read the Delivery part of Dec.');
+
+numCheck('fa1','fa1Btn','fa1Fb',[34.2],'Correct: 34.2%. That is 41 of 120 orders.','Not quite. Delivery orders divided by total orders.');
+numCheck('fa2','fa2Btn','fa2Fb',[18.3],'Correct: 18.3%. That is $542.50 of $2,958.50.','Not quite. Delivery profit after commission divided by total profit after commission.');
+numCheck('fa3','fa3Btn','fa3Fb',[3157.09,3157.1],'Correct: about $3,157.09. Ten orders earning $19.86 more each adds about $198.59.','Not quite. Add 10 times (dine-in profit per order minus delivery profit per order) to total profit.');
+})();
+</script>
+<script>
+/* Generic helpers for slides added in the course-alignment pass: number checks and copy buttons */
+(function(){
+  document.querySelectorAll('[data-num]').forEach(function(box){
+    var inp=box.querySelector('input'),btn=box.querySelector('button'),fb=box.querySelector('.feedback');
+    var ans=box.dataset.num.split('|').map(Number);
+    btn.onclick=function(){
+      var v=parseFloat(inp.value.replace(/[$,%\s]/g,''));
+      if(isNaN(v))fb.textContent='Type a number first.';
+      else fb.textContent=ans.some(function(a){return Math.abs(v-a)<0.051})?box.dataset.ok:box.dataset.bad;
+    };
+  });
+  document.querySelectorAll('[data-copy]').forEach(function(btn){
+    btn.onclick=function(){
+      var t=document.getElementById(btn.dataset.copy),fb=btn.parentNode.querySelector('.feedback'),ok=false;
+      t.focus();t.select();
+      try{ok=document.execCommand('copy')}catch(e){}
+      if(fb)fb.textContent=ok?'Copied.':'Selected. Press Ctrl+C (or Cmd+C) to copy.';
+    };
+  });
 })();
 </script>
 </body>
