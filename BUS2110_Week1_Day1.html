@@ -75,6 +75,10 @@ p{margin:0 0 .8em;max-width:68ch}
 .card[aria-expanded="true"] .back{display:block}
 .card[aria-expanded="true"]{border-color:var(--teal)}
 .card .hint{font-size:.8em;color:var(--teal);margin-top:.4em}
+.cardtxt{margin:.5em 0 0;color:var(--muted)}
+.dtab.ctab td,.dtab.ctab td:nth-child(n+2){text-align:left}
+.dtab.ctab th[scope=row]{background:var(--surface);white-space:nowrap}
+.dtab.ctab thead th{white-space:normal}
 .card[aria-expanded="true"] .hint{display:none}
 
 /* the framework band: signature visual */
@@ -275,10 +279,10 @@ a{color:var(--maroon-ink)}
     <p>I'm Dr. Katelyn Walls. My background is in Information Systems, with interests in how people and organizations use technology, data, and digital communication. I also work with text analysis and study how online information and communication can affect organizations.</p>
     <p>You'll see that systems perspective all term. Instead of treating Excel, AI, analytics, and MIS as separate topics, we'll keep asking how they work together to help people solve business problems and make decisions.</p>
     <p><b>What you can expect from me.</b> Winter Term moves quickly. I'll make the course challenging, and I'll make sure you have chances to practice, ask questions, make mistakes, and try again.</p>
-    <div class="cards reveal">
-      <button class="card" aria-expanded="false"><h3>Ask questions</h3><div class="hint">Tap to reveal</div><div class="back">If something doesn't make sense, ask. Questions help us figure out what needs more time.</div></button>
-      <button class="card" aria-expanded="false"><h3>Try things</h3><div class="hint">Tap to reveal</div><div class="back">Technology is learned by using it. Expect to experiment, troubleshoot, and occasionally break things.</div></button>
-      <button class="card" aria-expanded="false"><h3>Understand your work</h3><div class="hint">Tap to reveal</div><div class="back">You can use tools to help you learn, but you should be able to explain, evaluate, and take responsibility for the work you produce.</div></button>
+    <div class="cards">
+      <div class="card"><h3>Ask questions</h3><p class="cardtxt">If something doesn't make sense, ask. Questions help us figure out what needs more time.</p></div>
+      <div class="card"><h3>Try things</h3><p class="cardtxt">Technology is learned by using it. Expect to experiment, troubleshoot, and occasionally break things.</p></div>
+      <div class="card"><h3>Understand your work</h3><p class="cardtxt">You can use tools to help you learn, but you should be able to explain, evaluate, and take responsibility for the work you produce.</p></div>
     </div>
   </div>
 </section>
@@ -292,7 +296,7 @@ a{color:var(--maroon-ink)}
     <div class="cards">
       <div class="card"><h3>Email</h3><a href="mailto:kwalls4@elon.edu">kwalls4@elon.edu</a></div>
       <div class="card"><h3>Office</h3>Koury Business Center (KOBC), Room 346-C</div>
-      <div class="card"><h3>Office hours</h3><span class="tbd">Add office hours</span></div>
+      <div class="card"><h3>Office hours</h3>Monday, Wednesday, and Friday, 12:30 to 1:30 p.m.</div>
     </div>
     <div class="warn"><b>You don't need a perfect question.</b> Tell me what you're trying to do, where you're getting stuck, and what you've already tried. That gives us a good place to start.</div>
   </div>
@@ -320,8 +324,8 @@ a{color:var(--maroon-ink)}
 <section class="slide" data-title="Winter at a glance">
   <div class="inner">
     <div class="kicker">Orientation</div>
-    <h2>Three weeks, fifteen class meetings</h2>
-    <p>We meet Monday through Friday, 1:30 to 4:30 p.m. Each class builds directly on the one before it. With only 15 meetings, <b>one missed day is roughly a week of material in a regular semester.</b></p>
+    <h2>Three weeks, thirteen class meetings and a final exam period</h2>
+    <p>We meet Monday through Friday, 1:30 to 4:30 p.m. Each class builds directly on the one before it. With only 13 meetings, <b>one missed day is roughly a week of material in a regular semester.</b></p>
     <div class="flow3">
       <div><h3>Week 1: Understand the Business</h3><p>MIS concepts, business processes, organizational technology, Excel foundations, and identifying useful business questions.</p></div>
       <div><h3>Week 2: Work With the Data</h3><p>Excel, visualization, information systems, data quality, security and privacy, AI, and analytical thinking.</p></div>
@@ -352,9 +356,9 @@ a{color:var(--maroon-ink)}
     <h2>Class time is for what you can't easily do alone</h2>
     <p>Research on college courses has found that attendance predicts grades better than study habits, study skills, or standardized test scores (Cred&eacute; et al., 2010). In three weeks, that effect is even harder to ignore.</p>
     <div class="flow3">
-      <div><h3>Before class</h3><p>Complete the day's readings and video quiz so you arrive ready to apply the ideas, not hear them for the first time.</p></div>
-      <div><h3>In class</h3><p>Guided Excel simulations, timed practice that mirrors the certification exam, case discussions, and group analysis with real-time feedback.</p></div>
-      <div><h3>After class</h3><p>Untimed Excel projects in Pearson, as many attempts as you want within the window, plus progress on your consulting engagement.</p></div>
+      <div><h3>Before class</h3><p>Complete the day's readings so you arrive ready to apply the ideas, not hear them for the first time.</p></div>
+      <div><h3>In class</h3><p>Guided Excel simulations, case discussions, and group analysis with real-time feedback.</p></div>
+      <div><h3>After class</h3><p>Excel projects in Pearson, with as many attempts as you want, <b>due Sunday at 11:59 p.m.</b> Plus progress on your consulting engagement.</p></div>
     </div>
   </div>
 </section>
@@ -367,12 +371,11 @@ a{color:var(--maroon-ink)}
     <p>You'll need the <b>MyLab IT NextGen with Pearson eText access code for <i>Exploring Microsoft 365: 2021 Edition</i></b>. It's listed under MyITLab Materials in Canvas. Tap a part of Pearson to see how it works.</p>
     <div class="tabs" role="tablist" id="prTabs">
       <button role="tab" aria-selected="true" data-p="0">Simulations</button>
-      <button role="tab" aria-selected="false" data-p="1">Timed projects</button>
-      <button role="tab" aria-selected="false" data-p="2">Untimed projects</button>
-      <button role="tab" aria-selected="false" data-p="3">Readings</button>
+      <button role="tab" aria-selected="false" data-p="1">Projects</button>
+      <button role="tab" aria-selected="false" data-p="2">Readings</button>
     </div>
     <div class="panel" role="tabpanel" id="prPanel"></div>
-    <p class="note">MyLab IT accepts late work but deducts points. Pearson due dates: <span class="tbd">Add due-date pattern</span></p>
+    <p class="note">Pearson projects are due <b>Sunday at 11:59 p.m.</b> MyLab IT accepts late work but deducts points.</p>
   </div>
 </section>
 
@@ -380,15 +383,15 @@ a{color:var(--maroon-ink)}
 <section class="slide" data-title="Excel certification">
   <div class="inner">
     <div class="kicker">Excel</div>
-    <h2>You can earn the Microsoft Excel Associate certification</h2>
-    <p>One of your exams is the certification exam. Tap each piece to see how it works.</p>
-    <div class="cards reveal">
-      <button class="card" aria-expanded="false"><h3>The voucher</h3><div class="hint">Tap to reveal</div><div class="back">You receive a voucher good for two attempts at the exam, if you need them.</div></button>
-      <button class="card" aria-expanded="false"><h3>How it's graded</h3><div class="hint">Tap to reveal</div><div class="back">Pass, and you receive 100% for that assignment. If you don't pass, you receive the highest score from your attempts.</div></button>
-      <button class="card" aria-expanded="false"><h3>Practice</h3><div class="hint">Tap to reveal</div><div class="back">GMetrix is an optional practice exam. It runs only on Windows, not on a Mac.</div></button>
-      <button class="card" aria-expanded="false"><h3>Windows or Mac?</h3><div class="hint">Tap to reveal</div><div class="back">The exam is taken in Windows, so a Windows environment is strongly encouraged. You can do most Excel work on a Mac, and you may use a computer lab to practice in Windows.</div></button>
+    <h2>You can earn the Microsoft Office Specialist (MOS): Excel Associate certification</h2>
+    <p>You take the certification exam in class through Certiport. Here's how it works.</p>
+    <div class="cards">
+      <div class="card"><h3>The voucher</h3><p class="cardtxt">You receive a voucher good for two attempts at the exam, if you need them.</p></div>
+      <div class="card"><h3>How it's graded</h3><p class="cardtxt">Pass, and you receive 100% for that assignment. If you don't pass, you receive the highest score from your attempts.</p></div>
+      <div class="card"><h3>Practice exam</h3><p class="cardtxt">You take a GMetrix practice exam in class on Friday, January 15. It counts toward your grade. GMetrix runs only on Windows, not on a Mac.</p></div>
+      <div class="card"><h3>Windows or Mac?</h3><p class="cardtxt">The exam is taken in Windows, so a Windows environment is strongly encouraged. You can do most Excel work on a Mac, and you may use a computer lab to practice in Windows.</p></div>
     </div>
-    <p class="note">Certification exam date: <span class="tbd">Add exam date</span></p>
+    <p class="note"><b>Certification exam: Tuesday, January 19, in class.</b> Makeup: Friday, January 22, during the final exam period (time to be announced). Create your free Certiport account before the exam.</p>
   </div>
 </section>
 
@@ -396,17 +399,17 @@ a{color:var(--maroon-ink)}
 <section class="slide" data-title="Grading">
   <div class="inner">
     <div class="kicker">Orientation</div>
-    <h2>Where your points come from</h2>
-    <p>Out of 1,000 points. Bars are scaled to the largest items (250 points).</p>
+    <h2>Where your grade comes from</h2>
+    <p>Canvas weights each category. Bars are scaled to the largest category (30%).</p>
     <div class="gbars">
-      <div class="gb"><span>Video quizzes</span><div class="bar"><i style="width:40%"></i></div><b>100</b></div>
-      <div class="gb"><span>MyLab IT Excel exercises and assignments</span><div class="bar"><i style="width:80%"></i></div><b>200</b></div>
-      <div class="gb"><span>Exams and practice exams</span><div class="bar"><i style="width:100%"></i></div><b>250</b></div>
-      <div class="gb"><span>Business Analytics + AI homework</span><div class="bar"><i style="width:60%"></i></div><b>150</b></div>
-      <div class="gb"><span>Final project</span><div class="bar"><i style="width:100%"></i></div><b>250</b></div>
-      <div class="gb"><span>Class attendance</span><div class="bar"><i style="width:20%"></i></div><b>50</b></div>
+      <div class="gb"><span>Assignments: Client Discovery Brief, Analyst Audit, Final Consulting Engagement</span><div class="bar"><i style="width:100%"></i></div><b>30%</b></div>
+      <div class="gb"><span>Pearson MyLab IT simulations and projects</span><div class="bar"><i style="width:83%"></i></div><b>25%</b></div>
+      <div class="gb"><span>Excel certification: GMetrix practice exam and certification exam</span><div class="bar"><i style="width:50%"></i></div><b>15%</b></div>
+      <div class="gb"><span>MIS Knowledge Checks</span><div class="bar"><i style="width:50%"></i></div><b>15%</b></div>
+      <div class="gb"><span>In-class activities and attendance</span><div class="bar"><i style="width:33%"></i></div><b>10%</b></div>
+      <div class="gb"><span>Consultant Log spot checks</span><div class="bar"><i style="width:17%"></i></div><b>5%</b></div>
     </div>
-    <p class="note">The certification exam is one of your exams. Full details are in the syllabus.</p>
+    <p class="note">The practice exam and the certification exam each count for half of the 15%. Full details are in the syllabus.</p>
   </div>
 </section>
 
@@ -415,7 +418,7 @@ a{color:var(--maroon-ink)}
   <div class="inner">
     <div class="kicker">Orientation</div>
     <h2>Attendance counts, and make-up work needs an excused absence</h2>
-    <p>I take attendance every class. Because the course meets every day, it's easy to fall behind, so make-up work is allowed <b>only for excused absences</b>.</p>
+    <p>I take attendance every class, and attendance and in-class activities are <b>10% of your grade</b>. Because the course meets every day, it's easy to fall behind, so make-up work is allowed <b>only for excused absences</b>.</p>
     <div class="steps">
       <label><input type="checkbox"><span>Email me at <b>kwalls4@elon.edu</b> with the information Elon's absence policy asks for.</span></label>
       <label><input type="checkbox"><span>Follow Elon's <a href="https://www.elon.edu/u/student-care/absence-notifications/" target="_blank" rel="noopener">absence notification process</a> so the absence can be reviewed.</span></label>
@@ -438,10 +441,10 @@ a{color:var(--maroon-ink)}
   <div class="inner">
     <div class="kicker">Orientation</div>
     <h2>What I expect from you</h2>
-    <div class="cards reveal">
-      <button class="card" aria-expanded="false"><h3>Honor code</h3><div class="hint">Tap to reveal</div><div class="back">The honor code is strictly enforced in this class.</div></button>
-      <button class="card" aria-expanded="false"><h3>Participation</h3><div class="hint">Tap to reveal</div><div class="back">Participation in class discussions is expected. Come prepared. Your grade may be adjusted to reflect a lack of preparation or participation.</div></button>
-      <button class="card" aria-expanded="false"><h3>Accommodations</h3><div class="hint">Tap to reveal</div><div class="back">Send me any approved accommodation letters as soon as you can. The certification exam needs its own, separate Certiport accommodation approval. Elon's approval doesn't automatically apply to it.</div></button>
+    <div class="cards">
+      <div class="card"><h3>Honor code</h3><p class="cardtxt">The honor code is strictly enforced in this class.</p></div>
+      <div class="card"><h3>Participation</h3><p class="cardtxt">Participation in class discussions is expected. Come prepared. Your grade may be adjusted to reflect a lack of preparation or participation.</p></div>
+      <div class="card"><h3>Accommodations</h3><p class="cardtxt">Send me any approved accommodation letters as soon as you can. The certification exam needs its own, separate Certiport accommodation approval. Elon's approval doesn't automatically apply to it.</p></div>
     </div>
   </div>
 </section>
@@ -452,31 +455,31 @@ a{color:var(--maroon-ink)}
     <div class="kicker">Quick check</div>
     <h2>Three questions before we start the content</h2>
     <div class="q" data-quiz>
-      <p><b>1.</b> How many class meetings are in this course?</p>
+      <p><b>1.</b> When are your Pearson projects due?</p>
       <div class="opts">
-        <button class="opt">10</button>
-        <button class="opt" data-right>15</button>
-        <button class="opt">20</button>
+        <button class="opt">At the start of the next class</button>
+        <button class="opt" data-right>Sunday at 11:59 p.m.</button>
+        <button class="opt">At the end of the term</button>
       </div>
-      <p class="explain">Three weeks, Monday to Friday. That's why one missed day is about a week of a regular semester.</p>
+      <p class="explain">Projects are due Sunday at 11:59 p.m. MyLab IT accepts late work but deducts points, so plan your weekend around them.</p>
     </div>
     <div class="q" data-quiz>
-      <p><b>2.</b> Which Pearson work is done in class, under the clock, to mimic the certification exam?</p>
+      <p><b>2.</b> When is the Excel certification exam?</p>
       <div class="opts">
-        <button class="opt">Simulations</button>
-        <button class="opt" data-right>Timed projects</button>
-        <button class="opt">Untimed projects</button>
+        <button class="opt">Friday, January 15</button>
+        <button class="opt" data-right>Tuesday, January 19</button>
+        <button class="opt">Friday, January 22</button>
       </div>
-      <p class="explain">Timed projects prepare you for the exam. Untimed projects are done outside class, with as many attempts as you want within the window.</p>
+      <p class="explain">The certification exam is Tuesday, January 19, in class. Friday, January 15 is the GMetrix practice exam, and Friday, January 22 is the makeup.</p>
     </div>
     <div class="q" data-quiz>
-      <p><b>3.</b> When is make-up work available?</p>
+      <p><b>3.</b> You miss class with an unexcused absence. What happens to that day's in-class activity?</p>
       <div class="opts">
-        <button class="opt">Any time, if you ask nicely</button>
-        <button class="opt" data-right>Only for excused absences</button>
-        <button class="opt">Only before the absence</button>
+        <button class="opt">You can make it up any time before the end of the term.</button>
+        <button class="opt" data-right>You can't make it up, and it counts against the 10% for activities and attendance.</button>
+        <button class="opt">Nothing. In-class activities don't count.</button>
       </div>
-      <p class="explain">Winter Term moves every day, so make-up work is limited to excused absences.</p>
+      <p class="explain">Make-up work is only for excused absences, and in-class activities and attendance are 10% of your grade.</p>
     </div>
   </div>
 </section>
@@ -540,11 +543,11 @@ a{color:var(--maroon-ink)}
   <div class="inner">
     <div class="kicker">Define</div>
     <h2>MIS: managing information systems to help a business achieve its strategies</h2>
-    <p>MIS has three parts. Tap each one to see what it means for you.</p>
-    <div class="cards reveal">
-      <button class="card" aria-expanded="false"><h3>Management and use</h3><div class="hint">Tap to reveal</div><div class="back">Developing, maintaining, and supporting technology that solves business problems. You're involved because you know the business needs better than IT does.</div></button>
-      <button class="card" aria-expanded="false"><h3>Information systems</h3><div class="hint">Tap to reveal</div><div class="back">A group of components that interact to produce information: hardware, software, data, procedures, and people.</div></button>
-      <button class="card" aria-expanded="false"><h3>Strategies</h3><div class="hint">Tap to reveal</div><div class="back">Technology should support the organization's goals, like cutting costs or improving service. It isn't adopted for its own sake.</div></button>
+    <p>MIS has three parts. Here's what each one means for you.</p>
+    <div class="cards">
+      <div class="card"><h3>Management and use</h3><p class="cardtxt">Developing, maintaining, and supporting technology that solves business problems. You're involved because you know the business needs better than IT does.</p></div>
+      <div class="card"><h3>Information systems</h3><p class="cardtxt">A group of components that interact to produce information: hardware, software, data, procedures, and people.</p></div>
+      <div class="card"><h3>Strategies</h3><p class="cardtxt">Technology should support the organization's goals, like cutting costs or improving service. It isn't adopted for its own sake.</p></div>
     </div>
   </div>
 </section>
@@ -555,10 +558,10 @@ a{color:var(--maroon-ink)}
     <div class="kicker">Define</div>
     <h2>You won't build the system. You'll decide whether it fits.</h2>
     <p class="lede">Business professionals are closest to daily operations, so IT teams depend on them to describe what a system needs to do.</p>
-    <div class="cards reveal">
-      <button class="card" aria-expanded="false"><h3>Understand the need</h3><div class="hint">Tap to reveal</div><div class="back">You know the workflow, the customers, and the pain points firsthand.</div></button>
-      <button class="card" aria-expanded="false"><h3>Define requirements</h3><div class="hint">Tap to reveal</div><div class="back">You tell IT what the system must do, in business terms they can build to.</div></button>
-      <button class="card" aria-expanded="false"><h3>Prevent misalignment</h3><div class="hint">Tap to reveal</div><div class="back">Without your input, IT may build a tool that doesn't match how your team actually works.</div></button>
+    <div class="cards">
+      <div class="card"><h3>Understand the need</h3><p class="cardtxt">You know the workflow, the customers, and the pain points firsthand.</p></div>
+      <div class="card"><h3>Define requirements</h3><p class="cardtxt">You tell IT what the system must do, in business terms they can build to.</p></div>
+      <div class="card"><h3>Prevent misalignment</h3><p class="cardtxt">Without your input, IT may build a tool that doesn't match how your team actually works.</p></div>
     </div>
   </div>
 </section>
@@ -629,14 +632,20 @@ a{color:var(--maroon-ink)}
   <div class="inner">
     <div class="kicker">Dissect</div>
     <h2>Every system has all five</h2>
-    <p>Pick an example and look for the component that's easiest to forget.</p>
-    <div class="tabs" role="tablist" id="exTabs">
-      <button role="tab" aria-selected="true" data-ex="0">Point of sale</button>
-      <button role="tab" aria-selected="false" data-ex="1">Amazon recommendations</button>
-      <button role="tab" aria-selected="false" data-ex="2">CRM</button>
-      <button role="tab" aria-selected="false" data-ex="3">Social media marketing</button>
+    <p>Read across a row to compare the same component in four systems. Which row is easiest to forget?</p>
+    <div style="overflow-x:auto;margin-top:1em">
+    <table class="dtab ctab">
+      <thead><tr><th scope="col"></th><th scope="col">Point of sale</th><th scope="col">Amazon recommendations</th><th scope="col">CRM</th><th scope="col">Social media marketing</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Hardware</th><td>Barcode scanner, receipt printer</td><td>Cloud servers</td><td>Cloud servers</td><td>Cloud servers, phones</td></tr>
+        <tr><th scope="row">Software</th><td>Sales-tracking application</td><td>Recommendation system</td><td>Salesforce or HubSpot</td><td>The social media platform</td></tr>
+        <tr><th scope="row">Data</th><td>Product prices, transaction details</td><td>Product details, purchase and browsing history</td><td>Customer interactions, sales history</td><td>Likes, comments, shares, product sales</td></tr>
+        <tr><th scope="row">Procedures</th><td>Scanning items, generating receipts</td><td>Collecting and analyzing customer behavior</td><td>Logging customer details, tracking interactions</td><td>Content creation, campaign management, performance analysis</td></tr>
+        <tr><th scope="row">People</th><td>Cashiers and managers</td><td>Data scientists and developers</td><td>Sales and marketing teams</td><td>Marketing teams and managers</td></tr>
+      </tbody>
+    </table>
     </div>
-    <div class="panel" role="tabpanel" id="exPanel"></div>
+    <p class="note">Notice that the hardware barely changes across three of the four. What makes each system different is mostly its data, procedures, and people.</p>
   </div>
 </section>
 
@@ -691,7 +700,14 @@ a{color:var(--maroon-ink)}
   <div class="inner">
     <div class="kicker">Analytics</div>
     <h2>The Copper Table has plenty of data. Does it have information?</h2>
-    <p>Data is raw facts. Information is data organized so it can support a decision. Tap each statement to label it.</p>
+    <p><b>Data</b> is raw facts: individual records of what happened, captured by a system. <b>Information</b> is data that has been organized, summarized, compared, or given context so that someone can act on it.</p>
+    <div class="flow3">
+      <div><h3>Data</h3><p>Raw, individual facts. <i>"Table 12 ordered two Copper Burgers at 7:05 p.m."</i> True and worth storing, but on its own it doesn't point to a decision.</p></div>
+      <div><h3>Processing</h3><p>What turns data into information: <b>organize</b> it, <b>summarize</b> it (totals, averages, counts), <b>compare</b> it (before vs. after, this table vs. that one), or <b>add context</b> (is 143 a lot?).</p></div>
+      <div><h3>Information</h3><p>A finding someone can use. <i>"Tables seated after 8 p.m. waited twice as long as earlier tables"</i> tells the owner to look at staffing for the late rush.</p></div>
+    </div>
+    <div class="warn"><b>A quick test:</b> could a manager make a decision from this statement as it stands? If yes, it's probably information. If you'd first need to add it up, compare it, or ask "compared to what?", it's still data.</div>
+    <p style="margin-top:1.2em">Now try it. Label each statement, then read why.</p>
     <div class="dilist" id="dilist">
       <div class="di" data-ans="data"><p>Table 12 ordered two Copper Burgers at 7:05 p.m.</p><div class="dibtns"><button type="button" data-pick="data">Data</button><button type="button" data-pick="info">Information</button></div><p class="diwhy">A single raw fact. On its own, it doesn't point to a decision.</p></div>
       <div class="di" data-ans="info"><p>The Copper Burger was the best-selling dish of the night.</p><div class="dibtns"><button type="button" data-pick="data">Data</button><button type="button" data-pick="info">Information</button></div><p class="diwhy">Many orders summarized into one finding. It could shape how much to prep tomorrow.</p></div>
@@ -727,12 +743,13 @@ a{color:var(--maroon-ink)}
   <div class="inner">
     <div class="kicker">Excel</div>
     <h2>Set up your first workbook</h2>
-    <p>You'll turn the Copper Table's orders into information. First, a place to keep your work. Check off each step as you go.</p>
+    <p>You'll turn the Copper Table's orders into information. First, get today's workbook and a place to keep your work. Check off each step as you go.</p>
     <div class="steps">
       <label><input type="checkbox"><span>Sign in to Office 365 with your elon.edu account and open <b>OneDrive</b>.</span></label>
       <label><input type="checkbox"><span>Create a folder named <b>BUS2110</b>. Files here are backed up and reachable from any device.</span></label>
-      <label><input type="checkbox"><span>Inside it, create a new blank Excel workbook.</span></label>
-      <label><input type="checkbox"><span>Rename it <b>CopperTable_OpeningNight</b>. Notice the <b>.xlsx</b> extension: that's what makes it an Excel workbook.</span></label>
+      <label><input type="checkbox"><span>In Canvas, go to <b>Week 1</b> and download <b>BUS2110_Week1_Day1_Workbook.xlsx</b> from Monday's materials.</span></label>
+      <label><input type="checkbox"><span>Save it into your <b>BUS2110</b> folder and open it. Notice the <b>.xlsx</b> extension: that's what makes it an Excel workbook.</span></label>
+      <label><input type="checkbox"><span>Read the <b>Start Here</b> tab. Yellow cells are where you type; blue text is data given to you.</span></label>
     </div>
     <div class="cards" style="margin-top:1.2em">
       <div class="card"><h3>Workbook</h3>The whole Excel file. One workbook can hold many worksheets.</div>
@@ -749,7 +766,7 @@ a{color:var(--maroon-ink)}
     <h2>Take a tour of the Excel window</h2>
     <p>Tap any part of the window below to learn what it does.</p>
     <div class="xl" id="xl">
-      <div class="xl-title"><button type="button" class="hs" data-k="file">CopperTable_OpeningNight.xlsx</button></div>
+      <div class="xl-title"><button type="button" class="hs" data-k="file">BUS2110_Week1_Day1_Workbook.xlsx</button></div>
       <button type="button" class="hs xl-tabs" data-k="tabs"><span>File</span><span class="sel">Home</span><span>Insert</span><span>Page Layout</span><span>Formulas</span><span>Data</span><span>View</span></button>
       <button type="button" class="hs xl-ribbon" data-k="ribbon"><span>Clipboard</span><span>Font</span><span>Alignment</span><span>Number</span><span>Styles</span></button>
       <div class="xl-fbar"><button type="button" class="hs nb" data-k="namebox">D2</button><span class="fx">fx</span><button type="button" class="hs fb" data-k="fbar">=B2*C2</button></div>
@@ -760,7 +777,7 @@ a{color:var(--maroon-ink)}
         <button type="button" class="hs xh" data-k="row">3</button><span>Chef's Special</span><span class="n">8</span><span class="n">24</span><span></span>
         <button type="button" class="hs xh" data-k="row">4</button><span></span><span></span><span></span><span></span>
       </div>
-      <div class="xl-sheets"><button type="button" class="hs" data-k="sheet">Sheet1</button><span>+</span></div>
+      <div class="xl-sheets"><span>Start Here</span><button type="button" class="hs" data-k="sheet">OpeningNight</button><span>Data or Information</span><span>+</span></div>
     </div>
     <div class="band-detail" id="xlDetail" aria-live="polite">Tap a part of the window.</div>
   </div>
@@ -773,7 +790,7 @@ a{color:var(--maroon-ink)}
     <h2>Turn opening-night orders into information</h2>
     <div class="xlsplit">
       <div>
-        <p>Enter this data starting in cell A1:</p>
+        <p>On the <b>OpeningNight</b> tab, type this data starting in cell A1:</p>
         <table class="dtab">
           <tr><th>Item</th><th>Qty</th><th>Price</th><th>Total</th></tr>
           <tr><td>Copper Burger</td><td>12</td><td>16</td><td></td></tr>
@@ -798,7 +815,7 @@ a{color:var(--maroon-ink)}
       <button class="btn" id="xlCheck" type="button">Check</button>
       <span class="feedback" id="xlFb" aria-live="polite"></span>
     </div>
-    <p class="note">Now the analyst's question: what does this total tell the owner, and what does it <i>not</i> tell her?</p>
+    <p class="note">Then answer the questions on the <b>Checkpoints</b> tab and label the statements on the <b>Data or Information</b> tab. The analyst's question: what does this total tell the owner, and what does it <i>not</i> tell her?</p>
   </div>
 </section>
 
@@ -882,7 +899,7 @@ a{color:var(--maroon-ink)}
         </div>
       </div>
     </div>
-    <p class="note">Why this order? Your thinking gets captured before another tool influences it. On the timed Excel work and the certification exam, you'll work without AI entirely.</p>
+    <p class="note">Why this order? Your thinking gets captured before another tool influences it. On the practice exam and the certification exam, you'll work without AI entirely.</p>
   </div>
 </section>
 
@@ -1061,20 +1078,6 @@ a{color:var(--maroon-ink)}
   };
   document.getElementById('sortReset').onclick=()=>{original.forEach(it=>{it.classList.remove('right','wrong');it.setAttribute('aria-pressed','false');pool.appendChild(it)});sel=null;fb.textContent=''};
 
-  // example tabs
-  const ex=[
-    {Hardware:'Barcode scanner, receipt printer',Software:'Sales-tracking application',Data:'Product prices, transaction details',Procedures:'Scanning items, generating receipts',People:'Cashiers and managers'},
-    {Hardware:'Cloud servers',Software:'Recommendation system',Data:'Product details, purchase and browsing history',Procedures:'Collecting and analyzing customer behavior',People:'Data scientists and developers'},
-    {Hardware:'Cloud servers',Software:'Salesforce or HubSpot',Data:'Customer interactions, sales history',Procedures:'Logging customer details, tracking interactions',People:'Sales and marketing teams'},
-    {Hardware:'Cloud servers, phones',Software:'The social media platform',Data:'Likes, comments, shares, product sales',Procedures:'Content creation, campaign management, performance analysis',People:'Marketing teams and managers'}
-  ];
-  const panel=document.getElementById('exPanel');
-  function showEx(i){
-    panel.innerHTML='<dl>'+Object.entries(ex[i]).map(([k,v])=>'<dt>'+k+'</dt><dd>'+v+'</dd>').join('')+'</dl>';
-    document.querySelectorAll('#exTabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.ex==i?'true':'false'));
-  }
-  document.querySelectorAll('#exTabs button').forEach(b=>b.onclick=()=>showEx(+b.dataset.ex));
-  showEx(0);
 
   // quizzes
   document.querySelectorAll('[data-quiz]').forEach(q=>{
@@ -1182,8 +1185,7 @@ a{color:var(--maroon-ink)}
   (function(){
     const pr=[
       {'What it is':'Step-by-step Excel practice that we walk through together in class.','How it works':'We pause at each step so you can follow along and make sure you have it.'},
-      {'What it is':'Excel projects completed in class under the clock, to mimic the certification exam.','How it counts':'70% is passing. Done without AI.'},
-      {'What it is':'Excel projects you complete outside class.','How it works':'Make as many attempts as you want within the window.'},
+      {'What it is':'Excel projects you complete outside class, one for each chapter.','How it works':'Make as many attempts as you want. Projects are due Sunday at 11:59 p.m.'},
       {'What it is':'The Exploring Microsoft 365 eText readings for each chapter.','How it works':'Complete the day\u2019s readings before class so you arrive ready to apply them.'}
     ];
     const panel=document.getElementById('prPanel');
