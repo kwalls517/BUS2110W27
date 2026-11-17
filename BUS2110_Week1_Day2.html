@@ -324,6 +324,16 @@ footer.nav .navbtn:disabled{opacity:.35;cursor:default}
 .qmeter{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-top:10px}
 .pm2{height:18px;background:var(--line);border-radius:9px;overflow:hidden}
 .pm2 i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--maroon),var(--gold),var(--teal));transition:width .3s}
+.strat.big{gap:18px}
+.strat.big div{font-size:1.18em;padding:26px 26px;min-height:180px;line-height:1.45}
+.strat.big h3{font-size:1.3em;margin-bottom:.5em}
+.bin-desc{font-size:.78em;color:var(--muted);text-align:center;line-height:1.3;padding:2px 2px 8px;border-bottom:1px dashed var(--line)}
+.bin-desc i{display:block;margin-top:3px}
+.pydesc p+p{margin-top:4px}
+.lvls{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:1em}
+.lvls div{background:var(--surface);border-top:5px solid var(--teal);border-radius:0 0 8px 8px;padding:10px 14px;font-size:.92em}
+.lvls div:first-child{border-top-color:var(--maroon)}.lvls div:nth-child(2){border-top-color:#8a2f35}
+@media (max-width:860px){.lvls{grid-template-columns:1fr}}
 @media (max-width:860px){.flowrow,.kpis,.chevs4,.chvd,.hub,.pyr,.stpgrid,.bins.b4,.bins.b5{grid-template-columns:1fr}.farrow{justify-content:center;transform:rotate(90deg)}.hn.mis,.hn.tps,.hn.erp,.hn.crm,.hn.scm{grid-column:1;grid-row:auto}.qrow{grid-template-columns:1fr}.chv{clip-path:none;border-radius:8px}}
 </style>
 </head>
@@ -404,7 +414,6 @@ footer.nav .navbtn:disabled{opacity:.35;cursor:default}
       <div class="fcol"><h3>Outputs</h3><p>What comes out.</p><ul><li>A served meal</li><li>A paid receipt</li><li>A record of the sale</li></ul></div>
     </div>
     <div class="floop"><b>Information is produced the whole way through.</b> Every step creates data. That is where information systems come in.</div>
-    <div class="warn"><b>Coming up:</b> you will sort inputs, activities, and outputs for this process, then put its steps in order.</div>
   </div>
 </section>
 
@@ -413,27 +422,12 @@ footer.nav .navbtn:disabled{opacity:.35;cursor:default}
     <div class="kicker">Define</div>
     <h2>Why should a business care about its processes?</h2>
     <p>Well-run processes pay off in four ways.</p>
-    <div class="strat">
+    <div class="strat big">
 <div><h3>Efficiency</h3>Fewer wasted steps means plates leave the kitchen sooner.</div>
 <div><h3>Customer satisfaction</h3>Guests get hot food, the right order, and a short wait.</div>
 <div><h3>Reduced costs</h3>Fewer remade dishes and less wasted food.</div>
 <div><h3>Better decision-making</h3>A defined process produces data you can measure and compare from night to night.</div>
     </div>
-  </div>
-</section>
-
-<section class="slide" data-title="Measuring processes">
-  <div class="inner">
-    <div class="kicker">Define</div>
-    <h2>A good process is measurable</h2>
-    <p>Processes have <b>KPIs</b>, key performance indicators that show whether the process is working. Most fall into three groups: time, cost, and quality. Move each slider, or load a scenario, and watch the status change.</p>
-    <div class="actions" id="kScen"><button class="btn ghost" type="button" data-s="tue">A normal Tuesday</button><button class="btn ghost" type="button" data-s="thu">Thursday's printer failure</button><button class="btn ghost" type="button" data-s="fix">After new training</button></div>
-    <div class="kpis">
-      <div class="kpi" id="kTime"><h3>Time</h3><small>Minutes from order entered to plate on the table. Target: 15 or less.</small><div class="kv"></div><input type="range" min="5" max="40" step="1" value="13" aria-label="Minutes"><div class="ks"></div></div>
-      <div class="kpi" id="kCost"><h3>Cost</h3><small>Food cost per plate served. Target: $8 or less.</small><div class="kv"></div><input type="range" min="4" max="14" step="0.5" value="7" aria-label="Dollars per plate"><div class="ks"></div></div>
-      <div class="kpi" id="kQual"><h3>Quality</h3><small>Percent of plates sent back. Target: 3% or less.</small><div class="kv"></div><input type="range" min="0" max="20" step="1" value="2" aria-label="Percent sent back"><div class="ks"></div></div>
-    </div>
-    <div class="warn" id="kSum"></div>
   </div>
 </section>
 
@@ -510,7 +504,7 @@ footer.nav .navbtn:disabled{opacity:.35;cursor:default}
   <div class="inner">
     <div class="kicker">Map</div>
     <h2>What breaks when one step fails?</h2>
-    <p>A process is a chain, so a failed step affects every step after it. Select a step to break it, then switch on a backup plan to see the difference.</p>
+    <p>A process is a chain, so a failed step affects every step after it. Select a step to break it and see what else stops.</p>
     <div class="stpgrid" id="stpGrid">
       <button class="stp" type="button" data-n="1"><b>1</b>Guest is seated and orders</button>
       <button class="stp" type="button" data-n="2"><b>2</b>Server enters the order on the tablet</button>
@@ -521,8 +515,8 @@ footer.nav .navbtn:disabled{opacity:.35;cursor:default}
       <button class="stp" type="button" data-n="7"><b>7</b>Guest pays, sale is recorded</button>
       <button class="stp" type="button" data-n="8"><b>8</b>Sale appears in tonight's report</button>
     </div>
-    <div class="actions"><button class="btn ghost" id="bkBtn" type="button" aria-pressed="false">Backup plan: off</button><button class="btn ghost" id="stpReset" type="button">Clear</button><span class="feedback" id="stpFb" aria-live="polite">Select a step to break it.</span></div>
-    <p class="note">Dark red is the broken step, pink steps are blocked until it is fixed, and gold steps are slowed down but still happening.</p>
+    <div class="actions"><button class="btn ghost" id="stpReset" type="button">Clear</button><span class="feedback" id="stpFb" aria-live="polite">Select a step to break it.</span></div>
+    <p class="note">Dark red is the broken step. Pink steps are blocked until it is fixed. Try step 3: that is what happened on Thursday.</p>
   </div>
 </section>
 
@@ -588,27 +582,52 @@ footer.nav .navbtn:disabled{opacity:.35;cursor:default}
   <div class="inner">
     <div class="kicker">Judge</div>
     <h2>Different decisions need different types of information</h2>
-    <p>Managers work at three levels. The higher the level, the longer the time frame and the broader the question.</p>
+    <p>People at different levels of a business make different kinds of decisions, so they need different information. The higher the level, the <b>longer the time frame</b>, the <b>broader the question</b>, and the <b>more summarized</b> the information. The lower the level, the more detailed and up-to-the-minute it has to be.</p>
     <div class="pyr">
-      <div class="pyslice s1">Strategic</div><div class="pydesc"><p><b>Long-term planning.</b></p><p>Example: market trends for entering a new area.</p></div>
-      <div class="pyslice s2">Tactical</div><div class="pydesc"><p><b>Short- to medium-term goals.</b></p><p>Example: monthly sales reports.</p></div>
-      <div class="pyslice s3">Operational</div><div class="pydesc"><p><b>Day-to-day decisions.</b></p><p>Example: real-time stock levels for restocking.</p></div>
+      <div class="pyslice s1">Strategic</div><div class="pydesc"><p><b>Long-term planning: years ahead.</b> Made by owners and senior leaders.</p><p>Uses summarized information, often from outside the business, like market trends. <i>Copper Table:</i> should we open a second location downtown?</p></div>
+      <div class="pyslice s2">Tactical</div><div class="pydesc"><p><b>Short- to medium-term goals: weeks to months.</b> Made by managers.</p><p>Uses summary reports that compare periods, like monthly sales. <i>Copper Table:</i> how many servers should we schedule on Fridays next month?</p></div>
+      <div class="pyslice s3">Operational</div><div class="pydesc"><p><b>Day-to-day decisions: today, this hour.</b> Made by supervisors and frontline staff.</p><p>Uses detailed, real-time information from inside the business, like current stock. <i>Copper Table:</i> do we have enough buns for tonight?</p></div>
     </div>
-    <div class="warn"><b>Next slide:</b> label real Copper Table questions as strategic, tactical, or operational.</div>
+    <div class="warn"><b>How to tell them apart, ask three questions:</b> How far ahead does the decision reach? Who makes it? How detailed is the information? You'll use these on the next slide.</div>
   </div>
 </section>
 
 <section class="slide" data-title="Types of information">
   <div class="inner">
     <div class="kicker">Judge</div>
-    <h2>Different decisions need different types of information</h2>
-    <p style="margin-top:1.2em">Which type is each of these? Tap a label.</p>
-    <div class="dilist">
-<div class="di five" data-ans="strategic"><p>Is there enough demand downtown to open a second Copper Table?</p><div class="dibtns"><button type="button" data-pick="strategic">Strategic</button><button type="button" data-pick="tactical">Tactical</button><button type="button" data-pick="operational">Operational</button></div><p class="diwhy">Strategic: a long-term question about where the business goes next.</p></div>
-<div class="di five" data-ans="tactical"><p>Last month&rsquo;s sales by day of the week.</p><div class="dibtns"><button type="button" data-pick="strategic">Strategic</button><button type="button" data-pick="tactical">Tactical</button><button type="button" data-pick="operational">Operational</button></div><p class="diwhy">Tactical: a monthly report that helps set staffing and promotions for the weeks ahead.</p></div>
-<div class="di five" data-ans="operational"><p>Right now there are 4 burger buns left.</p><div class="dibtns"><button type="button" data-pick="strategic">Strategic</button><button type="button" data-pick="tactical">Tactical</button><button type="button" data-pick="operational">Operational</button></div><p class="diwhy">Operational: a real-time number that drives a decision this hour.</p></div>
-<div class="di five" data-ans="tactical"><p>This week&rsquo;s labor cost compared with the budget.</p><div class="dibtns"><button type="button" data-pick="strategic">Strategic</button><button type="button" data-pick="tactical">Tactical</button><button type="button" data-pick="operational">Operational</button></div><p class="diwhy">Tactical: it supports short-term goals and adjustments.</p></div>
+    <h2>Strategic, tactical, or operational?</h2>
+    <p>Use the three questions: how far ahead does the decision reach, who makes it, and how detailed is the information?</p>
+    <div class="lvls">
+      <div><b>Strategic</b><br>Years ahead &middot; owners and leaders &middot; summarized, often external</div>
+      <div><b>Tactical</b><br>Weeks to months &middot; managers &middot; reports comparing periods</div>
+      <div><b>Operational</b><br>Today &middot; supervisors and staff &middot; detailed and real-time</div>
     </div>
+    <p style="margin-top:1.2em">Which type is each of these? Tap a label, then read why.</p>
+    <div class="dilist">
+<div class="di five" data-ans="strategic"><p>Is there enough demand downtown to open a second Copper Table?</p><div class="dibtns"><button type="button" data-pick="strategic">Strategic</button><button type="button" data-pick="tactical">Tactical</button><button type="button" data-pick="operational">Operational</button></div><p class="diwhy">Strategic: it reaches years ahead, the owner makes it, and it depends on outside information about the downtown market.</p></div>
+<div class="di five" data-ans="tactical"><p>Last month&rsquo;s sales by day of the week.</p><div class="dibtns"><button type="button" data-pick="strategic">Strategic</button><button type="button" data-pick="tactical">Tactical</button><button type="button" data-pick="operational">Operational</button></div><p class="diwhy">Tactical: a summary that compares days across a month. A manager uses it to set staffing and promotions for the next few weeks.</p></div>
+<div class="di five" data-ans="operational"><p>Right now there are 4 burger buns left.</p><div class="dibtns"><button type="button" data-pick="strategic">Strategic</button><button type="button" data-pick="tactical">Tactical</button><button type="button" data-pick="operational">Operational</button></div><p class="diwhy">Operational: detailed, real-time, and it drives a decision this hour, like taking the burger off tonight's menu or sending someone to the store.</p></div>
+<div class="di five" data-ans="tactical"><p>This week&rsquo;s labor cost compared with the budget.</p><div class="dibtns"><button type="button" data-pick="strategic">Strategic</button><button type="button" data-pick="tactical">Tactical</button><button type="button" data-pick="operational">Operational</button></div><p class="diwhy">Tactical: a manager compares this week with the budget to adjust schedules for the weeks ahead. It isn't a this-hour decision or a years-ahead one.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-title="Measuring processes">
+  <div class="inner">
+    <div class="kicker">Judge</div>
+    <h2>A good process is measurable</h2>
+    <p>A <b>KPI</b> (key performance indicator) is a number that tells you whether a process is doing its job. Each KPI has a <b>target</b>: the level the business has decided counts as good. KPIs are information too. They're how a manager knows, night after night, whether the order process is working. Most process KPIs fall into three groups: time, cost, and quality.</p>
+    <p><b>Why switch between nights?</b> A KPI only means something when you compare it, against its target and against other nights. Load each night below to see how the same three numbers tell three different stories, and how they point you to the part of the process that needs fixing. You can also drag a slider to test a what-if.</p>
+    <div class="actions" id="kScen"><button class="btn ghost" type="button" data-s="tue">A normal Tuesday</button><button class="btn ghost" type="button" data-s="thu">Thursday's printer failure</button><button class="btn ghost" type="button" data-s="fix">After new training</button></div>
+    <p class="note" id="kStory" aria-live="polite" style="min-height:1.5em"></p>
+    <div class="kpis">
+      <div class="kpi" id="kTime"><h3>Time</h3><small>Minutes from order entered to plate on the table. Target: 15 or less.<br><b>Why it matters:</b> slow food means unhappy guests and fewer tables served in a night.</small><div class="kv"></div><input type="range" min="5" max="40" step="1" value="13" aria-label="Minutes"><div class="ks"></div></div>
+      <div class="kpi" id="kCost"><h3>Cost</h3><small>Food cost per plate served. Target: $8 or less.<br><b>Why it matters:</b> when a plate costs too much to make, it eats the profit on every sale.</small><div class="kv"></div><input type="range" min="4" max="14" step="0.5" value="7" aria-label="Dollars per plate"><div class="ks"></div></div>
+      <div class="kpi" id="kQual"><h3>Quality</h3><small>Percent of plates sent back. Target: 3% or less.<br><b>Why it matters:</b> every returned plate is wasted food, extra work, and a guest who may not come back.</small><div class="kv"></div><input type="range" min="0" max="20" step="1" value="2" aria-label="Percent sent back"><div class="ks"></div></div>
+    </div>
+    <p class="note"><b>Teal</b> means on target, <b>gold</b> means close to the line (watch it), and <b>maroon</b> means off target.</p>
+    <div class="warn" id="kSum"></div>
+    <p class="note">A KPI is only as trustworthy as the information behind it. Next: how to tell whether information is good.</p>
   </div>
 </section>
 
@@ -647,28 +666,11 @@ footer.nav .navbtn:disabled{opacity:.35;cursor:default}
   <div class="inner">
     <div class="kicker">If time allows &middot; Judge</div>
     <h2>How much can you trust this information for the decision?</h2>
-    <p><b>The decision:</b> the kitchen manager will use tonight's order data to decide how many burger buns to order for Saturday. Rate the data on each characteristic and watch the confidence meter.</p>
+    <p><b>The decision:</b> the kitchen manager will use tonight's order data to decide how many burger buns to order for Saturday.</p>
+    <p><b>How to use it:</b> imagine you are checking that data before she relies on it. For each of the five characteristics, choose <b>Good</b> (no problem), <b>Weak</b> (some doubt), or <b>Broken</b> (clearly wrong). Each problem you choose shows what it would mean for the bun order, and the meter shows how much confidence the decision deserves.</p>
+    <div class="warn" style="margin-top:.6em"><b>Try this:</b> set two characteristics to Weak. Then reset them and set just one to Broken. Which is worse for the decision? <b>The point:</b> data doesn't have to be perfect to be useful, but a single broken characteristic is enough to stop a decision until it's fixed.</div>
     <div class="qrows" id="qrows"><div class="qrow" data-k="accurate"><div><b>Accurate</b><small>It matches reality</small></div><div class="seg" role="group" aria-label="Accurate"><button type="button" data-v="0" aria-pressed="true">Good</button><button type="button" data-v="1" aria-pressed="false">Weak</button><button type="button" data-v="2" aria-pressed="false">Broken</button></div><div class="qc" data-c="The counts do not match what was really sold."></div></div><div class="qrow" data-k="timely"><div><b>Timely</b><small>It arrives in time</small></div><div class="seg" role="group" aria-label="Timely"><button type="button" data-v="0" aria-pressed="true">Good</button><button type="button" data-v="1" aria-pressed="false">Weak</button><button type="button" data-v="2" aria-pressed="false">Broken</button></div><div class="qc" data-c="The numbers arrive after the order deadline."></div></div><div class="qrow" data-k="relevant"><div><b>Relevant</b><small>It answers the question</small></div><div class="seg" role="group" aria-label="Relevant"><button type="button" data-v="0" aria-pressed="true">Good</button><button type="button" data-v="1" aria-pressed="false">Weak</button><button type="button" data-v="2" aria-pressed="false">Broken</button></div><div class="qc" data-c="The report covers drinks, but the question is about buns."></div></div><div class="qrow" data-k="complete"><div><b>Complete</b><small>Nothing needed is missing</small></div><div class="seg" role="group" aria-label="Complete"><button type="button" data-v="0" aria-pressed="true">Good</button><button type="button" data-v="1" aria-pressed="false">Weak</button><button type="button" data-v="2" aria-pressed="false">Broken</button></div><div class="qc" data-c="Two nights of orders are missing, so Saturday looks quieter than it is."></div></div><div class="qrow" data-k="consistent"><div><b>Consistent</b><small>Systems agree</small></div><div class="seg" role="group" aria-label="Consistent"><button type="button" data-v="0" aria-pressed="true">Good</button><button type="button" data-v="1" aria-pressed="false">Weak</button><button type="button" data-v="2" aria-pressed="false">Broken</button></div><div class="qc" data-c="The POS and the inventory system disagree on buns left."></div></div></div>
     <div class="qmeter"><h3 style="margin:0 0 6px">Confidence in the decision</h3><div class="pm2"><i id="qBar"></i></div><p id="qLabel" style="margin:6px 0 0" aria-live="polite"></p></div>
-  </div>
-</section>
-
-<section class="slide" data-title="Data detective">
-  <div class="inner">
-    <div class="kicker">Judge</div>
-    <h2>Data detective: find the problems in the order log</h2>
-    <p>A busy night's order log was typed by hand. Four cells will cause trouble. Tap the ones you think are wrong, then reveal.</p>
-    <table class="dtab xlike" id="dtBox">
-      <tr><th>Table</th><th>Item</th><th>Qty</th><th>Price</th></tr>
-      <tr><td class="n"><button type="button" class="ais" data-bad="0">12</button></td><td><button type="button" class="ais" data-bad="0">Copper Burger</button></td><td class="n"><button type="button" class="ais" data-bad="0">2</button></td><td class="n"><button type="button" class="ais" data-bad="0">16</button></td></tr>
-      <tr><td class="n"><button type="button" class="ais" data-bad="0">12</button></td><td><button type="button" class="ais" data-bad="1" data-why="Consistent: a typo makes Excel and Tableau treat this as a different item, so burger sales get split in two.">Cooper Burger</button></td><td class="n"><button type="button" class="ais" data-bad="0">1</button></td><td class="n"><button type="button" class="ais" data-bad="0">16</button></td></tr>
-      <tr><td class="n"><button type="button" class="ais" data-bad="0">8</button></td><td><button type="button" class="ais" data-bad="0">Chef's Special</button></td><td class="n"><button type="button" class="ais" data-bad="0">1</button></td><td class="n"><button type="button" class="ais" data-bad="1" data-why="Complete: the Chef's Special has no price, so its total would be $0, just like the $0.00 bill on opening night.">(empty)</button></td></tr>
-      <tr><td class="n"><button type="button" class="ais" data-bad="0">5</button></td><td><button type="button" class="ais" data-bad="0">Grilled Salmon</button></td><td class="n"><button type="button" class="ais" data-bad="1" data-why="Format: &quot;two&quot; was typed as text, so Excel can't multiply it by the price. It needs to be the number 2.">two</button></td><td class="n"><button type="button" class="ais" data-bad="0">22</button></td></tr>
-      <tr><td class="n"><button type="button" class="ais" data-bad="0">3</button></td><td><button type="button" class="ais" data-bad="0">Lemonade</button></td><td class="n"><button type="button" class="ais" data-bad="0">3</button></td><td class="n"><button type="button" class="ais" data-bad="1" data-why="Accurate: lemonade is $4 everywhere else. A $40 price is almost certainly a typo and would inflate the total.">40</button></td></tr>
-    </table>
-    <div class="actions"><button class="btn" id="dtReveal" type="button">Reveal</button><button class="btn ghost" id="dtReset" type="button">Start over</button><span class="feedback" id="dtFb" aria-live="polite"></span></div>
-    <div id="dtWhy"></div>
-    <p class="note">Notice that three of the four problems map to characteristics you just learned. Messy data is how bad information gets made.</p>
   </div>
 </section>
 
@@ -689,6 +691,27 @@ footer.nav .navbtn:disabled{opacity:.35;cursor:default}
 <div class="di five" data-ans="security"><p>A former server can still log in and view guests&rsquo; payment details.</p><div class="dibtns"><button type="button" data-pick="overload">Data overload</button><button type="button" data-pick="quality">Poor data quality</button><button type="button" data-pick="security">Access and security</button></div><p class="diwhy">Access and security: only authorized people should see sensitive information.</p></div>
     </div>
     <p class="note">Discuss: have you ever made a bad decision because you lacked information, or had wrong information? What was the impact?</p>
+    <div class="warn"><b>Poor data quality is the challenge you can do the most about.</b> Next, you'll find it in a real order log.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Data detective">
+  <div class="inner">
+    <div class="kicker">Judge</div>
+    <h2>Data detective: find the problems in the order log</h2>
+    <p><b>Why this matters:</b> you just saw that good information helps the owner spot problems, reduce uncertainty, and cut waste. That only works if the data underneath is clean. One typo in a hand-typed log can quietly change a total, a best-seller list, or a supply order, and nobody notices until the decision goes wrong.</p>
+    <p>This order log was typed by hand on a busy night. Four cells will cause trouble. Tap the ones you think are wrong, then reveal and read what each one would do to a decision. (The same table is on the <b>Data Detective</b> tab of today's workbook.)</p>
+    <table class="dtab xlike" id="dtBox">
+      <tr><th>Table</th><th>Item</th><th>Qty</th><th>Price</th></tr>
+      <tr><td class="n"><button type="button" class="ais" data-bad="0">12</button></td><td><button type="button" class="ais" data-bad="0">Copper Burger</button></td><td class="n"><button type="button" class="ais" data-bad="0">2</button></td><td class="n"><button type="button" class="ais" data-bad="0">16</button></td></tr>
+      <tr><td class="n"><button type="button" class="ais" data-bad="0">12</button></td><td><button type="button" class="ais" data-bad="1" data-why="Consistent: a typo makes Excel and Tableau treat this as a different item, so burger sales get split in two. The best seller looks smaller than it is, and the kitchen could under-order buns.">Cooper Burger</button></td><td class="n"><button type="button" class="ais" data-bad="0">1</button></td><td class="n"><button type="button" class="ais" data-bad="0">16</button></td></tr>
+      <tr><td class="n"><button type="button" class="ais" data-bad="0">8</button></td><td><button type="button" class="ais" data-bad="0">Chef's Special</button></td><td class="n"><button type="button" class="ais" data-bad="0">1</button></td><td class="n"><button type="button" class="ais" data-bad="1" data-why="Complete: the Chef's Special has no price, so its total would be $0. Tonight's revenue looks lower than it really was.">(empty)</button></td></tr>
+      <tr><td class="n"><button type="button" class="ais" data-bad="0">5</button></td><td><button type="button" class="ais" data-bad="0">Grilled Salmon</button></td><td class="n"><button type="button" class="ais" data-bad="1" data-why="Format: &quot;two&quot; was typed as text, so Excel can't multiply it by the price. That row drops out of the total until it is the number 2.">two</button></td><td class="n"><button type="button" class="ais" data-bad="0">22</button></td></tr>
+      <tr><td class="n"><button type="button" class="ais" data-bad="0">3</button></td><td><button type="button" class="ais" data-bad="0">Lemonade</button></td><td class="n"><button type="button" class="ais" data-bad="0">3</button></td><td class="n"><button type="button" class="ais" data-bad="1" data-why="Accurate: lemonade is $4 everywhere else. A $40 price adds $108 of revenue that never happened and makes lemonade look like a top seller.">40</button></td></tr>
+    </table>
+    <div class="actions"><button class="btn" id="dtReveal" type="button">Reveal</button><button class="btn ghost" id="dtReset" type="button">Start over</button><span class="feedback" id="dtFb" aria-live="polite"></span></div>
+    <div id="dtWhy"></div>
+    <p class="note">Three of the four problems map to characteristics you learned (accurate, complete, consistent). Messy data is how bad information gets made, and bad information is how bad decisions get made.</p>
   </div>
 </section>
 
@@ -793,7 +816,7 @@ footer.nav .navbtn:disabled{opacity:.35;cursor:default}
 
 <section class="slide" data-title="Process to decision">
   <div class="inner">
-    <div class="kicker">Consultant Log</div>
+    <div class="kicker">Trace</div>
     <h2>Process &rarr; Data &rarr; Information &rarr; Decision</h2>
     <p>Everything today fits one chain. A process creates data, data is organized into information, and information supports a decision.</p>
     <div class="strat">
@@ -802,7 +825,7 @@ footer.nav .navbtn:disabled{opacity:.35;cursor:default}
       <div><h3>Information</h3>What useful information could those data produce?<br><i>Tables seated after 8 p.m. wait twice as long as tables seated before 7.</i></div>
       <div><h3>Decision</h3>What could management decide with it?<br><i>Add a cook from 8 to 10 on weekend nights.</i></div>
     </div>
-    <div class="warn"><b>LOG IT now (5 minutes):</b> choose one important process at your client organization and fill in all four boxes. You will build on this entry in Assignment 1, Part 2.</div>
+    <div class="warn"><b>Keep this chain in mind.</b> You'll write one for your client in today's Consultant Log entry at the end of class, and you'll build on it in Assignment 1, Part 2.</div>
   </div>
 </section>
 
@@ -826,7 +849,7 @@ footer.nav .navbtn:disabled{opacity:.35;cursor:default}
   <div class="inner">
     <div class="kicker">Trace</div>
     <h2>Which system handles each situation?</h2>
-    <p>Select a situation, then select the system. On a computer you can also drag.</p>
+    <p>Select a situation, then select the system. On a computer you can also drag. Each system's job is written on its bin, so you don't need to flip back.</p>
     <div class="pool" id="poolY" aria-label="Situations to sort">
 <button class="item" draggable="true" data-ans="TPS" aria-pressed="false">Recording each card payment as it happens</button>
 <button class="item" draggable="true" data-ans="MIS" aria-pressed="false">A weekly report of sales by category for the manager</button>
@@ -839,11 +862,11 @@ footer.nav .navbtn:disabled{opacity:.35;cursor:default}
 <button class="item" draggable="true" data-ans="SCM" aria-pressed="false">Ordering more tomatoes from the supplier when the count drops</button>
     </div>
     <div class="bins b5" id="binsY">
-      <div class="bin" data-bin="TPS" role="button" tabindex="0"><div class="bin-title">TPS</div></div>
-      <div class="bin" data-bin="MIS" role="button" tabindex="0"><div class="bin-title">MIS</div></div>
-      <div class="bin" data-bin="ERP" role="button" tabindex="0"><div class="bin-title">ERP</div></div>
-      <div class="bin" data-bin="CRM" role="button" tabindex="0"><div class="bin-title">CRM</div></div>
-      <div class="bin" data-bin="SCM" role="button" tabindex="0"><div class="bin-title">SCM</div></div>
+      <div class="bin" data-bin="TPS" role="button" tabindex="0"><div class="bin-title">TPS</div><div class="bin-desc">Records routine transactions as they happen.<i>Copper Table: the register</i></div></div>
+      <div class="bin" data-bin="MIS" role="button" tabindex="0"><div class="bin-title">MIS</div><div class="bin-desc">Summarizes data into reports for managers.<i>Copper Table: the nightly sales summary</i></div></div>
+      <div class="bin" data-bin="ERP" role="button" tabindex="0"><div class="bin-title">ERP</div><div class="bin-desc">Ties core processes like inventory, payroll, and accounting into one system.<i>Copper Table: if it grew into a chain</i></div></div>
+      <div class="bin" data-bin="CRM" role="button" tabindex="0"><div class="bin-title">CRM</div><div class="bin-desc">Manages customer data and relationships.<i>Copper Table: the loyalty program</i></div></div>
+      <div class="bin" data-bin="SCM" role="button" tabindex="0"><div class="bin-title">SCM</div><div class="bin-desc">Manages the flow of goods from suppliers.<i>Copper Table: food orders and deliveries</i></div></div>
     </div>
     <div class="actions"><button class="btn" id="sortCheckY" type="button">Check my sort</button><button class="btn ghost" id="sortResetY" type="button">Start over</button><span class="feedback" id="sortFbY" aria-live="polite"></span></div>
   </div>
@@ -875,10 +898,10 @@ footer.nav .navbtn:disabled{opacity:.35;cursor:default}
     <h2>Start the order log workbook</h2>
     <p>You'll turn the Copper Table's orders into a working order log. Check off each step as you go.</p>
     <div class="steps">
-      <label><input type="checkbox"><span>Open your <b>BUS2110</b> folder in OneDrive and create a new blank Excel workbook.</span></label>
-      <label><input type="checkbox"><span>Name it <b>CopperTable_OrderLog</b>.</span></label>
-      <label><input type="checkbox"><span>Double-click the <b>Sheet1</b> tab and rename it <b>Orders</b>.</span></label>
-      <label><input type="checkbox"><span>Click cell <b>A1</b>. You'll enter six headers across row 1 on the next slide.</span></label>
+      <label><input type="checkbox"><span>In Canvas, go to <b>Week 1</b> and download <b>BUS2110_Week1_Day2_Workbook.xlsx</b> from Tuesday's materials.</span></label>
+      <label><input type="checkbox"><span>Save it into your <b>BUS2110</b> folder in OneDrive and open it.</span></label>
+      <label><input type="checkbox"><span>Read the <b>Start Here</b> tab. Yellow cells are where you type; blue text is data given to you.</span></label>
+      <label><input type="checkbox"><span>Click the <b>Orders</b> tab. Tonight's eight orders are already entered for you.</span></label>
     </div>
     <div class="cards" style="margin-top:1.2em">
       <div class="card"><h3>Cell reference</h3>A formula like <code>=D2*E2</code> points to cells instead of typing numbers. If a quantity changes, the answer updates itself.</div>
@@ -894,7 +917,7 @@ footer.nav .navbtn:disabled{opacity:.35;cursor:default}
     <h2>Build the order log</h2>
     <div class="xlsplit">
       <div>
-        <p>Enter this data starting in cell A1:</p>
+        <p>The orders are already on the <b>Orders</b> tab:</p>
         <table class="dtab xlike">
           <tr><th>Table</th><th>Server</th><th>Item</th><th>Qty</th><th>Price</th><th>Total</th></tr>
           <tr><td class="n">12</td><td>Maya</td><td>Copper Burger</td><td class="n">2</td><td class="n">16</td><td></td></tr>
@@ -908,11 +931,11 @@ footer.nav .navbtn:disabled{opacity:.35;cursor:default}
         </table>
       </div>
       <div class="steps">
-        <label><input type="checkbox"><span>Type the six headers and eight rows. <b>Tab</b> moves right, <b>Enter</b> moves down.</span></label>
         <label><input type="checkbox"><span>In <b>F2</b>, type <code>=D2*E2</code> (Qty times Price). AutoFill it down to F9.</span></label>
         <label><input type="checkbox"><span>Select E2:F9. On the <b>Home</b> tab, in the <b>Number</b> group, choose <b>Currency</b>.</span></label>
         <label><input type="checkbox"><span>Make it readable: bold the headers, and double-click the border between column letters to fit each column to its data.</span></label>
-        <label><input type="checkbox"><span>In E10 type <b>Total</b>. In F10, add F2 through F9 with a formula using plus signs. (Tedious? That's why Thursday brings SUM.)</span></label>
+        <label><input type="checkbox"><span><b>Estimate first:</b> in <b>F12</b>, type your guess for the grand total. Eight rows at about $20 each is a good start.</span></label>
+        <label><input type="checkbox"><span>In <b>F10</b>, add F2 through F9 with a formula using plus signs. (Tedious? That's why Thursday brings SUM.)</span></label>
       </div>
     </div>
     <div class="check">
@@ -965,7 +988,7 @@ footer.nav .navbtn:disabled{opacity:.35;cursor:default}
     <p>"It looked right" isn't evidence. Today's Consultant Log adds a new question: <b>VERIFY</b>.</p>
     <div class="strat">
       <div><h3>Estimate first</h3>Eight rows averaging about $20 each should land somewhere around $160. If Excel says $1,770 or $17, something's off.</div>
-      <div><h3>Come at it a second way</h3>Total the amounts by a different path, such as by server, and see whether the pieces add up to the same grand total. This is called reconciling.</div>
+      <div><h3>Come at it a second way</h3>On the <b>By Server</b> tab, total each server's orders and see whether the pieces add up to the same grand total. This is called reconciling.</div>
       <div><h3>Spot-check one row</h3>Click a cell and read the formula bar. Does F5 say <code>=D5*E5</code>? Does the answer match what you'd work out by hand?</div>
     </div>
     <div class="check">
@@ -974,7 +997,23 @@ footer.nav .navbtn:disabled{opacity:.35;cursor:default}
       <button class="btn" id="xlTopCheck" type="button">Check</button>
       <span class="feedback" id="xlTopFb" aria-live="polite"></span>
     </div>
-    <p class="note">Does the highest total make Maya the best server? What else would you need to know before you decided anything? (Think about how many tables she had.)</p>
+    <p class="note">Record your answers on the <b>Checkpoints</b> tab. Then think: does the highest total make Maya the best server? What else would you need to know before you decided anything? (Think about how many tables she had.)</p>
+  </div>
+</section>
+
+<section class="slide" data-title="Data dictionary">
+  <div class="inner">
+    <div class="kicker">Activity &middot; in class &middot; about 15 minutes</div>
+    <h2>Data Dictionary Starter</h2>
+    <p>Analysts document their data before they use it. You've just built the order log, so now describe it the way an analyst would. Use the ideas from <i>Data has a shape</i>: fields, records, and data types.</p>
+    <div class="steps">
+      <label><input type="checkbox"><span>Open the <b>Activity - Data Dictionary</b> tab in today's workbook.</span></label>
+      <label><input type="checkbox"><span>Choose <b>five columns</b> from the Orders tab. For each, fill in: field name, what it represents, data type or format, an example value, and anything to watch for.</span></label>
+      <label><input type="checkbox"><span>For "anything to watch for," look for blanks, odd or inconsistent entries, mixed formats, or values that could be read more than one way. If you find none, write what could go wrong. (The Data Detective tab is a good source.)</span></label>
+      <label><input type="checkbox"><span>Write <b>one judgment</b> an analyst would have to make about this data, such as how to treat a value that looks wrong.</span></label>
+      <label><input type="checkbox"><span>Copy your five-row table and your judgment into <b>Week 1 - Activity 2</b> in Canvas.</span></label>
+    </div>
+    <p class="note">Completion credit: a real attempt finished in class. Your team will build a fuller version with the project data, starting on Friday of Week 2.</p>
   </div>
 </section>
 
@@ -1020,7 +1059,7 @@ footer.nav .navbtn:disabled{opacity:.35;cursor:default}
     <div class="prompts">
       <div><span class="tag">KNOW</span><p>In your own words, what are the inputs, activities, and outputs of a business process? Name the three characteristics that make something a process.</p></div>
       <div><span class="tag">DO</span><p>Pick a process you went through today, like buying coffee. List its inputs, activities, and outputs, and name one piece of information that moved along the way.</p></div>
-      <div><span class="tag">DECIDE</span><p>Which Copper Table process would you fix first, and what information would tell you it worked?</p></div>
+      <div><span class="tag">DECIDE</span><p>Choose one important process at your client organization and write its chain: Process &rarr; Data &rarr; Information &rarr; Decision, the way we did for The Copper Table. You'll build on this in Assignment 1, Part 2.</p></div>
       <div><span class="tag">VERIFY</span><p>Describe one way you checked your Excel total other than "it looked right." What did it show?</p></div>
     </div>
     <p class="note">Sentences, bullets, or a diagram are all fine. Unsure? Write the question you still have.</p>
@@ -1263,34 +1302,37 @@ footer.nav .navbtn:disabled{opacity:.35;cursor:default}
       });
       document.getElementById('kSum').innerHTML='<b>'+ok+' of 3 KPIs on target.</b> '+(ok===3?'The process is healthy. You can only know that because it is measured.':'The biggest miss is <b>'+worst+'</b>. A KPI tells you where to look, not why. Finding the cause is the next step.');
     }
-    defs.forEach(d=>document.getElementById(d.id).querySelector('input').oninput=render);
+    const story=document.getElementById('kStory');
+    const stories={
+      tue:'<b>A normal Tuesday:</b> all three KPIs meet their targets. This is the baseline you compare other nights against.',
+      thu:'<b>Thursday\u2019s printer failure:</b> tickets never reached the kitchen, so time from order to plate jumped to 32 minutes. Rushed and remade dishes pushed cost and send-backs up too. Time is the KPI that points to the broken step.',
+      fix:'<b>After new training:</b> servers now confirm that each ticket printed. Time is back under target, which is how the owner can tell the fix worked.'
+    };
+    defs.forEach(d=>document.getElementById(d.id).querySelector('input').oninput=()=>{story.innerHTML='<b>What-if:</b> you changed a reading by hand.';render()});
     const sc={tue:[13,7,2],thu:[32,9,5],fix:[11,7,2]};
     document.querySelectorAll('#kScen button').forEach(b=>b.onclick=()=>{
-      sc[b.dataset.s].forEach((v,i)=>document.getElementById(defs[i].id).querySelector('input').value=v);render();
+      sc[b.dataset.s].forEach((v,i)=>document.getElementById(defs[i].id).querySelector('input').value=v);story.innerHTML=stories[b.dataset.s];render();
     });
     render();
   })();
 
   // what breaks
   (function(){
-    const btns=[...document.querySelectorAll('#stpGrid .stp')],fb=document.getElementById('stpFb'),bk=document.getElementById('bkBtn');
-    let broken=0,backup=false;
+    const btns=[...document.querySelectorAll('#stpGrid .stp')],fb=document.getElementById('stpFb');
+    let broken=0;
     function render(){
       btns.forEach((b,i)=>{
         const n=i+1;b.classList.remove('broken','blocked','slow');
         if(!broken)return;
         if(n===broken)b.classList.add('broken');
-        else if(n>broken)b.classList.add(backup?'slow':'blocked');
+        else if(n>broken)b.classList.add('blocked');
       });
-      bk.setAttribute('aria-pressed',backup?'true':'false');
-      bk.textContent='Backup plan: '+(backup?'on':'off');
       if(!broken){fb.textContent='Select a step to break it.';return}
       const after=8-broken;
       fb.textContent=after===0?'Step 8 broke. Nothing is downstream, but the owner has no report tonight.':
-        (backup?'Step '+broken+' broke, but the backup plan keeps '+after+' later step'+(after===1?'':'s')+' moving, just slower.':'Step '+broken+' broke, so '+after+' later step'+(after===1?' is':'s are')+' blocked.');
+        'Step '+broken+' broke, so '+after+' later step'+(after===1?' is':'s are')+' blocked.';
     }
     btns.forEach(b=>b.onclick=()=>{broken=+b.dataset.n;render()});
-    bk.onclick=()=>{backup=!backup;render()};
     document.getElementById('stpReset').onclick=()=>{broken=0;render()};
     render();
   })();
@@ -1305,9 +1347,12 @@ footer.nav .navbtn:disabled{opacity:.35;cursor:default}
         const on=r.querySelector('button[aria-pressed="true"]'),v=+on.dataset.v;sum+=v;
         r.querySelector('.qc').textContent=v?why[r.dataset.k]:'';
       });
-      const pct=100-sum*10;
+      const vals=rows.map(r=>+r.querySelector('button[aria-pressed="true"]').dataset.v);
+      const weak=vals.filter(v=>v===1).length,broke=vals.filter(v=>v===2).length;
+      const pct=Math.max(0,100-weak*15-broke*35);
       document.getElementById('qBar').style.width=Math.max(4,pct)+'%';
-      document.getElementById('qLabel').textContent=(pct>=80?'Safe to decide: ':pct>=50?'Decide with caution: ':'Do not decide yet: ')+pct+'% confidence. '+(pct>=80?'The data passes the tests.':pct>=50?'Check the weak spots first.':'Fix the data before anyone orders buns.');
+      const lvl=broke>0?2:pct>=85?0:1;
+      document.getElementById('qLabel').textContent=['Safe to decide: ','Decide with caution: ','Do not decide yet: '][lvl]+pct+'% confidence. '+['The data passes the tests.','Check the weak spots before ordering.','Something is broken. Fix the data before anyone orders buns.'][lvl];
     }
     rows.forEach(r=>r.querySelectorAll('button').forEach(b=>b.onclick=()=>{r.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));render()}));
     render();
