@@ -464,6 +464,54 @@ button.fbx:disabled{cursor:default}
 @media (max-width:860px){.stpgrid.five,.capwrap,.smwrap,.ifrows{grid-template-columns:1fr}}
 .chart.sales .capline em{right:auto;left:4px}
 
+/* ---- Day 5 revisions ---- */
+.svgfig{width:100%;height:auto;display:block;background:var(--surface);border:1px solid var(--line);border-radius:10px;margin-top:.8em}
+.svgfig text{font-family:var(--body);fill:var(--ink);font-size:15px}
+.svgfig .lbl{font-weight:700;font-size:16px}
+.svgfig .sm{font-size:12.5px;fill:var(--muted)}
+.svgfig .ttl{font-family:var(--display);font-weight:800;font-size:19px;fill:var(--maroon-ink)}
+.g-node{fill:var(--surface);stroke:var(--teal);stroke-width:2.5}
+.g-fill{fill:var(--teal-soft);stroke:var(--teal);stroke-width:2}
+.g-dark{fill:var(--maroon)}
+.g-gold{fill:var(--gold-soft);stroke:var(--gold);stroke-width:2}
+.g-line{stroke:var(--muted);stroke-width:3;fill:none}
+.g-dash{stroke-dasharray:8 6}
+.g-wave{stroke:var(--teal);stroke-width:3;fill:none;stroke-linecap:round}
+.g-bldg{fill:none;stroke:var(--maroon);stroke-width:3;stroke-dasharray:10 6}
+.g-pk{fill:var(--gold);stroke:var(--maroon);stroke-width:1.5}
+.svgfig .g-pk + text{font-size:12px;font-weight:700}
+#webFig .stepable{transition:opacity .25s}
+#webFig.running .stepable{opacity:.28}
+#webFig.running .stepable.act{opacity:1}
+#webFig .act .g-node,#webFig .act.g-line{stroke:var(--gold);stroke-width:5}
+.stepcap{background:var(--surface);border-left:6px solid var(--gold);padding:12px 18px;border-radius:0 8px 8px 0;min-height:3.2em;margin-top:.6em}
+.lanwan{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:.8em}
+.lanwan>div{background:var(--surface);border:1px solid var(--line);border-top:6px solid var(--teal);border-radius:0 0 10px 10px;padding:12px 16px}
+.lanwan>div:last-child{border-top-color:var(--maroon)}
+.lanwan h3{margin:0 0 .3em}
+.lanwan p{margin:0 0 .35em}
+.comps{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:1em}
+.comps>div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:.92em}
+.comps svg{width:100%;height:70px;display:block;margin-bottom:6px}
+.comps h3{margin:0 0 .3em;color:var(--maroon-ink);font-size:1.05em}
+.comps p{margin:0 0 .3em}
+.c5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:1em}
+.c5>div{background:var(--surface);border-top:5px solid var(--teal);border-radius:0 0 8px 8px;padding:12px 14px;font-size:.93em}
+.c5 h3{margin:0 0 .3em}
+.c5 p{margin:0 0 .3em}
+.ifb{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin-bottom:14px}
+.ifb .task{margin:0 0 .5em}
+.ifb .fx{font-family:Consolas,'Courier New',monospace;font-style:normal;color:var(--ink);font-size:1.05em;display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:.4em 0}
+.ifb .slot{min-width:150px;min-height:40px;border:2px dashed var(--teal);border-radius:8px;background:var(--bg);display:inline-flex;align-items:center;justify-content:center;padding:2px 6px}
+.ifb .slot.drop{background:var(--teal-soft)}
+.ifb .slot.right{border-style:solid;border-color:var(--good);background:var(--good-soft)}
+.ifb .slot.wrong{border-style:solid;border-color:var(--bad);background:var(--bad-soft)}
+.ifb .pcs{display:flex;flex-wrap:wrap;gap:8px;min-height:44px;padding:8px;border:2px dashed var(--line);border-radius:10px}
+.ifb .pc{font-family:Consolas,'Courier New',monospace;background:var(--surface);border:2px solid var(--maroon);border-radius:8px;padding:6px 12px;cursor:grab}
+.ifb .pc[aria-pressed="true"]{box-shadow:0 0 0 3px var(--gold)}
+.ifb .why{margin:.5em 0 0;color:var(--muted)}
+.ifb .why b{color:var(--ink)}
+@media (max-width:860px){.lanwan,.comps,.c5{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -517,23 +565,7 @@ button.fbx:disabled{cursor:default}
   </div>
 </section>
 
-<section class="slide" data-title="Order journey">
-  <div class="inner">
-    <div class="kicker">Trace</div>
-    <h2>An online order has a long way to travel</h2>
-    <p>A guest places an order on their phone. Five links carry it to the kitchen. Select one link to break it and see what happens downstream.</p>
-    <div class="stpgrid five" id="ojGrid">
-      <button class="stp" type="button" data-n="1"><b>1. Guest's phone</b>The ordering app on a mobile device</button>
-      <button class="stp" type="button" data-n="2"><b>2. The internet</b>Cables and networks run by internet service providers</button>
-      <button class="stp" type="button" data-n="3"><b>3. The cloud service</b>The online ordering system, running on a provider's servers</button>
-      <button class="stp" type="button" data-n="4"><b>4. The restaurant router</b>The device that connects the restaurant to the internet</button>
-      <button class="stp" type="button" data-n="5"><b>5. Kitchen screen</b>Where the cook sees the ticket</button>
-    </div>
-    <div class="actions"><button class="btn ghost" id="ojReset" type="button">Clear</button><span class="feedback" id="ojFb" aria-live="polite">Select a link to break it.</span></div>
-    <div class="band-detail" id="ojWhy" aria-live="polite"></div>
-    <p class="note">Dark red is the broken link, and pink links never receive the order. Notice that some failures hit only The Copper Table, while others hit every customer of the cloud service.</p>
-  </div>
-</section>
+
 
 <section class="slide" data-title="Internet and the web">
   <div class="inner">
@@ -552,6 +584,78 @@ button.fbx:disabled{cursor:default}
       <div>The server's data is broken into packets, sent back to your device, reassembled, and displayed.</div>
     </div>
     <div class="warn"><b>Next slide:</b> decide whether each item is part of the internet or the web.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="How a page reaches you">
+  <div class="inner">
+    <div class="kicker">Networks</div>
+    <h2>What actually happens when you open a website</h2>
+    <p>Opening a web page takes about a second, but your request makes a round trip across several networks. Step through it.</p>
+    <svg class="svgfig" id="webFig" viewBox="0 0 1000 330" role="img" aria-label="Diagram: a laptop sends a request through a Wi-Fi router and an internet service provider; a DNS server looks up the address; the request crosses the internet to a web server; the page comes back as numbered packets.">
+  <!-- edges -->
+  <line class="g-line stepable" data-s="1" x1="130" y1="170" x2="215" y2="170"/>
+  <line class="g-line stepable" data-s="2" x1="305" y1="170" x2="395" y2="170"/>
+  <line class="g-line g-dash stepable" data-s="3" x1="470" y1="135" x2="545" y2="80"/>
+  <line class="g-line stepable" data-s="4" x1="505" y1="170" x2="610" y2="170"/>
+  <line class="g-line stepable" data-s="4" x1="760" y1="170" x2="845" y2="170"/>
+  <!-- device -->
+  <g class="stepable" data-s="1 5">
+    <rect class="g-node" x="40" y="128" width="90" height="62" rx="6"/>
+    <rect class="g-fill" x="50" y="137" width="70" height="44" rx="3"/>
+    <rect class="g-node" x="28" y="190" width="114" height="10" rx="4"/>
+    <text class="lbl" x="85" y="228" text-anchor="middle">Your laptop</text>
+    <text class="sm" x="85" y="246" text-anchor="middle">browser: coppertable.com</text>
+  </g>
+  <!-- router -->
+  <g class="stepable" data-s="1 2">
+    <rect class="g-node" x="215" y="150" width="90" height="40" rx="8"/>
+    <line class="g-line" x1="235" y1="150" x2="228" y2="122"/><line class="g-line" x1="285" y1="150" x2="292" y2="122"/>
+    <circle cx="240" cy="175" r="4" class="g-dark"/><circle cx="255" cy="175" r="4" class="g-dark"/><circle cx="270" cy="175" r="4" class="g-dark"/>
+    <text class="lbl" x="260" y="228" text-anchor="middle">Wi-Fi router</text>
+    <text class="sm" x="260" y="246" text-anchor="middle">at home or on campus</text>
+  </g>
+  <!-- ISP -->
+  <g class="stepable" data-s="2 3 4">
+    <rect class="g-node" x="395" y="135" width="110" height="70" rx="6"/>
+    <text class="lbl" x="450" y="177" text-anchor="middle">ISP</text>
+    <text class="lbl" x="450" y="228" text-anchor="middle">Internet service</text>
+    <text class="lbl" x="450" y="246" text-anchor="middle">provider</text>
+    <text class="sm" x="450" y="264" text-anchor="middle">Spectrum, AT&amp;T, a cell carrier</text>
+  </g>
+  <!-- DNS -->
+  <g class="stepable" data-s="3">
+    <rect class="g-gold" x="520" y="18" width="290" height="80" rx="8"/>
+    <text class="lbl" x="665" y="46" text-anchor="middle">DNS: the internet's phone book</text>
+    <text class="sm" x="665" y="70" text-anchor="middle">coppertable.com  &#8594;  203.0.113.25</text>
+    <text class="sm" x="665" y="88" text-anchor="middle">(name in, numeric address out)</text>
+  </g>
+  <!-- internet cloud -->
+  <g class="stepable" data-s="4 5">
+    <path class="g-fill" d="M625 195 Q605 195 610 175 Q600 150 630 148 Q640 120 675 130 Q700 112 725 135 Q760 135 755 165 Q770 190 740 195 Z"/>
+    <text class="lbl" x="685" y="172" text-anchor="middle">The internet</text>
+    <text class="sm" x="685" y="228" text-anchor="middle">many networks, many routes</text>
+  </g>
+  <!-- server -->
+  <g class="stepable" data-s="4 5">
+    <rect class="g-node" x="845" y="120" width="100" height="26" rx="4"/>
+    <rect class="g-node" x="845" y="150" width="100" height="26" rx="4"/>
+    <rect class="g-node" x="845" y="180" width="100" height="26" rx="4"/>
+    <circle cx="860" cy="133" r="4" class="g-dark"/><circle cx="860" cy="163" r="4" class="g-dark"/><circle cx="860" cy="193" r="4" class="g-dark"/>
+    <text class="lbl" x="895" y="232" text-anchor="middle">Web server</text>
+    <text class="sm" x="895" y="250" text-anchor="middle">in a data center</text>
+  </g>
+  <!-- packets back -->
+  <g class="stepable" data-s="5">
+    <line class="g-line g-dash" x1="880" y1="300" x2="100" y2="300"/>
+    <rect class="g-pk" x="760" y="288" width="26" height="24" rx="3"/><text x="773" y="305" text-anchor="middle">3</text>
+    <rect class="g-pk" x="560" y="288" width="26" height="24" rx="3"/><text x="573" y="305" text-anchor="middle">1</text>
+    <rect class="g-pk" x="360" y="288" width="26" height="24" rx="3"/><text x="373" y="305" text-anchor="middle">2</text>
+    <text class="sm" x="200" y="292" text-anchor="middle">&#8592; the page comes back in packets</text>
+  </g>
+</svg>
+    <div class="actions"><button class="btn" id="webNext" type="button">Start</button><button class="btn ghost" id="webReset" type="button">Reset</button><span class="feedback" id="webStep" aria-live="polite"></span></div>
+    <div class="stepcap" id="webCap" aria-live="polite">Press <b>Start</b> to follow a request for The Copper Table's menu page.</div>
   </div>
 </section>
 
@@ -575,20 +679,64 @@ button.fbx:disabled{cursor:default}
   </div>
 </section>
 
-<section class="slide" data-title="Networks">
+<section class="slide" data-title="LAN and WAN">
   <div class="inner">
     <div class="kicker">Networks</div>
-    <h2>Networks come in sizes and are built from five components</h2>
-    <div class="strat three" style="grid-template-columns:1fr 1fr">
-      <div><h3>LAN (local area network)</h3><p>Computers connected within a single location or organization.</p><p><b>Examples:</b> office computers sharing a printer; a home Wi-Fi network. <b>At The Copper Table:</b> the tablets, kitchen screens, and printer.</p></div>
-      <div><h3>WAN (wide area network)</h3><p>Computers connected over a wide geographic area using communication lines from an outside provider.</p><p><b>Examples:</b> a multinational company linking branch offices; a university campus network. <b>At The Copper Table:</b> the link out to the cloud service.</p></div>
+    <h2>Networks come in two sizes: LAN and WAN</h2>
+    <p>A <b>network</b> is two or more devices connected so they can share data, hardware like a printer, and applications. The difference between a LAN and a WAN is <b>distance</b>, and <b>who owns the connections</b>.</p>
+    <svg class="svgfig" viewBox="0 0 1000 330" role="img" aria-label="Left: a LAN inside one building, with a switch connecting a register, kitchen screen and printer by cable and an access point connecting tablets by Wi-Fi. Right: a WAN linking three distant sites, two restaurants and a cloud data center, through a provider's network.">
+  <text class="ttl" x="230" y="30" text-anchor="middle">LAN: one building</text>
+  <rect class="g-bldg" x="20" y="45" width="420" height="265" rx="14"/>
+  <text class="sm" x="40" y="70">The Copper Table</text>
+  <!-- switch center -->
+  <rect class="g-node" x="185" y="160" width="90" height="34" rx="6"/>
+  <text class="lbl" x="230" y="183" text-anchor="middle">Switch</text>
+  <!-- devices -->
+  <line class="g-line" x1="185" y1="177" x2="110" y2="110"/>
+  <line class="g-line" x1="275" y1="177" x2="350" y2="110"/>
+  <line class="g-line" x1="230" y1="194" x2="230" y2="245"/>
+  <rect class="g-node" x="60" y="85" width="100" height="40" rx="6"/><text x="110" y="110" text-anchor="middle">Register</text>
+  <rect class="g-node" x="300" y="85" width="110" height="40" rx="6"/><text x="355" y="110" text-anchor="middle">Kitchen screen</text>
+  <rect class="g-node" x="180" y="245" width="100" height="40" rx="6"/><text x="230" y="270" text-anchor="middle">Printer</text>
+  <!-- access point + tablets -->
+  <line class="g-line" x1="185" y1="185" x2="105" y2="230"/>
+  <circle class="g-node" cx="90" cy="240" r="16"/><text class="sm" x="90" y="285" text-anchor="middle">Access point</text>
+  <path class="g-wave" d="M112 228 q12 12 0 24"/><path class="g-wave" d="M122 220 q22 20 0 40"/>
+  <rect class="g-fill" x="140" y="205" width="26" height="36" rx="4"/>
+  <text class="sm" x="153" y="256" text-anchor="middle">tablet</text>
+  <text class="sm" x="360" y="230" text-anchor="middle">owned and run</text><text class="sm" x="360" y="246" text-anchor="middle">by the business</text>
+
+  <text class="ttl" x="740" y="30" text-anchor="middle">WAN: many places, far apart</text>
+  <!-- provider network -->
+  <path class="g-gold" d="M650 200 Q620 200 625 175 Q610 145 650 142 Q665 112 705 125 Q735 102 770 128 Q815 125 812 160 Q835 185 800 200 Z"/>
+  <text class="lbl" x="718" y="168" text-anchor="middle">Provider's network</text>
+  <text class="sm" x="718" y="187" text-anchor="middle">leased lines</text>
+  <!-- sites -->
+  <rect class="g-bldg" x="465" y="50" width="200" height="66" rx="10"/><text class="lbl" x="565" y="78" text-anchor="middle">Copper Table</text><text class="sm" x="565" y="99" text-anchor="middle">downtown, with its own LAN</text>
+  <rect class="g-bldg" x="785" y="50" width="200" height="66" rx="10"/><text class="lbl" x="885" y="78" text-anchor="middle">Second location</text><text class="sm" x="885" y="99" text-anchor="middle">across town, with its own LAN</text>
+  <rect class="g-node" x="640" y="245" width="160" height="60" rx="8"/><text class="lbl" x="720" y="272" text-anchor="middle">Cloud data center</text><text class="sm" x="720" y="291" text-anchor="middle">ordering system</text>
+  <line class="g-line" x1="575" y1="117" x2="640" y2="150"/>
+  <line class="g-line" x1="870" y1="116" x2="805" y2="155"/>
+  <line class="g-line" x1="720" y1="200" x2="720" y2="245"/>
+</svg>
+    <div class="lanwan">
+      <div><h3>LAN (local area network)</h3><p>Devices connected inside <b>one location</b>: a home, an office, a restaurant. The business owns and runs the equipment.</p><p><b>You know it:</b> your home Wi-Fi; the network in a campus building. <b>At The Copper Table:</b> the tablets, kitchen screen, printer, and register.</p></div>
+      <div><h3>WAN (wide area network)</h3><p>Networks connected across <b>long distances</b>: between cities, states, or countries, over lines rented from an outside provider.</p><p><b>You know it:</b> a bank linking all its branches; a chain store's registers reporting to headquarters. The internet itself is the biggest WAN. <b>At The Copper Table:</b> the link to the cloud ordering system, or to a second location.</p></div>
     </div>
-    <div class="strat five" style="margin-top:12px">
-      <div><h3>Router</h3>Connects multiple networks together.</div>
-      <div><h3>Network switch</h3>Connects computing devices to the network through cabling.</div>
-      <div><h3>Ethernet cable</h3>Physical cable connecting a device to a network.</div>
-      <div><h3>Fiber optic cable</h3>Glass-based cable for long-distance connections.</div>
-      <div><h3>Access point</h3>Connects devices to a network wirelessly.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Network components">
+  <div class="inner">
+    <div class="kicker">Networks</div>
+    <h2>Five pieces of equipment build every network</h2>
+    <p>You've probably seen most of these without knowing their names.</p>
+    <div class="comps">
+      <div><svg viewBox="0 0 120 70" aria-hidden="true"><rect class="g-node" x="20" y="30" width="80" height="30" rx="7"/><line class="g-line" x1="38" y1="30" x2="32" y2="6"/><line class="g-line" x1="82" y1="30" x2="88" y2="6"/><circle cx="42" cy="45" r="4" class="g-dark"/><circle cx="58" cy="45" r="4" class="g-dark"/><circle cx="74" cy="45" r="4" class="g-dark"/></svg><h3>Router</h3><p>Connects <b>different networks</b> together, like your home network to the internet, and decides where each piece of data goes next.</p><p class="note" style="margin:0"><b>You've seen it:</b> the box your internet company installs, often with antennas.</p></div>
+      <div><svg viewBox="0 0 120 70" aria-hidden="true"><rect class="g-node" x="10" y="24" width="100" height="30" rx="5"/><rect class="g-fill" x="18" y="34" width="8" height="10"/><rect class="g-fill" x="30" y="34" width="8" height="10"/><rect class="g-fill" x="42" y="34" width="8" height="10"/><rect class="g-fill" x="54" y="34" width="8" height="10"/><rect class="g-fill" x="66" y="34" width="8" height="10"/><rect class="g-fill" x="78" y="34" width="8" height="10"/><rect class="g-fill" x="90" y="34" width="8" height="10"/></svg><h3>Network switch</h3><p>Connects many <b>wired</b> devices inside one network and passes data only to the device it's meant for.</p><p class="note" style="margin:0"><b>You've seen it:</b> a box full of cable ports in an office closet.</p></div>
+      <div><svg viewBox="0 0 120 70" aria-hidden="true"><path class="g-line" d="M10 40 C40 10, 60 65, 82 35"/><rect class="g-node" x="80" y="22" width="26" height="26" rx="3"/><rect class="g-fill" x="88" y="30" width="10" height="10"/></svg><h3>Ethernet cable</h3><p>The <b>physical cable</b> that plugs one device into the network. Wired is steadier and faster than Wi-Fi.</p><p class="note" style="margin:0"><b>You've seen it:</b> the cable that plugs into a desktop or game console.</p></div>
+      <div><svg viewBox="0 0 120 70" aria-hidden="true"><path d="M8 50 C40 10, 80 70, 112 20" style="fill:none;stroke:var(--gold);stroke-width:4"/><path d="M8 54 C40 14, 80 74, 112 24" style="fill:none;stroke:var(--teal);stroke-width:2"/><circle cx="112" cy="20" r="6" style="fill:var(--gold)"/></svg><h3>Fiber optic cable</h3><p>Glass strands that carry data as <b>pulses of light</b>, fast and over long distances.</p><p class="note" style="margin:0"><b>You've seen it:</b> "fiber internet" ads; the undersea cables linking continents.</p></div>
+      <div><svg viewBox="0 0 120 70" aria-hidden="true"><ellipse class="g-node" cx="60" cy="52" rx="32" ry="10"/><path class="g-wave" d="M48 36 q12 -12 24 0"/><path class="g-wave" d="M40 28 q20 -20 40 0"/><path class="g-wave" d="M32 20 q28 -26 56 0"/></svg><h3>Access point</h3><p>Broadcasts a <b>wireless</b> signal so phones, laptops, and tablets can join the network without cables.</p><p class="note" style="margin:0"><b>You've seen it:</b> the white disks on classroom ceilings.</p></div>
     </div>
     <div class="warn"><b>Next slide:</b> match each description to the right component.</div>
   </div>
@@ -607,13 +755,31 @@ button.fbx:disabled{cursor:default}
   <div class="inner">
     <div class="kicker">Cloud</div>
     <h2>The cloud means renting computing over the internet</h2>
-    <p>Without the internet there is no cloud. Organizations rent services instead of owning them, by signing up for a subscription (some are free). Nothing is installed on local hardware.</p>
-    <div class="strat five">
-      <div><h3>On-demand</h3>Access resources anytime without manual intervention.</div>
-      <div><h3>Scalable</h3>Scale resources up or down based on demand.</div>
-      <div><h3>Pay-as-you-go</h3>Pay only for the resources you use.</div>
-      <div><h3>Resource pooling</h3>Share resources among many users securely and efficiently.</div>
-      <div><h3>Accessible</h3>Reach services from anywhere with an internet connection.</div>
+    <p>"The cloud" is a nickname for <b>computers in someone else's data center that you use over the internet</b>. When you stream a show on Netflix, back up photos to iCloud, or open a Google Doc, the files and programs aren't really on your device. They live on servers run by companies like Amazon, Google, and Microsoft.</p>
+    <svg class="svgfig" viewBox="0 0 1000 200" role="img" aria-label="Phones and laptops connect over the internet to a data center full of servers owned by a cloud provider.">
+  <rect class="g-node" x="40" y="60" width="44" height="76" rx="8"/><rect class="g-fill" x="47" y="70" width="30" height="52" rx="3"/>
+  <rect class="g-node" x="110" y="78" width="96" height="58" rx="6"/><rect class="g-fill" x="119" y="86" width="78" height="40" rx="3"/><rect class="g-node" x="98" y="136" width="120" height="9" rx="4"/>
+  <text class="lbl" x="128" y="178" text-anchor="middle">Your devices</text>
+  <line class="g-line" x1="225" y1="105" x2="395" y2="105"/>
+  <path class="g-fill" d="M420 140 Q392 140 398 115 Q385 85 420 82 Q432 52 470 64 Q497 44 528 70 Q570 68 566 104 Q585 132 548 140 Z"/>
+  <text class="lbl" x="482" y="112" text-anchor="middle">The internet</text>
+  <line class="g-line" x1="575" y1="105" x2="700" y2="105"/>
+  <rect class="g-bldg" x="700" y="30" width="270" height="140" rx="12"/>
+  <g>
+    <rect class="g-node" x="725" y="55" width="64" height="98" rx="4"/><rect class="g-node" x="805" y="55" width="64" height="98" rx="4"/><rect class="g-node" x="885" y="55" width="64" height="98" rx="4"/>
+    <line class="g-line" x1="735" y1="75" x2="779" y2="75"/><line class="g-line" x1="735" y1="95" x2="779" y2="95"/><line class="g-line" x1="735" y1="115" x2="779" y2="115"/>
+    <line class="g-line" x1="815" y1="75" x2="859" y2="75"/><line class="g-line" x1="815" y1="95" x2="859" y2="95"/><line class="g-line" x1="815" y1="115" x2="859" y2="115"/>
+    <line class="g-line" x1="895" y1="75" x2="939" y2="75"/><line class="g-line" x1="895" y1="95" x2="939" y2="95"/><line class="g-line" x1="895" y1="115" x2="939" y2="115"/>
+  </g>
+  <text class="lbl" x="835" y="190" text-anchor="middle">"The cloud": someone else's data center</text>
+</svg>
+    <p style="margin-top:1em">For a business, the cloud means <b>renting instead of owning</b>: signing up for a service, often a monthly subscription, instead of buying servers and hiring people to run them. Think of the difference between owning a car and calling an Uber. Without the internet, there is no cloud. Five features define it:</p>
+    <div class="c5">
+      <div><h3>On-demand</h3><p>Get more computing yourself, anytime, without calling anyone.</p><p class="note" style="margin:0"><b>e.g.</b> upgrading your iCloud storage in two taps.</p></div>
+      <div><h3>Scalable</h3><p>Grows or shrinks with demand.</p><p class="note" style="margin:0"><b>e.g.</b> a ticket site handling a concert-sale rush, then shrinking back.</p></div>
+      <div><h3>Pay-as-you-go</h3><p>Pay only for what you use, like an electric bill.</p><p class="note" style="margin:0"><b>e.g.</b> paying per order processed, not for an idle server.</p></div>
+      <div><h3>Resource pooling</h3><p>Many customers share the same data centers, safely kept apart.</p><p class="note" style="margin:0"><b>e.g.</b> millions of Google Drive users on shared servers.</p></div>
+      <div><h3>Accessible</h3><p>Reach it from any device with an internet connection.</p><p class="note" style="margin:0"><b>e.g.</b> opening Canvas from your phone or a library computer.</p></div>
     </div>
     <div class="warn"><b>Next slide:</b> see why scalability and pay-as-you-go matter, using The Copper Table's online orders.</div>
   </div>
@@ -668,7 +834,9 @@ button.fbx:disabled{cursor:default}
     <h2>Clouds can be public, private, or hybrid</h2>
     <table class="dtab"><tr><th></th><th>Public cloud</th><th>Private cloud</th><th>Hybrid cloud</th></tr>
     <tr><td><b>What it is</b></td><td>A shared environment. Your virtual machines run on the same hardware as other organizations'.</td><td>The provider gives you your own dedicated hardware.</td><td>Combines public and private clouds.</td></tr>
-    <tr><td><b>Examples</b></td><td>AWS, Google Cloud</td><td>VMware, OpenStack</td><td>AWS Outposts, Azure Stack</td></tr>
+    <tr><td><b>Think of it as</b></td><td>An apartment building: shared walls, lower rent, sometimes noisy neighbors</td><td>A house of your own: more control and privacy, more expensive</td><td>A house plus a rented storage unit: private things at home, overflow elsewhere</td></tr>
+    <tr><td><b>Examples you may know</b></td><td>Netflix runs on Amazon Web Services; Spotify runs on Google Cloud</td><td>A bank or government agency with its own dedicated cloud, such as the private cloud Amazon built for the CIA</td><td>A university that keeps student records on its own servers but uses Google Workspace or Microsoft 365 for email</td></tr>
+    <tr><td><b>Providers and products</b></td><td>AWS, Google Cloud, Microsoft Azure</td><td>VMware, OpenStack</td><td>AWS Outposts, Azure Stack</td></tr>
     <tr><td><b>Advantages</b></td><td>More cost effective, more providers</td><td>Guaranteed performance, better security</td><td>Keep sensitive data private, use the public cloud for the rest</td></tr>
     <tr><td><b>Disadvantages</b></td><td>"Noisy neighbors" using shared resources, security concerns</td><td>Higher costs, fewer providers</td><td>More complex to manage</td></tr></table>
     <div class="warn"><b>Next slide:</b> choose the cloud type for each situation.</div>
@@ -681,6 +849,25 @@ button.fbx:disabled{cursor:default}
     <h2>Public, private, or hybrid?</h2>
     <p>Tap the best fit.</p>
     <div class="dilist"><div class="di five" data-ans="Public"><p>A start-up wants the lowest cost and has no sensitive data.</p><div class="dibtns"><button type="button" data-pick="Public">Public</button><button type="button" data-pick="Private">Private</button><button type="button" data-pick="Hybrid">Hybrid</button></div><p class="diwhy">Public cloud: the most cost effective, with many providers to choose from.</p></div><div class="di five" data-ans="Private"><p>A health system needs guaranteed performance and strict control over patient data.</p><div class="dibtns"><button type="button" data-pick="Public">Public</button><button type="button" data-pick="Private">Private</button><button type="button" data-pick="Hybrid">Hybrid</button></div><p class="diwhy">Private cloud: dedicated hardware gives better security and guaranteed performance, at a higher cost.</p></div><div class="di five" data-ans="Hybrid"><p>A restaurant group keeps payment records on dedicated hardware and runs its website in the public cloud.</p><div class="dibtns"><button type="button" data-pick="Public">Public</button><button type="button" data-pick="Private">Private</button><button type="button" data-pick="Hybrid">Hybrid</button></div><p class="diwhy">Hybrid: sensitive data stays private while everything else uses the cheaper public cloud.</p></div></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Order journey">
+  <div class="inner">
+    <div class="kicker">Put it together</div>
+    <h2>Follow one online order from a guest's phone to the kitchen</h2>
+    <p>You now know every piece of this trip. A guest at home opens The Copper Table's ordering app and orders two burgers. Her order travels over <b>the internet</b> to the restaurant's ordering system, which runs as a <b>SaaS</b> service in <b>the cloud</b>. From there it comes back over the internet, through the restaurant's <b>router</b>, onto the <b>LAN</b> inside the building, and up on the kitchen screen.</p>
+    <p>Five links, and every one has to work. Select a link to break it and see what fails after it, and <b>who</b> the failure affects.</p>
+    <div class="stpgrid five" id="ojGrid">
+      <button class="stp" type="button" data-n="1"><b>1. Guest's phone</b>The ordering app on a mobile device</button>
+      <button class="stp" type="button" data-n="2"><b>2. The internet</b>Cables and networks run by internet service providers</button>
+      <button class="stp" type="button" data-n="3"><b>3. The cloud service</b>The online ordering system, running on a provider's servers</button>
+      <button class="stp" type="button" data-n="4"><b>4. The restaurant router</b>The device that connects the restaurant to the internet</button>
+      <button class="stp" type="button" data-n="5"><b>5. Kitchen screen</b>Where the cook sees the ticket</button>
+    </div>
+    <div class="actions"><button class="btn ghost" id="ojReset" type="button">Clear</button><span class="feedback" id="ojFb" aria-live="polite">Select a link to break it.</span></div>
+    <div class="band-detail" id="ojWhy" aria-live="polite"></div>
+    <p class="note">Dark red is the broken link, and pink links never receive the order. Notice that some failures hit only The Copper Table, while others hit every customer of the cloud service.</p>
   </div>
 </section>
 
@@ -746,7 +933,7 @@ button.fbx:disabled{cursor:default}
 
 <section class="slide" data-title="Which social media use?">
   <div class="inner">
-    <div class="kicker">If time allows &middot; Communications</div>
+    <div class="kicker">Communications</div>
     <h2>Which business use of social media is it?</h2>
     <p>Tap the use.</p>
     <div class="dilist"><div class="di five" data-ans="support"><p>A guest tweets that an order was wrong, and the manager replies within minutes.</p><div class="dibtns"><button type="button" data-pick="brand">Brand building</button><button type="button" data-pick="engage">Customer engagement</button><button type="button" data-pick="market">Marketing and advertising</button><button type="button" data-pick="research">Market research</button><button type="button" data-pick="support">Customer support</button></div><p class="diwhy">Customer support: social media is a quick channel for resolving problems.</p></div><div class="di five" data-ans="market"><p>The restaurant pays to show a promotion to people within five miles who like local food.</p><div class="dibtns"><button type="button" data-pick="brand">Brand building</button><button type="button" data-pick="engage">Customer engagement</button><button type="button" data-pick="market">Marketing and advertising</button><button type="button" data-pick="research">Market research</button><button type="button" data-pick="support">Customer support</button></div><p class="diwhy">Marketing and advertising: platforms allow precise targeting.</p></div><div class="di five" data-ans="research"><p>The owner tracks what people say about Lantern Kitchen and the local food scene.</p><div class="dibtns"><button type="button" data-pick="brand">Brand building</button><button type="button" data-pick="engage">Customer engagement</button><button type="button" data-pick="market">Marketing and advertising</button><button type="button" data-pick="research">Market research</button><button type="button" data-pick="support">Customer support</button></div><p class="diwhy">Market research: social listening monitors competitors, trends, and sentiment.</p></div><div class="di five" data-ans="brand"><p>Every post tells the local-farm story with the same look and voice.</p><div class="dibtns"><button type="button" data-pick="brand">Brand building</button><button type="button" data-pick="engage">Customer engagement</button><button type="button" data-pick="market">Marketing and advertising</button><button type="button" data-pick="research">Market research</button><button type="button" data-pick="support">Customer support</button></div><p class="diwhy">Brand building: consistent messaging builds identity and trust.</p></div><div class="di five" data-ans="engage"><p>The Copper Table asks followers to vote on the next special and replies to comments.</p><div class="dibtns"><button type="button" data-pick="brand">Brand building</button><button type="button" data-pick="engage">Customer engagement</button><button type="button" data-pick="market">Marketing and advertising</button><button type="button" data-pick="research">Market research</button><button type="button" data-pick="support">Customer support</button></div><p class="diwhy">Customer engagement: a direct, two-way channel with guests.</p></div></div>
@@ -789,6 +976,36 @@ button.fbx:disabled{cursor:default}
   </div>
 </section>
 
+<section class="slide" data-title="Build an IF">
+  <div class="inner">
+    <div class="kicker">Excel: Chapter 2</div>
+    <h2>Build the IF function, piece by piece</h2>
+    <p>Every IF has three slots: <b>the test</b>, <b>the value if true</b>, and <b>the value if false</b>. Drag a piece into each slot, or select a piece and then select a slot. Some pieces are traps.</p>
+    <div class="ifb" data-ans="C2>=1800|&quot;Busy&quot;|&quot;Quiet&quot;">
+      <p class="task"><b>1.</b> Label a night <b>Busy</b> if its sales in C2 are <b>at least $1,800</b>, otherwise <b>Quiet</b>.</p>
+      <div class="fx">=IF( <span class="slot" data-i="0" role="button" tabindex="0" aria-label="test"></span> , <span class="slot" data-i="1" role="button" tabindex="0" aria-label="value if true"></span> , <span class="slot" data-i="2" role="button" tabindex="0" aria-label="value if false"></span> )</div>
+      <div class="pcs"><button type="button" class="pc" draggable="true" aria-pressed="false">C2&gt;=1800</button><button type="button" class="pc" draggable="true" aria-pressed="false">C2&lt;=1800</button><button type="button" class="pc" draggable="true" aria-pressed="false">"Busy"</button><button type="button" class="pc" draggable="true" aria-pressed="false">Busy</button><button type="button" class="pc" draggable="true" aria-pressed="false">"Quiet"</button></div>
+      <div class="actions"><button class="btn" type="button" data-act="check">Check</button><button class="btn ghost" type="button" data-act="reset">Start over</button><span class="feedback"></span></div>
+      <p class="why" data-hint="At least means greater than or equal to (&gt;=). Text results need quotation marks."></p>
+    </div>
+    <div class="ifb" data-ans="B2>=60|&quot;Add a server&quot;|&quot;Normal&quot;">
+      <p class="task"><b>2.</b> Flag nights that need an extra server: if covers in B2 are <b>60 or more</b>, show <b>Add a server</b>, otherwise <b>Normal</b>.</p>
+      <div class="fx">=IF( <span class="slot" data-i="0" role="button" tabindex="0" aria-label="test"></span> , <span class="slot" data-i="1" role="button" tabindex="0" aria-label="value if true"></span> , <span class="slot" data-i="2" role="button" tabindex="0" aria-label="value if false"></span> )</div>
+      <div class="pcs"><button type="button" class="pc" draggable="true" aria-pressed="false">B2&gt;60</button><button type="button" class="pc" draggable="true" aria-pressed="false">B2&gt;=60</button><button type="button" class="pc" draggable="true" aria-pressed="false">C2&gt;=60</button><button type="button" class="pc" draggable="true" aria-pressed="false">"Normal"</button><button type="button" class="pc" draggable="true" aria-pressed="false">"Add a server"</button></div>
+      <div class="actions"><button class="btn" type="button" data-act="check">Check</button><button class="btn ghost" type="button" data-act="reset">Start over</button><span class="feedback"></span></div>
+      <p class="why" data-hint="Covers are in column B. &quot;60 or more&quot; includes 60, so use &gt;=. The value if true comes second."></p>
+    </div>
+    <div class="ifb" data-ans="C2>=$C$10|&quot;Busy&quot;|&quot;Quiet&quot;">
+      <p class="task"><b>3.</b> Compare each night with the <b>average in C10</b>, so the formula still works when you fill it down: <b>Busy</b> or <b>Quiet</b>.</p>
+      <div class="fx">=IF( <span class="slot" data-i="0" role="button" tabindex="0" aria-label="test"></span> , <span class="slot" data-i="1" role="button" tabindex="0" aria-label="value if true"></span> , <span class="slot" data-i="2" role="button" tabindex="0" aria-label="value if false"></span> )</div>
+      <div class="pcs"><button type="button" class="pc" draggable="true" aria-pressed="false">C2&gt;=C10</button><button type="button" class="pc" draggable="true" aria-pressed="false">C2&gt;=$C$10</button><button type="button" class="pc" draggable="true" aria-pressed="false">$C$2&gt;=$C$10</button><button type="button" class="pc" draggable="true" aria-pressed="false">"Quiet"</button><button type="button" class="pc" draggable="true" aria-pressed="false">"Busy"</button></div>
+      <div class="actions"><button class="btn" type="button" data-act="check">Check</button><button class="btn ghost" type="button" data-act="reset">Start over</button><span class="feedback"></span></div>
+      <p class="why" data-hint="Lock the average ($C$10) so every row compares with it, but leave C2 unlocked so it moves to C3, C4, and so on."></p>
+    </div>
+    <p class="note">The first one is Checkpoint question 4 in today's workbook. You'll type the second and third on the IF Column tab.</p>
+  </div>
+</section>
+
 <section class="slide" data-title="IF simulator">
   <div class="inner">
     <div class="kicker">Excel: Chapter 2</div>
@@ -805,7 +1022,7 @@ button.fbx:disabled{cursor:default}
   <div class="inner">
     <div class="kicker">Excel: Chapter 2</div>
     <h2>Label the busy nights</h2>
-    <p>Use the Week sheet from Day 4. If you need it again, enter the data below in A1:C8, then add the total row and the average as before.</p>
+    <p>Download <b>BUS2110_Week1_Day5_Workbook.xlsx</b> from Canvas (Week 1, Friday), save it to your BUS2110 folder, and open the <b>IF Column</b> tab. The week's data is already entered:</p>
     <div class="xlsplit">
       <div>
         <table class="dtab xlike">
@@ -821,10 +1038,11 @@ button.fbx:disabled{cursor:default}
         </table>
       </div>
       <div class="steps">
-        <label><input type="checkbox"><span>Make sure <b>C10</b> holds the average: <code>=AVERAGE(C2:C8)</code>.</span></label>
-        <label><input type="checkbox"><span>In <b>E1</b> type Night type. In <b>E2</b> enter <code>=IF(C2&gt;=$C$10,"Busy","Quiet")</code>.</span></label>
-        <label><input type="checkbox"><span>Fill the formula down to <b>E8</b>. Check that the dollar signs kept every row pointed at C10.</span></label>
+        <label><input type="checkbox"><span>In <b>C9</b> enter <code>=SUM(C2:C8)</code> and in <b>C10</b> <code>=AVERAGE(C2:C8)</code>.</span></label>
+        <label><input type="checkbox"><span>In <b>E2</b> enter <code>=IF(C2&gt;=$C$10,"Busy","Quiet")</code> and fill down to <b>E8</b>. Check that the $ signs kept every row pointed at C10.</span></label>
         <label><input type="checkbox"><span>In <b>E10</b> count the busy nights: <code>=COUNTIF(E2:E8,"Busy")</code>. COUNTIF counts the cells that match a condition.</span></label>
+        <label><input type="checkbox"><span>In <b>F2</b> find sales per guest, <code>=C2/B2</code>, and fill down. In <b>G2</b> flag staffing, <code>=IF(B2&gt;=60,"Add a server","Normal")</code>, and fill down.</span></label>
+        <label><input type="checkbox"><span>Open the <b>IF What-if</b> tab, where Thursday is $2,000. Add the average in C10, the IF labels in D3:D9, and the count in C11.</span></label>
       </div>
     </div>
     <div class="check">
@@ -834,12 +1052,12 @@ button.fbx:disabled{cursor:default}
       <span class="feedback" id="if1Fb" aria-live="polite"></span>
     </div>
     <div class="check">
-      <label for="if2"><b>Change Thursday's sales (C5) to 2000. What does E10 become?</b></label>
+      <label for="if2"><b>On the IF What-if tab (Thursday at $2,000), how many nights are Busy?</b></label>
       <input id="if2" type="text" inputmode="decimal" placeholder="a number">
       <button class="btn" id="if2Btn" type="button">Check</button>
       <span class="feedback" id="if2Fb" aria-live="polite"></span>
     </div>
-    <p class="note">The average moves when you change Thursday, so every label is compared against a new threshold. That is why the threshold must be a cell reference rather than a typed number.</p>
+    <p class="note">Record your answers on the <b>Checkpoints</b> tab. The average moves when Thursday changes, so every label is compared against a new threshold. That is why the threshold must be a cell reference rather than a typed number.</p>
   </div>
 </section>
 
@@ -871,7 +1089,7 @@ button.fbx:disabled{cursor:default}
     <h2>Simulation lab: Excel Chapter 2</h2>
     <p>About 40 minutes, in class. The simulation practices formulas, functions such as SUM, AVERAGE and IF, and relative and absolute references, in the same task-by-task format the certification exam uses.</p>
     <div class="steps"><label><input type="checkbox"><span>Open <b>Pearson MyLab IT</b> from the link in Canvas and sign in.</span></label><label><input type="checkbox"><span>Start the <b>Chapter 2 simulation</b>.</span></label><label><input type="checkbox"><span>Try every task yourself first. Use the built-in hints only after a real attempt.</span></label><label><input type="checkbox"><span>No AI on simulations. The certification exam is AI-free, so this is where you find out what you can do alone.</span></label><label><input type="checkbox"><span>Stuck for more than two minutes? Raise your hand. If you run out of time, finish the simulation tonight.</span></label></div>
-    <div class="warn"><b>Outside class:</b> the Chapter 2 Pearson project. The due date is in Canvas.</div>
+    <div class="warn"><b>Outside class:</b> the Chapter 2 Pearson project, due <b>Sunday at 11:59 p.m.</b></div>
   </div>
 </section>
 
@@ -891,7 +1109,7 @@ button.fbx:disabled{cursor:default}
 
 <section class="slide" data-title="Which type of analytics?">
   <div class="inner">
-    <div class="kicker">If time allows &middot; Analytics</div>
+    <div class="kicker">Analytics</div>
     <h2>Descriptive, predictive, or prescriptive?</h2>
     <p>Select a question, then select its type. On a computer you can also drag.</p>
     <div class="pool" id="poolT" aria-label="Items to sort">
@@ -935,7 +1153,23 @@ button.fbx:disabled{cursor:default}
       <div><b>Analytics</b><span>Turning the data it all produces into decisions, with Excel and AI as tools. (All week)</span></div>
     </div>
     <div class="warn"><b>Before Monday:</b> Assignment 1 (Client Discovery Brief), Knowledge Check 1, and the Pearson projects for Chapters 1 and 2. Due dates are in Canvas.</div>
-    <div class="warn"><b>Your Consultant Log:</b> you now have five entries. Look at them together on the next slide.</div>
+    <div class="warn"><b>Your Consultant Log:</b> you now have five entries. You'll look at them together at the end of class.</div>
+  </div>
+</section>
+
+<section class="slide" data-title="Challenge my question">
+  <div class="inner">
+    <div class="kicker">Activity &middot; in class &middot; about 15 minutes</div>
+    <h2>Challenge My Question</h2>
+    <p>Yesterday you wrote a business question for your client in your Consultant Log. A good question survives being challenged, so a classmate will push on it the way a manager would.</p>
+    <div class="steps">
+      <label><input type="checkbox"><span>Find a partner. Read your business question aloud.</span></label>
+      <label><input type="checkbox"><span>Your partner asks three questions: <b>What would you need to see in the data to answer this?</b> <b>What could make that data misleading?</b> <b>What would management do differently depending on the answer?</b> Answer out loud, then switch.</span></label>
+      <label><input type="checkbox"><span>On your own, open the <b>Activity - Challenge Question</b> tab. Write the strongest challenge you received and whether it's fair.</span></label>
+      <label><input type="checkbox"><span>Choose <b>KEEP IT</b>, <b>MODIFY IT</b>, or <b>REPLACE IT</b>, and write your question as it stands now.</span></label>
+      <label><input type="checkbox"><span>Copy your answers into <b>Week 1 - Activity 5</b> in Canvas.</span></label>
+    </div>
+    <p class="note">Completion credit. This feeds Assignment 1, Parts 6 and 7, due Sunday.</p>
   </div>
 </section>
 
@@ -1208,6 +1442,59 @@ button.fbx:disabled{cursor:default}
     new MutationObserver(()=>{const a=btns.find(b=>b.getAttribute('aria-pressed')==='true');if(a)show(a.dataset.m)}).observe(chart.closest('.slide'),{attributes:true,attributeFilter:['class']});
   })();
 
+  // web page journey
+  (function(){
+    const fig=document.getElementById('webFig'),cap=document.getElementById('webCap'),nb=document.getElementById('webNext'),st=document.getElementById('webStep');
+    const C=[
+      '<b>1. You ask.</b> You type coppertable.com. Your laptop sends the request over Wi-Fi to the <b>router</b>, the box that connects your home or campus network to the outside world.',
+      '<b>2. Onto the internet.</b> The router hands the request to your <b>ISP</b> (internet service provider), the company you pay for internet. It is your on-ramp.',
+      '<b>3. Look up the address.</b> Computers find each other by numbers, not names. <b>DNS</b>, the internet’s phone book, turns coppertable.com into the server’s numeric IP address.',
+      '<b>4. Reach the server.</b> The request crosses the internet, passing through many networks owned by different companies, to the <b>web server</b>: a computer in a data center that stores the menu page.',
+      '<b>5. The page comes back in pieces.</b> The server breaks the page into small <b>packets</b>. They can take different routes and arrive out of order; your browser puts them back together and shows the page.'
+    ];
+    const els=[...fig.querySelectorAll('.stepable')];let i=0;
+    function show(){
+      fig.classList.toggle('running',i>0);
+      els.forEach(e=>e.classList.toggle('act',i>0&&e.dataset.s.split(' ').includes(String(i))));
+      cap.innerHTML=i?C[i-1]:'Press <b>Start</b> to follow a request for The Copper Table’s menu page.';
+      st.textContent=i?'Step '+i+' of 5':'';
+      nb.textContent=i===0?'Start':i===5?'Start again':'Next step';
+    }
+    nb.onclick=()=>{i=i>=5?1:i+1;show()};
+    document.getElementById('webReset').onclick=()=>{i=0;show()};
+    show();
+  })();
+
+  // IF builders
+  document.querySelectorAll('.ifb').forEach(box=>{
+    const pool=box.querySelector('.pcs'),slots=[...box.querySelectorAll('.slot')],fb=box.querySelector('.feedback'),why=box.querySelector('.why');
+    const ans=box.dataset.ans.split('|'),pieces=[...pool.children];let sel=null;
+    const norm=t=>t.replace(/\s+/g,'').replace(/[“”]/g,'"');
+    function clear(){slots.forEach(s=>s.classList.remove('right','wrong'));fb.textContent='';why.textContent=''}
+    function pick(p){if(sel)sel.setAttribute('aria-pressed','false');sel=(sel===p)?null:p;if(sel)sel.setAttribute('aria-pressed','true')}
+    function put(p,slot){const old=slot.querySelector('.pc');if(old)pool.appendChild(old);slot.appendChild(p);p.setAttribute('aria-pressed','false');sel=null;clear()}
+    pieces.forEach(p=>{
+      p.addEventListener('click',e=>{e.stopPropagation();if(p.parentElement.classList.contains('slot')){pool.appendChild(p);clear();return}pick(p)});
+      p.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain','x');sel=p});
+    });
+    slots.forEach(s=>{
+      s.addEventListener('click',()=>{if(sel)put(sel,s)});
+      s.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&sel){e.preventDefault();put(sel,s)}});
+      s.addEventListener('dragover',e=>{e.preventDefault();s.classList.add('drop')});
+      s.addEventListener('dragleave',()=>s.classList.remove('drop'));
+      s.addEventListener('drop',e=>{e.preventDefault();s.classList.remove('drop');if(sel)put(sel,s)});
+    });
+    pool.addEventListener('dragover',e=>e.preventDefault());
+    pool.addEventListener('drop',e=>{e.preventDefault();if(sel&&sel.parentElement!==pool){pool.appendChild(sel);sel=null;clear()}});
+    box.querySelector('[data-act=check]').onclick=()=>{
+      let ok=0,empty=0;
+      slots.forEach((s,k)=>{const p=s.querySelector('.pc');if(!p){empty++;return}const r=norm(p.textContent)===norm(ans[k]);s.classList.toggle('right',r);s.classList.toggle('wrong',!r);if(r)ok++});
+      if(empty){fb.textContent='Fill all three slots first.';return}
+      if(ok===3){fb.textContent='Correct: =IF('+ans.join(',')+')';why.textContent=''}
+      else{fb.textContent=ok+' of 3 slots right.';why.innerHTML='<b>Hint:</b> '+box.querySelector('.why').dataset.hint}
+    };
+    box.querySelector('[data-act=reset]').onclick=()=>{pieces.forEach(p=>{pool.appendChild(p);p.setAttribute('aria-pressed','false')});sel=null;clear()};
+  });
 })();
 </script>
 </body>
