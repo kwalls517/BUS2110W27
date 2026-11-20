@@ -347,6 +347,28 @@ button.fbx:disabled{cursor:default}
 #aiWhy3 p{background:var(--surface);border-left:6px solid var(--gold);padding:10px 16px;border-radius:0 8px 8px 0;margin-top:10px}
 .qstrip small{overflow-wrap:anywhere}
 
+/* ---- Day 3 revisions ---- */
+.tps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:1em}
+.tps>div{background:var(--surface);border:1px solid var(--line);border-top:6px solid var(--maroon);border-radius:0 0 10px 10px;padding:16px 18px}
+.tps>div:nth-child(2){border-top-color:var(--teal)}
+.tps>div:nth-child(3){border-top-color:var(--gold)}
+.tps h3{margin:0 0 .2em}
+.tps .t{display:block;font-size:.85em;color:var(--muted);font-weight:700;margin-bottom:.4em}
+.tps p{margin:0}
+.cardtxt{margin:.5em 0 0;color:var(--muted)}
+.card .ex{margin:.6em 0 0;padding-top:.5em;border-top:1px dashed var(--line)}
+.card .ex+.ex{border-top:none;padding-top:0;margin-top:.3em}
+.quad{display:grid;grid-template-columns:28px 1fr 1fr;grid-template-rows:auto auto auto;gap:10px;margin-top:1em}
+.quad .qd{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 16px;font-size:.95em}
+.quad .qd h3{margin:0 0 .3em;color:var(--maroon-ink)}
+.quad .qd p{margin:0 0 .3em}
+.quad .qd.tr{background:#f3ecec}.quad .qd.bl{background:#e8f0f0}
+.quad .ylab{grid-row:1 / 3;grid-column:1}
+.quad .xlab{grid-column:2 / 4}
+.plans{margin:.6em 0 0;padding-left:1.3em}
+.plans li{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 14px;margin-bottom:8px}
+.sechead{margin-top:1.6em;padding-top:1em;border-top:3px solid var(--gold)}
+@media (max-width:860px){.tps{grid-template-columns:1fr}.quad{grid-template-columns:1fr}.quad .ylab,.quad .xlab{display:none}}
 </style>
 </head>
 <body>
@@ -402,21 +424,14 @@ button.fbx:disabled{cursor:default}
 
 <section class="slide" data-title="The rival">
   <div class="inner">
-    <div class="kicker">Choose</div>
+    <div class="kicker">Think, pair, share</div>
     <h2>A rival opens across the street</h2>
-    <p>Lantern Kitchen has a bigger menu, a loyal crowd from its other locations, and half-price appetizer nights. The owner asks: "Why would anyone choose us?" Tap every reason a guest might choose The Copper Table.</p>
-    <div class="chips" id="reasons">
-      <button class="chip" aria-pressed="false">Lower prices</button>
-      <button class="chip" aria-pressed="false">Dishes you can't get elsewhere</button>
-      <button class="chip" aria-pressed="false">Faster service</button>
-      <button class="chip" aria-pressed="false">Local ingredients</button>
-      <button class="chip" aria-pressed="false">Friendlier staff</button>
-      <button class="chip" aria-pressed="false">Rewards for regulars</button>
-      <button class="chip" aria-pressed="false">Close to where I live or work</button>
-      <button class="chip" aria-pressed="false">Date-night atmosphere</button>
+    <p>Lantern Kitchen has a bigger menu, a loyal crowd from its other locations, and half-price appetizer nights. The owner asks: <b>"Why would anyone choose us?"</b></p>
+    <div class="tps">
+      <div><h3>Think</h3><span class="t">2 minutes, on your own</span><p>In your notebook, list three reasons a guest might choose The Copper Table over Lantern Kitchen.</p></div>
+      <div><h3>Pair</h3><span class="t">3 minutes, with a neighbor</span><p>Compare lists. Which reasons did you both write? Which one would be hardest for Lantern Kitchen to match?</p></div>
+      <div><h3>Share</h3><span class="t">With the class</span><p>Each pair shares its strongest reason, and we'll list them on the board. Keep your list: you'll come back to it in a few slides.</p></div>
     </div>
-    <div class="band-detail" id="reasonMsg" aria-live="polite">Pick a few reasons.</div>
-    <p class="note">Each reason is a bet on a strategy. Price points toward cost leadership, a better or different experience toward differentiation, and serving a specific group or place toward focus.</p>
   </div>
 </section>
 
@@ -424,18 +439,18 @@ button.fbx:disabled{cursor:default}
   <div class="inner">
     <div class="kicker">Choose</div>
     <h2>Competitive strategy is the search for a position that earns lasting profit</h2>
-    <p>Businesses don't pick technology first. The order runs the other way.</p>
+    <p>To choose a strategy, a business asks two questions:</p>
+    <div class="cards">
+      <div class="card"><h3>1. Is the industry attractive?</h3>What determines long-term profitability in this industry?</div>
+      <div class="card"><h3>2. Where do we stand?</h3>What determines our competitive position within the industry?</div>
+    </div>
+    <p style="margin-top:1.2em">The answers then flow down into technology. Businesses don't pick technology first; the order runs this way:</p>
     <div class="qstrip" aria-label="From industry to systems">
       <div class="on">INDUSTRY STRUCTURE<small>The forces you face</small></div>
       <div class="on">COMPETITIVE STRATEGY<small>How you will compete</small></div>
       <div class="on">VALUE CHAIN<small>Activities that create value</small></div>
       <div class="on">BUSINESS PROCESSES<small>How work gets done</small></div>
       <div class="on">INFORMATION SYSTEMS<small>Technology that supports it</small></div>
-    </div>
-    <p>To choose a strategy, a business asks two questions:</p>
-    <div class="cards">
-      <div class="card"><h3>1. Is the industry attractive?</h3>What determines long-term profitability in this industry?</div>
-      <div class="card"><h3>2. Where do we stand?</h3>What determines our competitive position within the industry?</div>
     </div>
     <div class="warn"><b>Sustainable competitive advantage</b> is the basis of above-average performance over time. The rest of today is about how to find one.</div>
   </div>
@@ -449,7 +464,7 @@ button.fbx:disabled{cursor:default}
     <div class="strat three">
       <div><h3>Cost leadership</h3><p>Be the lowest-cost provider in a <b>broad</b> market, either to price below rivals or to keep average prices and earn a bigger margin.</p><p><b>Example:</b> Walmart streamlines its supply chain to keep costs and prices down.</p></div>
       <div><h3>Differentiation</h3><p>Offer unique features, quality, or experiences across a <b>broad</b> market that customers will pay a premium for.</p><p><b>Example:</b> Apple's product design; Tesla's technology and brand.</p></div>
-      <div><h3>Focus</h3><p>Concentrate on one <b>narrow</b> segment (a customer group, a region, a product line) and serve it better than anyone. It comes as <b>cost focus</b> or <b>differentiation focus</b>.</p><p><b>Example:</b> A luxury hotel chain for ultra-wealthy guests.</p></div>
+      <div><h3>Focus</h3><p>Concentrate on one <b>narrow</b> segment (a customer group, a region, a product line) and serve it better than anyone. It comes as <b>cost focus</b> or <b>differentiation focus</b>.</p><p><b>Examples:</b> cost focus, Dollar General (low prices for small rural towns); differentiation focus, a luxury hotel chain for ultra-wealthy guests.</p></div>
     </div>
     <div class="warn"><b>Next slide:</b> a 2x2 grid with market scope down the side and cost versus uniqueness across the top. You will sort business moves into the four boxes.</div>
   </div>
@@ -477,7 +492,7 @@ button.fbx:disabled{cursor:default}
       <div class="bins mx" id="binsM">
         <div class="bin" data-bin="cost" role="button" tabindex="0"><div class="bin-title">Cost leadership</div><small>The lowest-cost provider for a broad market.</small><em>Example: Walmart</em></div>
         <div class="bin" data-bin="diff" role="button" tabindex="0"><div class="bin-title">Differentiation</div><small>Unique features customers pay extra for, across a broad market.</small><em>Example: Apple</em></div>
-        <div class="bin" data-bin="costfocus" role="button" tabindex="0"><div class="bin-title">Cost focus</div><small>A cost advantage within one narrow segment.</small></div>
+        <div class="bin" data-bin="costfocus" role="button" tabindex="0"><div class="bin-title">Cost focus</div><small>A cost advantage within one narrow segment.</small><em>Example: Dollar General, low prices for small rural towns</em></div>
         <div class="bin" data-bin="difffocus" role="button" tabindex="0"><div class="bin-title">Differentiation focus</div><small>A unique offering for one narrow segment.</small><em>Example: luxury hotels; Tesla's early luxury EVs</em></div>
       </div>
     </div>
@@ -492,24 +507,26 @@ button.fbx:disabled{cursor:default}
 
 <section class="slide" data-title="Positioning basics">
   <div class="inner">
-    <div class="kicker">If time allows &middot; Choose</div>
+    <div class="kicker">Choose</div>
     <h2>Strategy shows up as a position: price and uniqueness</h2>
-    <p>You can place any business on two measures. <b>Price</b> runs left to right. <b>How unique the offering is</b> runs bottom to top. Where a business sits tells you which strategy it is really following.</p>
-    <div class="strat three">
-      <div><h3>Low price, standard offer</h3><p>Bottom left. This is <b>cost leadership</b>: win on price and efficiency.</p></div>
-      <div><h3>High price, unique offer</h3><p>Top right. This is <b>differentiation</b>: customers pay more because they get something they cannot get elsewhere.</p></div>
-      <div><h3>High price, nothing special</h3><p>Bottom right. This is the danger zone, <b>stuck in the middle</b> or simply overpriced. Customers have no reason to pay.</p></div>
+    <p>A company can <i>say</i> it differentiates, but customers judge it by what they pay and what they get. A positioning map is a reality check. It places a business on two measures: <b>price</b> (left to right, compared with its rivals) and <b>how unique the offering is</b> (bottom to top). Where it lands tells you which strategy it is really following.</p>
+    <div class="quad">
+      <div class="ylab">More unique &uarr;</div>
+      <div class="qd tl"><h3>Unique and cheap</h3><p>Rare, and hard to keep. Being distinctive usually costs money, so low prices squeeze the margin, and rivals copy what works.</p><p><b>Example:</b> a new restaurant running opening-month prices.</p></div>
+      <div class="qd tr"><h3>Differentiation</h3><p>Customers pay more because they get something they can't get elsewhere: design, quality, experience, or brand.</p><p><b>Examples:</b> Apple; The Copper Table's chef-led local menu.</p></div>
+      <div class="qd bl"><h3>Cost leadership</h3><p>A standard offer at a low price. The business wins on efficiency and volume, so its costs must stay below rivals'.</p><p><b>Examples:</b> Walmart; Lantern Kitchen's half-price nights.</p></div>
+      <div class="qd br"><h3>Overpriced ("stuck in the middle")</h3><p>A high price with nothing special to justify it. Customers have no reason to pay, so they leave.</p><p><b>Example:</b> a restaurant with high prices and an ordinary menu.</p></div>
+      <div class="xlab">Higher price &rarr;</div>
     </div>
-    <p>Focus is about the <b>segment</b> you serve, so it does not get its own spot on this map. A narrow-segment business still lands in the bottom left (cost focus) or top right (differentiation focus). Unique and cheap (top left) is rare and hard to keep, because rivals can copy it.</p>
-    <div class="warn"><b>Next slide:</b> drag seven businesses onto the map. Ask two questions for each one: is it cheap or pricey, and is it standard or distinctive?</div>
+    <div class="warn"><b>How to place any business, ask two questions.</b> Price: compared with its rivals, is it cheaper or more expensive? Uniqueness: could a customer get basically the same thing somewhere else? <br><b>Where does focus go?</b> The map shows price and uniqueness, not how many customers you serve. A focus business still lands in a quadrant: cost focus bottom left, differentiation focus top right. That's why the next slide tags focus businesses.</div>
   </div>
 </section>
 
 <section class="slide" data-title="Positioning map">
   <div class="inner">
-    <div class="kicker">If time allows &middot; Choose</div>
+    <div class="kicker">Choose</div>
     <h2>Where does each business sit on the map?</h2>
-    <p>Drag each business onto the map by its price and how unique its offering is. Then check.</p>
+    <p>For each business, ask the two questions from the last slide. <b>Left or right:</b> is it cheaper or pricier than its rivals? <b>Up or down:</b> could you get basically the same thing elsewhere? Then drag the chip into that quarter of the map. The exact spot inside a quarter doesn't matter. (Or select a chip, then click the map.)</p>
     <div class="pmwrap" id="pmwrap">
       <div class="ptray" id="ptray">
 <div class="pchip" data-t="BL" data-why="Low prices on a standard range of goods: cost leadership.">Walmart</div>
@@ -533,7 +550,8 @@ button.fbx:disabled{cursor:default}
     </div>
     <div class="actions"><button class="btn" id="pmCheck" type="button">Check my map</button><button class="btn ghost" id="pmReset" type="button">Start over</button><span class="feedback" id="pmFb" aria-live="polite"></span></div>
     <div id="pmWhy"></div>
-    <p class="note">The "focus" tag shows a narrow segment. Price and uniqueness place the business, and the segment tells you whether it is a focus strategy. A business that is neither cheap nor distinctive is "stuck in the middle".</p>
+    <p class="note">When you check, chips in the wrong quarter turn gold and explain where they belong. The "focus" tag marks a narrow segment: price and uniqueness place the business, and the segment tells you whether it is a focus strategy.</p>
+    <p class="lede">Discuss: The Copper Table and Lantern Kitchen sit in opposite corners. What does that say about how each one should compete?</p>
   </div>
 </section>
 
@@ -557,35 +575,39 @@ button.fbx:disabled{cursor:default}
 <section class="slide" data-title="Five forces">
   <div class="inner">
     <div class="kicker">Analyze</div>
-    <h2>Porter's five forces: how hard is this industry?</h2>
-    <p>Set the pressure each force puts on The Copper Table, from Low to High. Watch the industry's profit potential change.</p>
-    <div class="ffgrid"><div class="fbx entrants" data-f="entrants"><h3>New entrants</h3><p class="fq">How easily can newcomers enter?</p><p class="fe">Fintech disrupting traditional banking</p><div class="seg" role="group" aria-label="New entrants pressure" data-f="entrants"><button type="button" data-v="1">Low</button><button type="button" data-v="2">Med</button><button type="button" data-v="3">High</button></div></div><div class="fbx subs" data-f="subs"><h3>Substitutes</h3><p class="fq">Can customers meet the need another way?</p><p class="fe">Streaming replacing traditional TV</p><div class="seg" role="group" aria-label="Substitutes pressure" data-f="subs"><button type="button" data-v="1">Low</button><button type="button" data-v="2">Med</button><button type="button" data-v="3">High</button></div></div><div class="fbx buyers" data-f="buyers"><h3>Buyer power</h3><p class="fq">Can customers push on price and quality?</p><p class="fe">Shoppers using price comparison apps</p><div class="seg" role="group" aria-label="Buyer power pressure" data-f="buyers"><button type="button" data-v="1">Low</button><button type="button" data-v="2">Med</button><button type="button" data-v="3">High</button></div></div><div class="fbx suppliers" data-f="suppliers"><h3>Supplier power</h3><p class="fq">Can suppliers push on costs and supply?</p><p class="fe">Semiconductor shortages in automotive</p><div class="seg" role="group" aria-label="Supplier power pressure" data-f="suppliers"><button type="button" data-v="1">Low</button><button type="button" data-v="2">Med</button><button type="button" data-v="3">High</button></div></div><div class="fbx rivalry" data-f="rivalry"><h3>Rivalry</h3><p class="fq">How fierce is competition among existing players?</p><p class="fe">Uber vs. Lyft</p><div class="seg" role="group" aria-label="Rivalry pressure" data-f="rivalry"><button type="button" data-v="1">Low</button><button type="button" data-v="2">Med</button><button type="button" data-v="3">High</button></div></div>
-      <div class="fmeter"><h3>Industry profit potential</h3><div class="pm"><i id="ffBar"></i></div><p id="ffLabel" aria-live="polite"></p><button class="btn ghost" id="ffBench" type="button">Compare with a class-discussion read</button></div>
+    <h2>Porter's five forces: how hard is your company's industry?</h2>
+    <div class="tps">
+      <div><h3>Think</h3><span class="t">3 minutes, on your own</span><p>Pick a company you know well: where you work, shop, or eat. Write its name in your notebook. Rate each force Low, Med, or High with the buttons below, and jot one reason for each.</p></div>
+      <div><h3>Pair</h3><span class="t">3 minutes, with a neighbor</span><p>Explain your ratings. Your partner challenges at least one: what would make that force higher or lower?</p></div>
+      <div><h3>Share</h3><span class="t">With the class</span><p>Which force did most people rate High? What does that mean for how much profit those companies can earn?</p></div>
     </div>
-    <div class="band-detail" id="ffBenchNote" hidden>Dashed outlines show one reasonable read for downtown dining, as a starting point for debate: new entrants Medium (a lease and kitchen are real costs, but nothing legally blocks a newcomer), substitutes High (meal kits, delivery apps, home cooking), buyer power High (guests compare and switch for free), supplier power Medium, rivalry High. More High forces mean lower profit potential, which is why the strategy you pick matters.</div>
+    <p style="margin-top:1em">The meter shows the industry's profit potential: the more forces that are High, the harder it is to earn a return.</p>
+    <div class="ffgrid"><div class="fbx entrants" data-f="entrants"><h3>New entrants</h3><p class="fq">How easily can newcomers enter?</p><p class="fe">Fintech disrupting traditional banking</p><div class="seg" role="group" aria-label="New entrants pressure" data-f="entrants"><button type="button" data-v="1">Low</button><button type="button" data-v="2">Med</button><button type="button" data-v="3">High</button></div></div><div class="fbx subs" data-f="subs"><h3>Substitutes</h3><p class="fq">Can customers meet the need another way?</p><p class="fe">Streaming replacing traditional TV</p><div class="seg" role="group" aria-label="Substitutes pressure" data-f="subs"><button type="button" data-v="1">Low</button><button type="button" data-v="2">Med</button><button type="button" data-v="3">High</button></div></div><div class="fbx buyers" data-f="buyers"><h3>Buyer power</h3><p class="fq">Can customers push on price and quality?</p><p class="fe">Shoppers using price comparison apps</p><div class="seg" role="group" aria-label="Buyer power pressure" data-f="buyers"><button type="button" data-v="1">Low</button><button type="button" data-v="2">Med</button><button type="button" data-v="3">High</button></div></div><div class="fbx suppliers" data-f="suppliers"><h3>Supplier power</h3><p class="fq">Can suppliers push on costs and supply?</p><p class="fe">Semiconductor shortages in automotive</p><div class="seg" role="group" aria-label="Supplier power pressure" data-f="suppliers"><button type="button" data-v="1">Low</button><button type="button" data-v="2">Med</button><button type="button" data-v="3">High</button></div></div><div class="fbx rivalry" data-f="rivalry"><h3>Rivalry</h3><p class="fq">How fierce is competition among existing players?</p><p class="fe">Uber vs. Lyft</p><div class="seg" role="group" aria-label="Rivalry pressure" data-f="rivalry"><button type="button" data-v="1">Low</button><button type="button" data-v="2">Med</button><button type="button" data-v="3">High</button></div></div>
+      <div class="fmeter"><h3>Industry profit potential</h3><div class="pm"><i id="ffBar"></i></div><p id="ffLabel" aria-live="polite"></p><button class="btn ghost" id="ffBench" type="button">Compare with The Copper Table</button></div>
+    </div>
+    <div class="band-detail" id="ffBenchNote" hidden><b>Worked example: The Copper Table.</b> Dashed outlines show one reasonable read for downtown dining, as a starting point for debate: new entrants Medium (a lease and kitchen are real costs, but nothing legally blocks a newcomer), substitutes High (meal kits, delivery apps, home cooking), buyer power High (guests compare and switch for free), supplier power Medium, rivalry High. More High forces mean lower profit potential, which is why the strategy you pick matters.</div>
   </div>
 </section>
 
 <section class="slide" data-title="Forces change">
   <div class="inner">
-    <div class="kicker">If time allows &middot; Analyze</div>
+    <div class="kicker">Analyze</div>
     <h2>Forces move whenever something changes in the market</h2>
-    <p>Industry structure is not fixed. New technology, new rules, and rivals' decisions all shift the forces. Netflix shows how each force can show up in one business:</p>
+    <p>New technology, new rules, and rivals' moves all shift the forces. Netflix, one force at a time:</p>
     <div class="strat three">
-      <div><h3>New entrants</h3><p>High barriers: building a content library and global streaming service takes huge investment.</p></div>
-      <div><h3>Substitutes</h3><p>YouTube and TikTok compete for the same viewing time.</p></div>
-      <div><h3>Buyer power</h3><p>Subscribers can cancel at any time.</p></div>
-      <div><h3>Supplier power</h3><p>Studios such as Disney can pull their titles and launch their own services.</p></div>
-      <div><h3>Rivalry</h3><p>Prime Video, Disney+, Hulu, and HBO Max all fight for subscribers.</p></div>
-      <div><h3>How to analyze an event</h3><p>Ask what changed, <b>who gains power or loses it</b>, and whether it is easier or harder for someone to enter, switch, or charge more.</p></div>
+      <div><h3>New entrants</h3><p>Low threat: a content library costs billions.</p></div>
+      <div><h3>Substitutes</h3><p>YouTube and TikTok.</p></div>
+      <div><h3>Buyer power</h3><p>Subscribers cancel any time.</p></div>
+      <div><h3>Supplier power</h3><p>Studios pull titles for their own services.</p></div>
+      <div><h3>Rivalry</h3><p>Prime Video, Disney+, Max.</p></div>
+      <div><h3>Read any event</h3><p>Ask: <b>who gained power, and who lost it?</b></p></div>
     </div>
-    <div class="warn"><b>Next slide:</b> six news events hit The Copper Table's market. Tap the force each one moves and watch the profit meter.</div>
   </div>
 </section>
 
 <section class="slide" data-title="Force events">
   <div class="inner">
-    <div class="kicker">If time allows &middot; Analyze</div>
+    <div class="kicker">Analyze</div>
     <h2>News hits the industry: which force moved?</h2>
     <p>Read the event, then tap the force it changes. The profit meter shows what happens to the industry.</p>
     <div class="evcard" id="evCard"><span class="tag" id="evNum"></span><p id="evText"></p></div>
@@ -639,12 +661,13 @@ button.fbx:disabled{cursor:default}
   <div class="inner">
     <div class="kicker">Connect</div>
     <h2>MIS helps carry out the strategy</h2>
-    <p>Information systems collect, process, and analyze data so managers can make strategic decisions. Tap each way technology supports competition.</p>
-    <div class="cards reveal">
-<button class="card" aria-expanded="false"><h3>Operational efficiency</h3><div class="hint">Tap to reveal</div><div class="back">Streamlining processes, as in Walmart’s inventory management. At the Copper Table: kitchen screens that speed up tickets.</div></button>
-<button class="card" aria-expanded="false"><h3>Customer experience</h3><div class="hint">Tap to reveal</div><div class="back">Personalization and real-time insight, as in Netflix’s recommendation engine. A loyalty system that remembers a guest’s favorite dish.</div></button>
-<button class="card" aria-expanded="false"><h3>Innovation support</h3><div class="hint">Tap to reveal</div><div class="back">Using data to drive research and new ideas, as in Tesla’s simulation software. Testing new menu items against sales data.</div></button>
+    <p>Information systems collect, process, and analyze data so managers can make strategic decisions. Technology supports competition in three ways.</p>
+    <div class="cards">
+<div class="card"><h3>Operational efficiency</h3><p class="cardtxt">Streamlining processes so work costs less and goes faster.</p><p class="ex"><b>Example:</b> Walmart's inventory management.</p><p class="ex"><b>At The Copper Table:</b> kitchen screens that speed up tickets.</p></div>
+<div class="card"><h3>Customer experience</h3><p class="cardtxt">Personalization and real-time insight that make customers feel known.</p><p class="ex"><b>Example:</b> Netflix's recommendation engine.</p><p class="ex"><b>At The Copper Table:</b> a loyalty system that remembers a guest's favorite dish.</p></div>
+<div class="card"><h3>Innovation support</h3><p class="cardtxt">Using data to test and develop new ideas.</p><p class="ex"><b>Example:</b> Tesla's simulation software.</p><p class="ex"><b>At The Copper Table:</b> testing new menu items against sales data.</p></div>
     </div>
+<h3 class="sechead">Quick check: connect it to the value chain</h3>
 <div class="q" data-quiz>
 <p>The Copper Table installs kitchen display screens. Where does that sit in the value chain?</p>
 <div class="opts"><button class="opt">Inbound logistics</button><button class="opt" data-right>Technology development, a support activity</button><button class="opt">Service</button></div>
@@ -695,7 +718,7 @@ button.fbx:disabled{cursor:default}
   <div class="inner">
     <div class="kicker">Excel</div>
     <h2>The numbers behind a strategy decision</h2>
-    <p>Strategy ends in numbers. Tap a measure, then check yourself.</p>
+    <p>Strategy ends in numbers. Tap a measure, then check yourself. You'll practice profit margin and market share on the <b>Margins</b> tab of today's workbook.</p>
     <div class="tabs" role="tablist" id="nmTabs">
       <button role="tab" aria-selected="true" data-i="0">Revenue vs. profit</button>
       <button role="tab" aria-selected="false" data-i="1">Profit margin</button>
@@ -704,9 +727,9 @@ button.fbx:disabled{cursor:default}
     </div>
     <div class="panel" role="tabpanel" id="nmPanel"></div>
 <div class="q" data-quiz>
-<p>A restaurant has $500,000 in revenue and $50,000 in net profit. What is its profit margin?</p>
-<div class="opts"><button class="opt">5%</button><button class="opt" data-right>10%</button><button class="opt">50%</button></div>
-<p class="explain">$50,000 / $500,000 = 0.10, or 10%.</p>
+<p>Try a new one. A food truck has $400,000 in revenue and $60,000 in net profit. What is its profit margin?</p>
+<div class="opts"><button class="opt">6.7%</button><button class="opt" data-right>15%</button><button class="opt">40%</button></div>
+<p class="explain">$60,000 / $400,000 = 0.15, or 15%. Dividing the other way ($400,000 / $60,000) gives 6.67, which is not a margin.</p>
 </div>
   </div>
 </section>
@@ -715,27 +738,27 @@ button.fbx:disabled{cursor:default}
   <div class="inner">
     <div class="kicker">Excel: Chapter 1</div>
     <h2>Is the investment worth it? Build the ROI model</h2>
-    <p>The owner is considering $12,000 of kitchen ticket screens. The figures below are estimates made up for this class.</p>
+    <p>The owner is considering $12,000 of kitchen ticket screens. The figures are estimates made up for this class. Download <b>BUS2110_Week1_Day3_Workbook.xlsx</b> from Canvas (Week 1, Wednesday), save it to your BUS2110 folder, and open the <b>ROI</b> tab.</p>
     <div class="xlsplit">
       <div>
-        <p>Enter this in columns A and B:</p>
+        <p>The figures are already entered. Column B is the base case; column C is a what-if where added revenue is only $3,000.</p>
         <table class="dtab xlike">
-          <tr><th>A</th><th>B</th></tr>
-          <tr><td>Investment cost</td><td class="n">12000</td></tr>
-          <tr><td>Annual labor savings</td><td class="n">6000</td></tr>
-          <tr><td>Fewer order errors</td><td class="n">1500</td></tr>
-          <tr><td>Added revenue</td><td class="n">7500</td></tr>
-          <tr><td>Total benefits</td><td class="n"></td></tr>
-          <tr><td>Net profit</td><td class="n"></td></tr>
-          <tr><td>ROI</td><td class="n"></td></tr>
+          <tr><th></th><th>A</th><th>B: Base case</th><th>C: What-if</th></tr>
+          <tr><td>2</td><td>Investment cost</td><td class="n">12000</td><td class="n">12000</td></tr>
+          <tr><td>3</td><td>Annual labor savings</td><td class="n">6000</td><td class="n">6000</td></tr>
+          <tr><td>4</td><td>Fewer order errors</td><td class="n">1500</td><td class="n">1500</td></tr>
+          <tr><td>5</td><td>Added revenue</td><td class="n">7500</td><td class="n">3000</td></tr>
+          <tr><td>6</td><td>Total benefits</td><td class="n"></td><td class="n"></td></tr>
+          <tr><td>7</td><td>Net profit</td><td class="n"></td><td class="n"></td></tr>
+          <tr><td>8</td><td>ROI</td><td class="n"></td><td class="n"></td></tr>
         </table>
       </div>
       <div class="steps">
-        <label><input type="checkbox"><span>Leave row 1 for a title. Type the labels in A2:A8 and the four numbers in B2:B5. Rename the sheet <b>ROI</b>.</span></label>
-        <label><input type="checkbox"><span>In <b>B6</b>, total the benefits: <code>=B3+B4+B5</code>.</span></label>
+        <label><input type="checkbox"><span>In <b>B6</b>, total the benefits (not the cost): <code>=B3+B4+B5</code>.</span></label>
         <label><input type="checkbox"><span>In <b>B7</b>, net profit is benefits minus cost: <code>=B6-B2</code>.</span></label>
         <label><input type="checkbox"><span>In <b>B8</b>, ROI is net profit divided by cost: <code>=B7/B2</code>. Excel shows 0.25, so apply <b>Percent Style</b> on the Home tab.</span></label>
-        <label><input type="checkbox"><span>Format B2:B7 as <b>Currency</b>, then bold the labels and widen column A.</span></label>
+        <label><input type="checkbox"><span>Select <b>B6:B8</b> and drag the fill handle one column right into C6:C8. The formulas shift to column C by themselves.</span></label>
+        <label><input type="checkbox"><span>Format B2:C7 as <b>Currency</b>, then bold the labels and widen column A.</span></label>
       </div>
     </div>
     <div class="check">
@@ -745,12 +768,12 @@ button.fbx:disabled{cursor:default}
       <span class="feedback" id="roi1Fb" aria-live="polite"></span>
     </div>
     <div class="check">
-      <label for="roi2"><b>Now change Added revenue (B5) to 3000. What does B8 become?</b></label>
+      <label for="roi2"><b>What does the what-if ROI in C8 show?</b></label>
       <input id="roi2" type="text" inputmode="decimal" placeholder="percent">
       <button class="btn" id="roi2Btn" type="button">Check</button>
       <span class="feedback" id="roi2Fb" aria-live="polite"></span>
     </div>
-    <p class="note">Check without opening the formulas: if benefits are a bit larger than cost, ROI should be small and positive. Then ask what the number can't tell the owner, since every input is an estimate.</p>
+    <p class="note">Record both answers on the <b>Checkpoints</b> tab. Check without opening the formulas: if benefits are a bit larger than cost, ROI should be small and positive. Then ask what the number can't tell the owner, since every input is an estimate.</p>
   </div>
 </section>
 
@@ -782,7 +805,7 @@ button.fbx:disabled{cursor:default}
     <h2>Simulation lab: Excel Chapter 1</h2>
     <p>About 40 minutes, in class. The simulation practices entering data, formulas, AutoFill, and number formats, in the same task-by-task format the certification exam uses.</p>
     <div class="steps"><label><input type="checkbox"><span>Open <b>Pearson MyLab IT</b> from the link in Canvas and sign in.</span></label><label><input type="checkbox"><span>Start the <b>Chapter 1 simulation</b>.</span></label><label><input type="checkbox"><span>Try every task yourself first. Use the built-in hints only after a real attempt.</span></label><label><input type="checkbox"><span>No AI on simulations. The certification exam is AI-free, so this is where you find out what you can do alone.</span></label><label><input type="checkbox"><span>Stuck for more than two minutes? Raise your hand. If you run out of time, finish the simulation tonight.</span></label></div>
-    <div class="warn"><b>Outside class:</b> the Chapter 1 Pearson project. The due date is in Canvas.</div>
+    <div class="warn"><b>Outside class:</b> the Chapter 1 Pearson project, due <b>Sunday at 11:59 p.m.</b></div>
   </div>
 </section>
 
@@ -790,12 +813,12 @@ button.fbx:disabled{cursor:default}
   <div class="inner">
     <div class="kicker">AI</div>
     <h2>AI is a fast research assistant, not a source</h2>
-    <p>Used well, AI speeds up the start of research. Used carelessly, it hands you confident mistakes. Tap each card.</p>
-    <div class="cards reveal">
-<button class="card" aria-expanded="false"><h3>Good for</h3><div class="hint">Tap to reveal</div><div class="back">Explaining a concept, summarizing, brainstorming angles, and drafting questions to investigate.</div></button>
-<button class="card" aria-expanded="false"><h3>Risky for</h3><div class="hint">Tap to reveal</div><div class="back">Specific facts, numbers, dates, quotes, and sources. Always check these.</div></button>
-<button class="card" aria-expanded="false"><h3>Hallucinations</h3><div class="hint">Tap to reveal</div><div class="back">Output that sounds convincing but is factually wrong or fabricated, often when the AI goes beyond its training data.</div></button>
-<button class="card" aria-expanded="false"><h3>Bias and overreliance</h3><div class="hint">Tap to reveal</div><div class="back">AI learns from data that may be unrepresentative, and leaning on it can weaken your own thinking.</div></button>
+    <p>Used well, AI speeds up the start of research. Used carelessly, it hands you confident mistakes.</p>
+    <div class="cards">
+<div class="card"><h3>Good for</h3><p class="cardtxt">Explaining a concept, summarizing, brainstorming angles, and drafting questions to investigate.</p></div>
+<div class="card"><h3>Risky for</h3><p class="cardtxt">Specific facts, numbers, dates, quotes, and sources. Always check these.</p></div>
+<div class="card"><h3>Hallucinations</h3><p class="cardtxt">Output that sounds convincing but is factually wrong or fabricated, often when the AI goes beyond its training data.</p></div>
+<div class="card"><h3>Bias and overreliance</h3><p class="cardtxt">AI learns from data that may be unrepresentative, and leaning on it can weaken your own thinking.</p></div>
     </div>
     <div class="warn"><b>The habit:</b> use AI to get started, then verify against a real source before you rely on any claim.</div>
   </div>
@@ -856,21 +879,44 @@ button.fbx:disabled{cursor:default}
         </div>
       </div>
     </div>
-    <p class="note">Your thinking is captured before the tool can influence it. On timed Excel work and the certification exam, you'll work without AI.</p>
+    <p class="note">Your thinking is captured before the tool can influence it. Keep the AI's answer open: you'll record how you checked three of its claims on the next slide. On the practice exam and the certification exam, you'll work without AI.</p>
+  </div>
+</section>
+
+<section class="slide" data-title="Evidence trail">
+  <div class="inner">
+    <div class="kicker">Activity &middot; in class &middot; about 10 minutes</div>
+    <h2>Evidence Trail Starter</h2>
+    <p>A claim is only as good as the evidence behind it. Record the checking you just did, the way professional analysts do.</p>
+    <div class="steps">
+      <label><input type="checkbox"><span>Open the <b>Activity - Evidence Trail</b> tab in today's workbook.</span></label>
+      <label><input type="checkbox"><span>Choose <b>three claims</b> from the AI answer you got on the last slide. For each, fill in: the claim, the evidence, the source or tool, and how you verified it.</span></label>
+      <label><input type="checkbox"><span>Give each a verdict: <b>Supported</b>, <b>Partially supported</b>, <b>Unsupported</b>, <b>Incorrect</b>, or <b>Unable to verify</b>.</span></label>
+      <label><input type="checkbox"><span>Make sure at least one claim was checked with something other than the AI that made it.</span></label>
+      <label><input type="checkbox"><span>Copy your three-row table into <b>Week 1 - Activity 3</b> in Canvas.</span></label>
+    </div>
+    <div class="warn"><b>A rule you'll see again:</b> the same AI that produced a claim can't be the only evidence that the claim is correct. This leads to Assignment 2, Audit 1 and Assignment 3, Part 7.</div>
+    <p class="note">Completion credit: a real attempt finished in class.</p>
   </div>
 </section>
 
 <section class="slide" data-title="Your call">
   <div class="inner">
-    <div class="kicker">Decide</div>
+    <div class="kicker">Think, pair, share &middot; Decide</div>
     <h2>How should The Copper Table compete with Lantern Kitchen?</h2>
-    <p>Lantern Kitchen has scale, a bigger menu, and loyal customers. Which plan gives The Copper Table the best chance?</p>
-<div class="q" data-quiz>
-<p></p>
-<div class="opts"><button class="opt">Match their prices on every dish.</button><button class="opt" data-right>Build a local-ingredient dining experience, and use the loyalty system’s guest data to personalize visits and offers.</button><button class="opt">Add 40 new dishes to match their menu.</button><button class="opt">Wait and see how many customers leave.</button></div>
-<p class="explain">That plan differentiates in a way a larger rival can’t quickly copy, and technology (guest data) supports it. Matching prices attacks the rival where it is strongest, copying the menu chases its advantage, and waiting is not a strategy.</p>
-</div>
-    <p class="lede">Discuss: what data would show, within a month, whether the plan is working?</p>
+    <p>Lantern Kitchen has scale, a bigger menu, and loyal customers. The owner is weighing four plans:</p>
+    <ol class="plans">
+      <li>Match their prices on every dish.</li>
+      <li>Build a local-ingredient dining experience, and use the loyalty system's guest data to personalize visits and offers.</li>
+      <li>Add 40 new dishes to match their menu.</li>
+      <li>Wait and see how many customers leave.</li>
+    </ol>
+    <div class="tps">
+      <div><h3>Think</h3><span class="t">2 minutes, on your own</span><p>Pick the plan you'd recommend. Judge it three ways: does it play to The Copper Table's strengths, could Lantern Kitchen copy it easily, and how does technology support it?</p></div>
+      <div><h3>Pair</h3><span class="t">3 minutes, with a neighbor</span><p>Compare picks. If you disagree, each of you argues for the other person's plan for one minute.</p></div>
+      <div><h3>Share</h3><span class="t">With the class</span><p>Which plan did your pair choose, and what data would show within a month whether it's working?</p></div>
+    </div>
+    <div class="warn"><b>Debrief:</b> plan 2 gives The Copper Table the best chance. It differentiates in a way a larger rival can't quickly copy, and technology (guest data) supports it. Matching prices attacks Lantern Kitchen where it is strongest, copying the menu chases its advantage, and waiting is not a strategy.</div>
   </div>
 </section>
 
@@ -979,23 +1025,13 @@ button.fbx:disabled{cursor:default}
     show(0);
   }
 
-  // reasons chips
-  (function(){
-    const box=document.getElementById('reasons'),msg=document.getElementById('reasonMsg');
-    box.addEventListener('click',e=>{
-      const c=e.target.closest('.chip');if(!c)return;
-      c.setAttribute('aria-pressed',c.getAttribute('aria-pressed')==='true'?'false':'true');
-      const n=box.querySelectorAll('[aria-pressed="true"]').length;
-      msg.textContent=n===0?'Pick a few reasons.':'You chose '+n+' reason'+(n===1?'':'s')+'. Each one is a bet on a strategy, and a business has to decide which bet to make.';
-    });
-  })();
 
 
 
   tabsInit('nmTabs','nmPanel',[
     {'What it measures':'Revenue is money coming in from sales. Profit is what is left after costs.','Why profit matters':'Sustainability, investor confidence, taxes (based on profit), and operational efficiency.','Example':'$500,000 in sales with $450,000 in costs leaves $50,000 of profit.'},
-    {'What it measures':'How efficiently a business turns revenue into profit.','Formula':'(Net profit ÷ Revenue) × 100','Example':'Revenue of $1 million and profit of $200,000 is a 20% margin.'},
-    {'What it measures':'A company’s size relative to its market and competitors.','Formula':'(Company sales ÷ Total market sales) × 100','Example':'$2.2 million in sales in a $10 million downtown dining market is 22% share.'},
+    {'What it measures':'How efficiently a business turns revenue into profit.','Formula':'(Net profit ÷ Revenue) × 100','Example':'Revenue of $500,000 and net profit of $50,000 is a 10% margin. (These are the numbers on the Margins tab.)'},
+    {'What it measures':'A company’s size relative to its market and competitors.','Formula':'(Company sales ÷ Total market sales) × 100','Example':'$18,000 of sales in a $240,000 market is a 7.5% share. (These are the numbers on the Margins tab.)'},
     {'What it measures':'The profitability of an investment.','Formula':'(Net profit ÷ Investment cost) × 100, where net profit is the benefits minus the cost','Example':'Warehouse software costs $400,000 and brings $380,000 a year in benefits. ROI is −5%. Is that automatically a bad investment? What else would you want to know?'}
   ]);
 
@@ -1046,7 +1082,7 @@ button.fbx:disabled{cursor:default}
     };
   }
   numCheck('roi1','roi1Btn','roi1Fb',[25,0.25],'Correct: 25%. Net profit of $3,000 on a $12,000 investment.','Not quite. B6 should be $15,000, B7 should be $3,000, and B8 is B7 divided by B2.');
-  numCheck('roi2','roi2Btn','roi2Fb',[-12.5,-0.125],'Correct: −12.5%. Benefits fall to $10,500, which is less than the cost, and every dependent cell updated by itself.','Not quite. With B5 at 3000, benefits are $10,500, net profit is −$1,500, and ROI is that divided by $12,000.');
+  numCheck('roi2','roi2Btn','roi2Fb',[-12.5,-0.125],'Correct: −12.5%. Benefits fall to $10,500, which is less than the cost, so the project loses money. The copied formulas did the work.','Not quite. With C5 at 3000, benefits in C6 are $10,500, net profit in C7 is −$1,500, and C8 is that divided by $12,000.');
 
   // ---- Day 3 visual strategy section ----
   function makeSort(poolId,binsId,checkId,resetId,fbId,total){
@@ -1178,7 +1214,7 @@ button.fbx:disabled{cursor:default}
       document.querySelectorAll('.seg').forEach(seg=>{
         seg.querySelectorAll('button').forEach(b=>b.classList.toggle('bm',!on&&+b.dataset.v===bench[seg.dataset.f]));
       });
-      bb.textContent=on?'Compare with a class-discussion read':'Hide the class-discussion read';
+      bb.textContent=on?'Compare with The Copper Table':'Hide The Copper Table example';
     };
     // event simulator
     const evs=[
