@@ -426,6 +426,46 @@ button.fbx:disabled{cursor:default}
 .dtab:not(.xlike) td{text-align:left}
 @media (max-width:900px){.strat.five{grid-template-columns:1fr}}
 
+/* ---- Day 4 revisions ---- */
+.tps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:1em}
+.tps>div{background:var(--surface);border:1px solid var(--line);border-top:6px solid var(--maroon);border-radius:0 0 10px 10px;padding:14px 18px}
+.tps>div:nth-child(2){border-top-color:var(--teal)}
+.tps>div:nth-child(3){border-top-color:var(--gold)}
+.tps h3{margin:0 0 .2em}
+.tps .t{display:block;font-size:.85em;color:var(--muted);font-weight:700;margin-bottom:.4em}
+.tps p{margin:0}
+.dtab.defs td{vertical-align:top;text-align:left}
+.dtab.defs td:first-child{white-space:nowrap}
+.dtab.defs dfn{font-style:normal;font-weight:700;color:var(--maroon-ink)}
+.gloss{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:.8em;font-size:.92em}
+.gloss span{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 12px}
+.sw4{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:1em}
+.sw4>div{background:var(--surface);border:1px solid var(--line);border-top:6px solid var(--teal);border-radius:0 0 10px 10px;padding:14px 18px}
+.sw4>div:nth-child(1),.sw4>div:nth-child(4){border-top-color:var(--maroon)}
+.sw4 h3{margin:0 0 .3em;color:var(--maroon-ink)}
+.sw4 p{margin:0 0 .35em}
+.bbsl label output{font-weight:800;color:var(--maroon-ink);margin-left:6px}
+.bbsl small{display:block;font-weight:400;color:var(--muted);font-size:.85em}
+.bbsl label{grid-template-columns:1fr 150px 1.6em}
+.trap{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:1em}
+.trap>div{background:var(--surface);border:1px solid var(--line);border-top:6px solid var(--maroon);border-radius:0 0 10px 10px;padding:14px 18px}
+.trap h3{margin:0 0 .3em;color:var(--maroon-ink)}
+.trap p{margin:0 0 .45em}
+.dollar{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:1em}
+.dollar>div{background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--teal);border-radius:0 8px 8px 0;padding:12px 16px}
+.dollar>div:first-child{border-left-color:var(--maroon)}
+.dollar p{margin:0 0 .4em}
+.pcards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:1em}
+.pcards>div{background:var(--surface);border:1px solid var(--line);border-top:5px solid var(--teal);border-radius:0 0 10px 10px;padding:12px 16px}
+.pcards h3{margin:0 0 .2em}
+.pcards .prompt{margin:6px 0}
+.pcards .btn{padding:6px 14px;font-size:.9em}
+.timer{display:flex;flex-wrap:wrap;align-items:center;gap:14px;background:var(--surface);border:2px solid var(--teal);border-radius:10px;padding:12px 18px;margin:1em 0}
+.timer .clock{font-size:clamp(40px,5vw,72px);line-height:1;min-width:3.2em}
+.timer.done{border-color:var(--maroon);background:var(--gold-soft)}
+.timer.done .clock{color:var(--maroon-ink)}
+.urlbox{font-family:Consolas,'Courier New',monospace;font-size:.85em;background:var(--bg);border:1px dashed var(--muted);border-radius:6px;padding:6px 10px;word-break:break-all}
+@media (max-width:860px){.tps,.sw4,.trap,.dollar,.pcards{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -495,12 +535,38 @@ button.fbx:disabled{cursor:default}
   </div>
 </section>
 
+<section class="slide" data-title="Inside the computer">
+  <div class="inner">
+    <div class="kicker">Hardware</div>
+    <h2>Four parts do the work inside a computer</h2>
+    <p>Every computer, from a phone to a tablet to a server, is built around the same four parts. Think of a restaurant kitchen.</p>
+<div class="strat"><div><h3>CPU</h3><p><b>Central processing unit.</b> The part that follows a program's instructions and does the calculations. When people say a computer is "fast," they usually mean its CPU.</p><p><i>In the kitchen:</i> the chef doing the cooking.</p></div><div><h3>Primary memory (RAM)</h3><p>Short-term workspace that holds whatever the computer is working on right now. It is fast, but it empties when the power goes off. Saved files live in <b>storage</b> instead.</p><p><i>In the kitchen:</i> counter space. More counter lets the chef work on more dishes at once.</p></div><div><h3>System board (motherboard)</h3><p>The main circuit board that every other part plugs into, so they can share power and pass data to each other.</p><p><i>In the kitchen:</i> the building's wiring and plumbing.</p></div><div><h3>Hardware interface (ports)</h3><p>The connection points where outside devices, called <b>peripherals</b>, plug in: USB, HDMI for a screen, Ethernet for a wired network.</p><p><i>In the kitchen:</i> the pass-through window where orders come in and plates go out.</p></div></div>
+    <div class="warn"><b>Next slide:</b> a symptom appears. Which part is the problem?</div>
+  </div>
+</section>
+
+<section class="slide" data-title="What's failing?">
+  <div class="inner">
+    <div class="kicker">Hardware</div>
+    <h2>Match the symptom to the part</h2>
+    <p>Tap the part most likely behind each symptom.</p>
+    <div class="dilist"><div class="di five" data-ans="mem"><p>The kitchen computer slows to a crawl when many programs are open at once. There is not enough room for what it is working on right now.</p><div class="dibtns"><button type="button" data-pick="cpu">CPU</button><button type="button" data-pick="mem">Primary memory</button><button type="button" data-pick="board">System board</button><button type="button" data-pick="iface">Hardware interface</button></div><p class="diwhy">Primary memory holds the data the CPU is working with at that moment. Too little of it slows everything down.</p></div><div class="di five" data-ans="iface"><p>The new receipt printer is plugged in but the computer never detects it.</p><div class="dibtns"><button type="button" data-pick="cpu">CPU</button><button type="button" data-pick="mem">Primary memory</button><button type="button" data-pick="board">System board</button><button type="button" data-pick="iface">Hardware interface</button></div><p class="diwhy">The hardware interface (here, a USB port or cable) is where the computer and a peripheral connect.</p></div><div class="di five" data-ans="cpu"><p>The new kitchen display software takes ages to run its calculations, even with plenty of memory free.</p><div class="dibtns"><button type="button" data-pick="cpu">CPU</button><button type="button" data-pick="mem">Primary memory</button><button type="button" data-pick="board">System board</button><button type="button" data-pick="iface">Hardware interface</button></div><p class="diwhy">The CPU executes instructions. A processor that is too slow cannot keep up, however much memory it has.</p></div><div class="di five" data-ans="board"><p>Several unrelated components stop working at once, and a technician finds a damaged circuit board.</p><div class="dibtns"><button type="button" data-pick="cpu">CPU</button><button type="button" data-pick="mem">Primary memory</button><button type="button" data-pick="board">System board</button><button type="button" data-pick="iface">Hardware interface</button></div><p class="diwhy">Every component connects through the system board. When it fails, many parts fail together.</p></div></div>
+  </div>
+</section>
+
 <section class="slide" data-title="Types of hardware">
   <div class="inner">
     <div class="kicker">Hardware</div>
     <h2>Hardware comes in five types</h2>
-    <p>Hardware is the physical part of a system. It powers every piece of software a business uses, from a point of sale to a cloud platform.</p>
-<div class="strat five"><div><h3>Input</h3>Enters data. Keyboards, scanners, and sensors.</div><div><h3>Processing</h3>Performs calculations and operations. CPUs and graphics processors (GPUs).</div><div><h3>Storage</h3>Saves and retrieves data. SSDs and cloud storage.</div><div><h3>Output</h3>Presents data to users. Monitors and printers.</div><div><h3>Networking</h3>Enables communication. Routers and switches.</div></div>
+    <p><b>Hardware</b> is any physical part of a system, anything you could touch. It runs every piece of software a business uses. It comes in five types, grouped by job.</p>
+<table class="dtab defs">
+<tr><th>Type</th><th>Its job</th><th>Terms you'll hear, in plain language</th></tr>
+<tr><td><b>Input</b></td><td>Gets data into the system</td><td><dfn>Keyboard</dfn> and <dfn>touchscreen</dfn>. <dfn>Barcode scanner</dfn>: reads the striped code on a package. <dfn>Sensor</dfn>: measures something automatically, like a freezer thermometer that reports its temperature.</td></tr>
+<tr><td><b>Processing</b></td><td>Does the work: follows instructions and calculates</td><td><dfn>CPU</dfn>: the main processor from the last slides. <dfn>GPU</dfn> (graphics processing unit): a processor built for drawing images on a screen, now also used to run AI.</td></tr>
+<tr><td><b>Storage</b></td><td>Keeps data, even when the power is off</td><td><dfn>SSD</dfn> (solid-state drive): the storage chip inside most laptops and phones. <dfn>Cloud storage</dfn>: saving files on another company's computers over the internet, like Google Drive or iCloud.</td></tr>
+<tr><td><b>Output</b></td><td>Shows or delivers results to people</td><td><dfn>Monitor</dfn> or screen, <dfn>printer</dfn>, speakers.</td></tr>
+<tr><td><b>Networking</b></td><td>Lets devices talk to each other</td><td><dfn>Router</dfn>: the box that connects a building's network to the internet. <dfn>Switch</dfn>: connects many wired devices inside one building. <dfn>Access point</dfn>: broadcasts the Wi-Fi signal to a room.</td></tr>
+</table>
     <div class="warn"><b>Why does a business professional need to know?</b> To choose hardware that controls cost, to decide when to upgrade or replace, and to make sure it works with the business's software.</div>
   </div>
 </section>
@@ -527,25 +593,6 @@ button.fbx:disabled{cursor:default}
   </div>
 </section>
 
-<section class="slide" data-title="Inside the computer">
-  <div class="inner">
-    <div class="kicker">Hardware</div>
-    <h2>Four parts do the work inside a computer</h2>
-    <p>Every computer, from a tablet to a server, is built around the same parts.</p>
-<div class="strat"><div><h3>CPU</h3>The central processing unit. It executes the instructions we give the computer.</div><div><h3>Primary memory</h3>Electronic memory the CPU addresses directly. It holds what the computer is working on right now.</div><div><h3>System board</h3>The physical circuit board and electrical foundation that connects everything.</div><div><h3>Hardware interface</h3>The meeting point between the computer and its peripheral devices, such as the ports for Ethernet, USB, and HDMI.</div></div>
-    <div class="warn"><b>Next slide:</b> a symptom appears. Which part is the problem?</div>
-  </div>
-</section>
-
-<section class="slide" data-title="What's failing?">
-  <div class="inner">
-    <div class="kicker">If time allows &middot; Hardware</div>
-    <h2>Match the symptom to the part</h2>
-    <p>Tap the part most likely behind each symptom.</p>
-    <div class="dilist"><div class="di five" data-ans="mem"><p>The kitchen computer slows to a crawl when many programs are open at once. There is not enough room for what it is working on right now.</p><div class="dibtns"><button type="button" data-pick="cpu">CPU</button><button type="button" data-pick="mem">Primary memory</button><button type="button" data-pick="board">System board</button><button type="button" data-pick="iface">Hardware interface</button></div><p class="diwhy">Primary memory holds the data the CPU is working with at that moment. Too little of it slows everything down.</p></div><div class="di five" data-ans="iface"><p>The new receipt printer is plugged in but the computer never detects it.</p><div class="dibtns"><button type="button" data-pick="cpu">CPU</button><button type="button" data-pick="mem">Primary memory</button><button type="button" data-pick="board">System board</button><button type="button" data-pick="iface">Hardware interface</button></div><p class="diwhy">The hardware interface (here, a USB port or cable) is where the computer and a peripheral connect.</p></div><div class="di five" data-ans="cpu"><p>The new kitchen display software takes ages to run its calculations, even with plenty of memory free.</p><div class="dibtns"><button type="button" data-pick="cpu">CPU</button><button type="button" data-pick="mem">Primary memory</button><button type="button" data-pick="board">System board</button><button type="button" data-pick="iface">Hardware interface</button></div><p class="diwhy">The CPU executes instructions. A processor that is too slow cannot keep up, however much memory it has.</p></div><div class="di five" data-ans="board"><p>Several unrelated components stop working at once, and a technician finds a damaged circuit board.</p><div class="dibtns"><button type="button" data-pick="cpu">CPU</button><button type="button" data-pick="mem">Primary memory</button><button type="button" data-pick="board">System board</button><button type="button" data-pick="iface">Hardware interface</button></div><p class="diwhy">Every component connects through the system board. When it fails, many parts fail together.</p></div></div>
-  </div>
-</section>
-
 <section class="slide" data-title="Infrastructure">
   <div class="inner">
     <div class="kicker">Infrastructure</div>
@@ -555,8 +602,9 @@ button.fbx:disabled{cursor:default}
     <tr><td><b>What it is</b></td><td>On-premises servers and hardware</td><td>Internet-based resources, such as AWS or Azure</td><td>On-premises plus cloud resources</td></tr>
     <tr><td><b>Cost</b></td><td>High initial cost</td><td>Pay-as-you-go</td><td>Medium cost</td></tr>
     <tr><td><b>Scalability</b></td><td>Limited</td><td>Highly scalable</td><td>Flexible</td></tr>
-    <tr><td><b>Maintenance</b></td><td>Managed in-house</td><td>Managed by the provider</td><td>Shared responsibility</td></tr></table>
-    <div class="warn"><b>Next slide:</b> pick the option that fits each situation.</div>
+    <tr><td><b>Maintenance</b></td><td>Managed in-house</td><td>Managed by the provider</td><td>Shared responsibility</td></tr>
+    <tr><td><b>Examples you may know</b></td><td>A bank or hospital running its own data center; the server closet at a small office</td><td>Netflix runs on Amazon Web Services. Google Drive, iCloud, and Canvas are cloud services you use every day.</td><td>A hospital keeps patient records on its own servers but uses Microsoft 365 in the cloud for email</td></tr></table>
+    <div class="gloss"><span><b>On-premises:</b> equipment the business owns, on its own site</span><span><b>Pay-as-you-go:</b> pay each month for what you use, like a phone plan</span><span><b>Scalable:</b> can grow or shrink quickly when demand changes</span></div>
   </div>
 </section>
 
@@ -564,7 +612,11 @@ button.fbx:disabled{cursor:default}
   <div class="inner">
     <div class="kicker">Infrastructure</div>
     <h2>Which infrastructure fits?</h2>
-    <p>Tap the best fit.</p>
+    <div class="tps">
+      <div><h3>Think</h3><span class="t">2 minutes, on your own</span><p>For each business below, pick traditional, cloud, or hybrid in your notebook. Write the deciding factor: cost, scalability, maintenance, or control.</p></div>
+      <div><h3>Pair</h3><span class="t">3 minutes, with a neighbor</span><p>Compare answers. Where you disagree, which factor did each of you weigh most?</p></div>
+      <div><h3>Share</h3><span class="t">With the class</span><p>Which business was hardest to decide? Then tap your answers below to check them.</p></div>
+    </div>
     <div class="dilist"><div class="di five" data-ans="Cloud"><p>A one-location bakery wants online ordering next month, with no IT staff and little money up front.</p><div class="dibtns"><button type="button" data-pick="Traditional">Traditional</button><button type="button" data-pick="Cloud">Cloud</button><button type="button" data-pick="Hybrid">Hybrid</button></div><p class="diwhy">Cloud: pay-as-you-go, and the provider handles maintenance.</p></div><div class="di five" data-ans="Hybrid"><p>A hospital must keep patient records on its own servers but wants cloud tools for scheduling.</p><div class="dibtns"><button type="button" data-pick="Traditional">Traditional</button><button type="button" data-pick="Cloud">Cloud</button><button type="button" data-pick="Hybrid">Hybrid</button></div><p class="diwhy">Hybrid: keep sensitive data on-premises and use the cloud for everything else.</p></div><div class="di five" data-ans="Traditional"><p>A bank in a heavily regulated setting keeps every system in its own data center, run by its own staff.</p><div class="dibtns"><button type="button" data-pick="Traditional">Traditional</button><button type="button" data-pick="Cloud">Cloud</button><button type="button" data-pick="Hybrid">Hybrid</button></div><p class="diwhy">Traditional: full control and in-house maintenance, at a high initial cost.</p></div><div class="di five" data-ans="Cloud"><p>A retailer expects traffic to jump tenfold during holiday sales and then drop back.</p><div class="dibtns"><button type="button" data-pick="Traditional">Traditional</button><button type="button" data-pick="Cloud">Cloud</button><button type="button" data-pick="Hybrid">Hybrid</button></div><p class="diwhy">Cloud: highly scalable, so you pay for the extra capacity only when you need it.</p></div></div>
   </div>
 </section>
@@ -573,12 +625,14 @@ button.fbx:disabled{cursor:default}
   <div class="inner">
     <div class="kicker">Software</div>
     <h2>Software tells the hardware what to do</h2>
-    <p>Hardware is useless without software. Businesses use it to save time, improve productivity, and make better decisions. It comes in four types, based on its purpose.</p>
-    <table class="dtab"><tr><th>Type</th><th>Purpose</th><th>Example</th><th>At The Copper Table</th></tr>
-    <tr><td><b>Operational</b></td><td>Daily task management</td><td>Shopify</td><td>Taking and tracking tonight's orders</td></tr>
-    <tr><td><b>Managerial</b></td><td>Decision support</td><td>Excel</td><td>Comparing this week's labor cost with the budget</td></tr>
-    <tr><td><b>Application</b></td><td>Specialized tasks</td><td>Photoshop, QuickBooks</td><td>Payroll or menu photo editing</td></tr>
-    <tr><td><b>Strategic</b></td><td>Planning for the future</td><td>Power BI</td><td>Studying trends to plan a second location</td></tr></table>
+    <p>Hardware is useless without software: the programs that tell it what to do. We sort business software into four types by <b>what it is for</b>. To classify a tool, ask: is it running today's work, helping a manager decide, doing one specialized job, or planning the future?</p>
+    <div class="sw4">
+      <div><h3>Operational</h3><p><b>For:</b> running the day-to-day work as it happens.</p><p><b>Used by:</b> frontline staff, every shift.</p><p><b>You may know:</b> the Square or Toast register at a coffee shop; Shopify running an online store.</p><p><b>At The Copper Table:</b> taking and tracking tonight's orders.</p></div>
+      <div><h3>Managerial</h3><p><b>For:</b> helping managers compare, budget, and decide for the weeks ahead.</p><p><b>Used by:</b> managers.</p><p><b>You may know:</b> Excel or Google Sheets comparing a budget with what was spent.</p><p><b>At The Copper Table:</b> comparing this week's labor cost with the budget.</p></div>
+      <div><h3>Application</h3><p><b>For:</b> one specialized task, whatever the level.</p><p><b>Used by:</b> whoever does that task.</p><p><b>You may know:</b> Photoshop, Canva, Word, QuickBooks.</p><p><b>At The Copper Table:</b> running payroll or editing menu photos.</p></div>
+      <div><h3>Strategic</h3><p><b>For:</b> long-term planning, often with trends and outside data.</p><p><b>Used by:</b> owners and senior leaders.</p><p><b>You may know:</b> Power BI or Tableau dashboards.</p><p><b>At The Copper Table:</b> studying trends to plan a second location.</p></div>
+    </div>
+    <p class="note">Notice the link to Day 2's operational, tactical, and strategic information: operational, managerial, and strategic software support those same three levels of decision. Application software is the odd one out, because it is defined by a specialized task, not a level.</p>
     <div class="warn"><b>Software is not optional, it is strategic.</b> It connects people to the organization's technology and links business processes to technical solutions.</div>
   </div>
 </section>
@@ -630,14 +684,19 @@ button.fbx:disabled{cursor:default}
   <div class="inner">
     <div class="kicker">Software</div>
     <h2>Buy, adapt, or build?</h2>
-    <p>There are three approaches: <b>off-the-shelf</b> (as is), <b>off-the-shelf with adaptations</b>, and <b>custom build</b>. Set how much each priority matters to The Copper Table and see which approach fits best. The scores are my simplified ratings for this class.</p>
-    <div class="actions" id="bbScen"><button class="btn ghost" type="button" data-s="fast">We open in two weeks</button><button class="btn ghost" type="button" data-s="edge">Our edge is a unique experience</button><button class="btn ghost" type="button" data-s="budget">Tight budget</button></div>
+    <p>Three approaches: <b>off-the-shelf</b> (buy it and use it as is), <b>off-the-shelf with adaptations</b> (buy it, then configure or add to it), and <b>custom build</b> (create it from scratch). Which one fits depends on what the business cares about most.</p>
+    <div class="tps">
+      <div><h3>Think</h3><span class="t">3 minutes, on your own</span><p>Pick a business and one piece of software it needs. Use a campus coffee cart that wants mobile ordering, a local gym that wants a member check-in app, or make one up. Set the four sliders for <i>that</i> business and note which approach wins.</p></div>
+      <div><h3>Pair</h3><span class="t">3 minutes, with a neighbor</span><p>Describe your business. Your partner predicts the winning approach before you show the bars. Were they right?</p></div>
+      <div><h3>Share</h3><span class="t">With the class</span><p>Did anyone's business land on custom build? What made it worth the cost?</p></div>
+    </div>
+    <p style="margin-top:1em"><b>How the sliders work:</b> each one is a priority. <b>0</b> means it doesn't matter to this business; <b>5</b> means it's a top priority. The bars show how well each approach fits the priorities you set, using simplified ratings made for this class.</p>
     <div class="bbgrid">
       <div class="bbsl">
-        <label>Speed to launch <input type="range" min="0" max="5" value="3" data-c="0"></label>
-        <label>Low cost <input type="range" min="0" max="5" value="3" data-c="1"></label>
-        <label>Fit to our needs <input type="range" min="0" max="5" value="3" data-c="2"></label>
-        <label>Control and uniqueness <input type="range" min="0" max="5" value="3" data-c="3"></label>
+        <label><span>Speed to launch<small>How soon must it be running?</small></span> <input type="range" min="0" max="5" value="3" data-c="0"><output>3</output></label>
+        <label><span>Low cost<small>How tight is the budget?</small></span> <input type="range" min="0" max="5" value="3" data-c="1"><output>3</output></label>
+        <label><span>Fit to our needs<small>Must it match how we work exactly?</small></span> <input type="range" min="0" max="5" value="3" data-c="2"><output>3</output></label>
+        <label><span>Control and uniqueness<small>Is the software itself our edge over rivals?</small></span> <input type="range" min="0" max="5" value="3" data-c="3"><output>3</output></label>
       </div>
       <div class="bbbars" id="bbBars">
         <div class="bbo"><div><b>Off-the-shelf</b> <span></span></div><div class="bar"><i></i></div></div>
@@ -646,6 +705,7 @@ button.fbx:disabled{cursor:default}
       </div>
     </div>
     <div class="warn" id="bbMsg" aria-live="polite"></div>
+    <div class="actions" id="bbScen"><b>Or try a Copper Table example:</b> <button class="btn ghost" type="button" data-s="fast">We open in two weeks</button><button class="btn ghost" type="button" data-s="edge">Our edge is a unique experience</button><button class="btn ghost" type="button" data-s="budget">Tight budget</button></div>
     <p class="note">Off-the-shelf: cost-effective and quick, but limited customization. Adapted: balances cost and fit, but customizations can be costly and vendor updates can disrupt them. Custom: an exact fit and possible advantage, but expensive, slow, and needs ongoing maintenance.</p>
   </div>
 </section>
@@ -685,8 +745,8 @@ button.fbx:disabled{cursor:default}
     <div class="kicker">Develop</div>
     <h2>Two common ways to run a project</h2>
     <div class="strat three" style="grid-template-columns:1fr 1fr">
-      <div><h3>Waterfall</h3><p>Sequential phases: planning, analysis, design, development, testing, implementation, maintenance. Best for well-defined projects with clear requirements.</p><p><b>Strengths:</b> simple, and each phase has defined deliverables.</p><p><b>Weaknesses:</b> time-consuming, poor for short projects, and cannot handle changing requirements.</p></div>
-      <div><h3>Agile</h3><p>An iterative process with continuous collaboration, built in short cycles called <b>sprints</b> of two to four weeks. Best for dynamic projects where requirements may change.</p><p><b>Strengths:</b> flexible, features are easy to add, and users review after every sprint.</p><p><b>Weaknesses:</b> little documentation, needs skilled people, and risks scope creep and budget creep.</p></div>
+      <div><h3>Waterfall</h3><p>Sequential phases: planning, analysis, design, development, testing, implementation, maintenance. Best for well-defined projects with clear requirements.</p><p><b>Strengths:</b> simple, and each phase has defined deliverables.</p><p><b>Weaknesses:</b> time-consuming, poor for short projects, and cannot handle changing requirements.</p><p><b>Example you know:</b> building a house. The blueprint is approved before the foundation is poured, and moving a wall later is expensive. In software: a payroll system that must meet a new tax law by a fixed date.</p></div>
+      <div><h3>Agile</h3><p>An iterative process with continuous collaboration, built in short cycles called <b>sprints</b> of two to four weeks. Best for dynamic projects where requirements may change.</p><p><b>Strengths:</b> flexible, features are easy to add, and users review after every sprint.</p><p><b>Weaknesses:</b> little documentation, needs skilled people, and risks scope creep and budget creep.</p><p><b>Example you know:</b> the apps on your phone. Spotify and Instagram ship small updates every few weeks and keep or drop features based on how people use them.</p></div>
     </div>
     <div class="warn"><b>There is no perfect method.</b> You have to examine your needs. Other methods exist, such as the V-shaped, prototype, spiral, and iterative incremental models.</div>
   </div>
@@ -701,9 +761,23 @@ button.fbx:disabled{cursor:default}
   </div>
 </section>
 
+<section class="slide" data-title="Three project traps">
+  <div class="inner">
+    <div class="kicker">Develop</div>
+    <h2>Three traps that sink systems projects</h2>
+    <p>Projects rarely fail because the technology is impossible. They fail because of how the project is run. Watch for these three.</p>
+    <div class="trap">
+      <div><h3>Scope creep</h3><p>The <b>scope</b> is the agreed list of what the project will deliver. <b>Scope creep</b> is when that list keeps growing after work starts, "just one more feature," without adding time or money.</p><p><b>Example:</b> the kitchen-screen project grows to also handle inventory, then staff scheduling, then a loyalty program, and never launches.</p><p><b>Prevent it:</b> write the scope down, and treat every new request as a decision about time and cost.</p></div>
+      <div><h3>Poor estimates</h3><p>Guessing too low on how much <b>time, money, or people</b> the work will take, usually from optimism or from skipping the details.</p><p><b>Example:</b> "Three months" becomes fourteen, and the budget runs out in month six.</p><p><b>Prevent it:</b> break the work into small pieces, estimate each one, compare with past projects, and build in a buffer.</p></div>
+      <div><h3>Poor communication</h3><p>The people who <b>use</b> the system, the people who <b>build</b> it, and the people who <b>pay</b> for it don't share what they know.</p><p><b>Example:</b> nobody tells the developers the kitchen screens must work with greasy gloves on.</p><p><b>Prevent it:</b> involve end users early, and hold regular check-ins, like agile's review after each sprint.</p></div>
+    </div>
+    <p class="note">Next: real companies that lost hundreds of millions of dollars, and three situations to diagnose.</p>
+  </div>
+</section>
+
 <section class="slide" data-title="Why projects fail">
   <div class="inner">
-    <div class="kicker">If time allows &middot; Develop</div>
+    <div class="kicker">Develop</div>
     <h2>Even big companies abandon systems projects</h2>
     <div class="stats">
       <div class="stat"><h3>Avis Europe</h3><div class="bignum">$55M</div><p>ERP system abandoned in 2004.</p></div>
@@ -769,7 +843,11 @@ button.fbx:disabled{cursor:default}
       <tr><td>4</td><td>Wed</td><td class="n">1350</td><td data-r="4"></td></tr>
       <tr><td>5</td><td>Total</td><td class="n">3600</td><td></td></tr></table>
     <div class="warn" id="xsMsg" aria-live="polite"></div>
-    <p class="note">A normal (relative) reference shifts when you copy it. A dollar sign locks it: <code>$B$5</code> always points at B5. Press F4 while editing a reference to add the dollar signs.</p>
+    <div class="dollar">
+      <div><p><b>What the $ does.</b> In a cell reference, the letter is the <b>column</b> and the number is the <b>row</b>. A dollar sign in front of either one <b>locks</b> it, so it doesn't change when you copy the formula.</p><p><code>B5</code> nothing locked: the reference shifts as you copy.<br><code>$B$5</code> column and row locked: it always means B5.</p><p class="note" style="margin:0">You may also see <code>$B5</code> or <code>B$5</code>, which lock just one part. You'll meet those later in Chapter 2.</p></div>
+      <div><p><b>Think of it this way.</b> A relative reference is like directions: "three rows up from here." Copy directions to a new spot and they lead somewhere else. An absolute reference is like a street address: it leads to the same house no matter where you start.</p><p><b>How to add it:</b> type the $ signs yourself, or click in the reference while editing and press <kbd>F4</kbd> (Windows) or <kbd>Cmd</kbd>+<kbd>T</kbd> (Mac).</p><p style="margin:0"><b>When to use it:</b> whenever every row should point at the same cell, like a total or a tax rate.</p></div>
+    </div>
+    <p class="note">Try it yourself on the <b>Relative vs Absolute</b> tab of today's workbook.</p>
   </div>
 </section>
 
@@ -777,10 +855,10 @@ button.fbx:disabled{cursor:default}
   <div class="inner">
     <div class="kicker">Excel: Chapter 2</div>
     <h2>Build the weekly sales sheet</h2>
-    <p>These figures are made up for this class.</p>
+    <p>Download <b>BUS2110_Week1_Day4_Workbook.xlsx</b> from Canvas (Week 1, Thursday), save it to your BUS2110 folder, and open the <b>Week</b> tab. The figures are made up for this class.</p>
     <div class="xlsplit">
       <div>
-        <p>Enter this in columns A to C:</p>
+        <p>The data is already entered:</p>
         <table class="dtab xlike">
           <tr><th>A</th><th>B</th><th>C</th></tr>
           <tr><td>Day</td><td>Covers</td><td>Sales</td></tr>
@@ -794,10 +872,10 @@ button.fbx:disabled{cursor:default}
         </table>
       </div>
       <div class="steps">
-        <label><input type="checkbox"><span>Type the headers in row 1 and the data in A2:C8. Rename the sheet <b>Week</b>.</span></label>
-        <label><input type="checkbox"><span>In <b>A9</b> type Total. In <b>C9</b> enter <code>=SUM(C2:C8)</code>, then copy it left into B9.</span></label>
-        <label><input type="checkbox"><span>In <b>A10</b>, Average. In <b>C10</b>: <code>=AVERAGE(C2:C8)</code>. In <b>A11</b>, Highest: <code>=MAX(C2:C8)</code>. In <b>A12</b>, Lowest: <code>=MIN(C2:C8)</code>.</span></label>
-        <label><input type="checkbox"><span>In <b>D1</b> type Share of week. In <b>D2</b> enter <code>=C2/$C$9</code>, then fill down to D8.</span></label>
+        <label><input type="checkbox"><span>In <b>C9</b> enter <code>=SUM(C2:C8)</code>, then copy it left into B9 to total the covers.</span></label>
+        <label><input type="checkbox"><span>Fill in the labeled rows: <b>C10</b> <code>=AVERAGE(C2:C8)</code>, <b>C11</b> <code>=MAX(C2:C8)</code>, <b>C12</b> <code>=MIN(C2:C8)</code>, <b>C13</b> <code>=COUNT(C2:C8)</code>.</span></label>
+        <label><input type="checkbox"><span>In <b>D2</b> enter <code>=C2/$C$9</code>, then fill down to D8. The $ signs keep every row pointing at the total.</span></label>
+        <label><input type="checkbox"><span>In <b>D10</b>, add D2:D8 with SUM. If the $ signs worked, the shares total 100%.</span></label>
         <label><input type="checkbox"><span>Format D2:D8 as <b>Percent Style</b> and C2:C12 as <b>Currency</b>.</span></label>
       </div>
     </div>
@@ -813,7 +891,7 @@ button.fbx:disabled{cursor:default}
       <button class="btn" id="wk2Btn" type="button">Check</button>
       <span class="feedback" id="wk2Fb" aria-live="polite"></span>
     </div>
-    <p class="note">Check D2:D8 by adding them up. If you used $C$9 correctly, the shares total 100%.</p>
+    <p class="note">Record your answers on the <b>Checkpoints</b> tab.</p>
   </div>
 </section>
 
@@ -839,48 +917,77 @@ button.fbx:disabled{cursor:default}
   </div>
 </section>
 
+<section class="slide" data-title="What it tells you">
+  <div class="inner">
+    <div class="kicker">Activity &middot; in class &middot; about 10 minutes</div>
+    <h2>What It Tells You (and What It Doesn't)</h2>
+    <p>A number is not a conclusion until you say what it means. Move from a calculation to a business use.</p>
+    <div class="steps">
+      <label><input type="checkbox"><span>Open the <b>Activity - What It Tells You</b> tab in today's workbook.</span></label>
+      <label><input type="checkbox"><span>Choose one result from your weekly sales sheet (a total, average, highest value, or share) and write it <b>exactly as it appears</b>.</span></label>
+      <label><input type="checkbox"><span>In one or two sentences each: What does this result tell you? What does it <b>not</b> tell you? What business decision could it help inform?</span></label>
+      <label><input type="checkbox"><span>Add one sentence on how you checked that the result is correct.</span></label>
+      <label><input type="checkbox"><span>Copy your answers into <b>Week 1 - Activity 4</b> in Canvas.</span></label>
+    </div>
+    <div class="warn"><b>Example of a "doesn't tell you":</b> Saturday is 24.8% of the week's sales, but that doesn't tell you whether Saturday is profitable, or whether it's busy because of a one-time event.</div>
+    <p class="note">Completion credit. This leads to Assignment 1, Part 4 and Assignment 3, Part 3.</p>
+  </div>
+</section>
+
 <section class="slide" data-title="AI as a learning tool">
   <div class="inner">
     <div class="kicker">AI</div>
     <h2>AI can be a tutor or a shortcut</h2>
-    <p>The same tool can teach you or let you skip the learning. The difference is who does the thinking. Four study moves keep you in charge:</p>
-<div class="strat"><div><h3>Explain it</h3>Ask for an explanation at your level, with an example, and then a question to check your understanding.</div><div><h3>Quiz me</h3>Ask it to question you one at a time and wait for your answer before it replies.</div><div><h3>Challenge me</h3>Give it your own explanation and ask what is missing or wrong, without letting it rewrite the answer.</div><div><h3>Give me an analogy</h3>Ask for a comparison to something familiar, like a restaurant kitchen, then ask where the analogy breaks down.</div></div>
-    <div class="warn"><b>Remember:</b> AI can be wrong. When it teaches you something, check it against the class slides or your textbook. On timed Excel work and the certification exam you work without AI, so the learning has to be yours.</div>
+    <p>The same tool can teach you or do the work for you. The difference is who does the thinking. Four study moves keep you in charge.</p>
+    <p>Each move below has a ready prompt about today's material. Copy one, paste it into Gemini or NotebookLM, and answer before you read the feedback.</p>
+    <div class="pcards">
+      <div><h3>Explain it</h3><p class="note" style="margin:0">An explanation at your level, then a check.</p><div class="prompt" id="pm1">Explain the difference between primary memory (RAM) and storage to me as a business student who has never studied computers. Use a restaurant kitchen example. Then ask me one question to check that I understood, and wait for my answer.</div><button class="btn ghost" type="button" data-copy="pm1">Copy prompt</button> <span class="feedback"></span></div>
+      <div><h3>Quiz me</h3><p class="note" style="margin:0">One question at a time; you answer first.</p><div class="prompt" id="pm2">Quiz me on traditional, cloud, and hybrid infrastructure. Ask one multiple-choice question at a time using business examples, and wait for my answer before telling me if I'm right. Explain why after each question. Stop after 5 questions.</div><button class="btn ghost" type="button" data-copy="pm2">Copy prompt</button> <span class="feedback"></span></div>
+      <div><h3>Challenge me</h3><p class="note" style="margin:0">You explain; AI finds the gaps without rewriting.</p><div class="prompt" id="pm3">Here is my explanation of when a business should buy, adapt, or build software: [paste what you wrote]. Tell me what is missing or wrong. Do not rewrite it for me. Ask me one question that would help me fix it myself.</div><button class="btn ghost" type="button" data-copy="pm3">Copy prompt</button> <span class="feedback"></span></div>
+      <div><h3>Give me an analogy</h3><p class="note" style="margin:0">Connect it to something familiar, then test the limits.</p><div class="prompt" id="pm4">Give me a restaurant analogy for relative and absolute cell references in Excel, like =C2/$C$9. Then tell me where the analogy breaks down.</div><button class="btn ghost" type="button" data-copy="pm4">Copy prompt</button> <span class="feedback"></span></div>
+    </div>
+    <div class="warn"><b>Remember:</b> AI can be wrong. When it teaches you something, check it against the class slides or your textbook. On the practice exam and the certification exam you work without AI, so the learning has to be yours.</div>
   </div>
 </section>
 
-<section class="slide" data-title="Learning or shortcut?">
+<section class="slide" data-title="Who is thinking?">
   <div class="inner">
     <div class="kicker">AI</div>
-    <h2>Does this use of AI build learning or skip it?</h2>
-    <p>Select a use, then select where it belongs. On a computer you can also drag.</p>
+    <h2>Who is doing the thinking: me, or AI?</h2>
+    <p>If <b>you</b> do the thinking and AI checks, questions, or explains, it's <b>My thinking</b>. If AI produces the work you would hand in, it's <b>AI's thinking</b>. Select a use, then select where it belongs. On a computer you can also drag.</p>
     <div class="pool" id="poolA" aria-label="Items to sort">
-<button class="item" draggable="true" data-ans="Builds learning" aria-pressed="false">Asking AI to quiz me on hardware types, one question at a time, after I try to answer</button>
-<button class="item" draggable="true" data-ans="Builds learning" aria-pressed="false">Pasting my own explanation of SDLC and asking what I missed</button>
-<button class="item" draggable="true" data-ans="Builds learning" aria-pressed="false">Asking for a restaurant analogy to understand a CPU</button>
-<button class="item" draggable="true" data-ans="Builds learning" aria-pressed="false">Asking AI to explain why my wrong answer was wrong</button>
-<button class="item" draggable="true" data-ans="Skips learning" aria-pressed="false">Pasting the Excel question and asking for the finished formula to submit</button>
-<button class="item" draggable="true" data-ans="Skips learning" aria-pressed="false">Asking AI to write my Consultant Log entry</button>
-<button class="item" draggable="true" data-ans="Skips learning" aria-pressed="false">Asking for the quiz answers before I try them</button>
-<button class="item" draggable="true" data-ans="Skips learning" aria-pressed="false">Asking AI to complete a whole simulation for me</button>
+<button class="item" draggable="true" data-ans="My thinking" aria-pressed="false">Asking AI to quiz me on hardware types, one question at a time, after I try to answer</button>
+<button class="item" draggable="true" data-ans="My thinking" aria-pressed="false">Pasting my own explanation of SDLC and asking what I missed</button>
+<button class="item" draggable="true" data-ans="My thinking" aria-pressed="false">Asking for a restaurant analogy to understand a CPU</button>
+<button class="item" draggable="true" data-ans="My thinking" aria-pressed="false">Asking AI to explain why my wrong answer was wrong</button>
+<button class="item" draggable="true" data-ans="AI's thinking" aria-pressed="false">Pasting the Excel question and asking for the finished formula to submit</button>
+<button class="item" draggable="true" data-ans="AI's thinking" aria-pressed="false">Asking AI to write my Consultant Log entry</button>
+<button class="item" draggable="true" data-ans="AI's thinking" aria-pressed="false">Asking for the quiz answers before I try them</button>
+<button class="item" draggable="true" data-ans="AI's thinking" aria-pressed="false">Asking AI to complete a whole simulation for me</button>
     </div>
-    <div class="bins mx" id="binsA"><div class="bin" data-bin="Builds learning" role="button" tabindex="0"><div class="bin-title">Builds learning</div></div><div class="bin" data-bin="Skips learning" role="button" tabindex="0"><div class="bin-title">Skips learning</div></div></div>
+    <div class="bins mx" id="binsA"><div class="bin" data-bin="My thinking" role="button" tabindex="0"><div class="bin-title">My thinking</div></div><div class="bin" data-bin="AI's thinking" role="button" tabindex="0"><div class="bin-title">AI's thinking</div></div></div>
     <div class="actions"><button class="btn" id="sortCheckA" type="button">Check my sort</button><button class="btn ghost" id="sortResetA" type="button">Start over</button><span class="feedback" id="sortFbA" aria-live="polite"></span></div>
   </div>
 </section>
 
-<section class="slide" data-title="Build a study prompt">
+<section class="slide" data-title="NotebookLM">
   <div class="inner">
     <div class="kicker">AI</div>
-    <h2>Build a study prompt</h2>
-    <p>Pick a study move and a topic. The prompt writes itself, and you can copy it.</p>
-    <div class="seg" id="sbMode" role="group" aria-label="Study move" style="max-width:640px">
-      <button type="button" data-m="explain" aria-pressed="true">Explain it</button><button type="button" data-m="quiz" aria-pressed="false">Quiz me</button><button type="button" data-m="challenge" aria-pressed="false">Challenge me</button><button type="button" data-m="analogy" aria-pressed="false">Analogy</button>
+    <h2>NotebookLM: a study partner that only uses your class materials</h2>
+    <p>Gemini answers from everything it learned on the internet. <b>NotebookLM</b> answers only from the <b>sources</b> you give it, and it shows a numbered citation for each answer so you can click and see exactly where it came from. That makes it a good fit for studying a course.</p>
+    <div class="steps">
+      <label><input type="checkbox"><span>Go to <b>notebooklm.google.com</b> and sign in with your <b>elon.edu</b> account.</span></label>
+      <label><input type="checkbox"><span>Click <b>Create new notebook</b>. Name it <b>BUS 2110</b>.</span></label>
+      <label><input type="checkbox"><span>Add a source: choose <b>Website</b> and paste the link to today's slides:<br><span class="urlbox" id="nbUrl">https://kwalls517.github.io/BUS2110W27/BUS2110_Week1_Day4.html</span> <button class="btn ghost" type="button" data-copy="nbUrl">Copy link</button> <span class="feedback"></span></span></label>
+      <label><input type="checkbox"><span><b>Ask in the chat:</b> "What are the five types of hardware?" Click a citation number in the answer to see the part of the slides it came from.</span></label>
+      <label><input type="checkbox"><span><b>Use the Studio panel</b> to make <b>Flashcards</b> or a <b>Quiz</b> from today's slides. Answer before you flip or check.</span></label>
+      <label><input type="checkbox"><span>For review later, try an <b>Audio Overview</b>: a podcast-style summary of your sources.</span></label>
     </div>
-    <p><label for="sbTopic"><b>Topic:</b></label> <select id="sbTopic"><option>the five types of hardware</option><option>cloud, traditional, and hybrid infrastructure</option><option>the four types of software</option><option>buying versus building software</option><option>the systems development life cycle</option><option>the SUM, AVERAGE, MIN, and MAX functions in Excel</option></select></p>
-    <div class="prompt" id="sbOut" aria-live="polite"></div>
-    <button class="btn ghost" id="sbCopy" type="button">Copy prompt</button> <span class="feedback" id="sbFb" aria-live="polite"></span>
-    <p class="note">Every prompt makes the AI wait for you or point things out, instead of handing you the finished answer. That is what turns it into a tutor.</p>
+    <div class="pcards">
+      <div><h3>Try in the chat</h3><div class="prompt" id="nb1">Using only my sources, quiz me on the four types of software. Ask one question at a time and wait for my answer before you explain.</div><button class="btn ghost" type="button" data-copy="nb1">Copy prompt</button> <span class="feedback"></span></div>
+      <div><h3>Find your gaps</h3><div class="prompt" id="nb2">Based on my sources, what are the three ideas from today a student is most likely to confuse? For each one, ask me a question that tests whether I can tell them apart.</div><button class="btn ghost" type="button" data-copy="nb2">Copy prompt</button> <span class="feedback"></span></div>
+    </div>
+    <div class="warn"><b>Build it all week:</b> add each day's slide link to the same notebook, and you'll have a study partner for the whole course before the certification exam. It is still only as good as its sources, and it can misread them, so click the citations.</div>
   </div>
 </section>
 
@@ -888,9 +995,10 @@ button.fbx:disabled{cursor:default}
   <div class="inner">
     <div class="kicker">AI</div>
     <h2>Your turn: my thinking, AI's thinking, my evaluation</h2>
+    <div class="timer" id="tmr"><span class="clock" id="tmClock">7:00</span><button class="btn" id="tmStart" type="button">Start</button><button class="btn ghost" id="tmReset" type="button">Reset</button><span class="feedback" id="tmMsg" aria-live="polite">7 minutes for all three steps.</span></div>
     <div class="flow3">
       <div><span class="tag">1. My thinking</span><p><b>Laptop closed.</b> In your Consultant Log, explain in your own words the difference between hardware and software, with one example of each from a business you know.</p></div>
-      <div><span class="tag">2. AI's thinking</span><p>Open Gemini signed in with your <b>elon.edu</b> account. Use the study prompt you built, or paste this one:</p>
+      <div><span class="tag">2. AI's thinking</span><p>Open the NotebookLM notebook you just made (or Gemini, signed in with your <b>elon.edu</b> account) and paste this prompt:</p>
         <div class="prompt" id="aiPrompt4">Quiz me on the four types of software (operational, managerial, application, strategic). Ask one multiple-choice question at a time using restaurant examples, and wait for my answer before telling me if I'm right. Explain why after each question. Stop after 5 questions.</div>
         <button class="btn ghost" id="copyPrompt4" type="button">Copy prompt</button> <span class="feedback" id="copyFb4" aria-live="polite"></span></div>
       <div><span class="tag">3. My evaluation</span><p>Check what you learned and what to trust:</p>
@@ -965,7 +1073,6 @@ button.fbx:disabled{cursor:default}
     <div class="warn"><b>Coming up tomorrow: connected organizations.</b> The kitchen screens, tablets, and online orders all have to talk to each other, from anywhere. How does data travel, what is the cloud, and what changes when everyone is mobile?</div>
   </div>
 </section>
-
 
 </main>
 
@@ -1105,6 +1212,7 @@ button.fbx:disabled{cursor:default}
       const w=sl.map(s=>+s.value),tot=w.reduce((a,b)=>a+b,0);
       const pct=sc.map(o=>tot?Math.round(o.reduce((a,v,i)=>a+v*w[i],0)/(tot*5)*100):0);
       const best=pct.indexOf(Math.max(...pct));
+      sl.forEach(s=>{const o=s.parentElement.querySelector('output');if(o)o.textContent=s.value});
       rows.forEach((r,i)=>{r.querySelector('i').style.width=pct[i]+'%';r.querySelector('span').textContent=pct[i]+'%';r.classList.toggle('best',i===best&&tot>0)});
       msg.innerHTML=tot?'<b>Best fit for these priorities: '+names[best]+'.</b> Change the sliders and see when the answer flips. Every number here is a simplified class rating, not a rule.':'Move a slider to set a priority.';
     }
@@ -1140,29 +1248,30 @@ button.fbx:disabled{cursor:default}
     render();
   })();
 
-  // study prompt builder
-  (function(){
-    const T={
-      explain:t=>'Explain '+t+' to me as a business student who has never studied it. Use a restaurant example. Then ask me one question to check that I understood, and wait for my answer.',
-      quiz:t=>'Quiz me on '+t+'. Ask one multiple-choice question at a time using restaurant examples, and wait for my answer before telling me if I am right. Explain why after each question. Stop after 5 questions.',
-      challenge:t=>'Here is my explanation of '+t+': [paste what you wrote]. Tell me what is missing or wrong. Do not rewrite it for me. Ask me a question that would help me fix it myself.',
-      analogy:t=>'Give me two analogies for '+t+' using a restaurant. For each one, tell me where the analogy breaks down.'
-    };
-    let mode='explain';const out=document.getElementById('sbOut'),sel=document.getElementById('sbTopic');
-    function render(){out.textContent=T[mode](sel.value);document.querySelectorAll('#sbMode button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===mode?'true':'false'))}
-    document.querySelectorAll('#sbMode button').forEach(b=>b.onclick=()=>{mode=b.dataset.m;render()});
-    sel.onchange=render;render();
-    function copier(btn,get,fb){
-      document.getElementById(btn).onclick=()=>{
-        const t=get(),f=document.getElementById(fb);
-        const fall=()=>{f.textContent='Select the prompt text and press Ctrl+C (or Cmd+C) to copy.'};
-        try{navigator.clipboard.writeText(t).then(()=>f.textContent='Copied.',fall)}catch(e){fall()}
-      };
-    }
-    copier('sbCopy',()=>out.textContent,'sbFb');
-    copier('copyPrompt4',()=>document.getElementById('aiPrompt4').textContent,'copyFb4');
-  })();
 
+  // copy buttons
+  function copyText(t,f){
+    const fall=()=>{f.textContent='Select the text and press Ctrl+C (or Cmd+C).'};
+    try{navigator.clipboard.writeText(t).then(()=>f.textContent='Copied.',fall)}catch(e){fall()}
+  }
+  document.querySelectorAll('[data-copy]').forEach(b=>b.onclick=()=>copyText(document.getElementById(b.dataset.copy).textContent,b.nextElementSibling));
+  document.getElementById('copyPrompt4').onclick=()=>copyText(document.getElementById('aiPrompt4').textContent,document.getElementById('copyFb4'));
+
+  // 7-minute timer
+  (function(){
+    const total=7*60,box=document.getElementById('tmr'),clock=document.getElementById('tmClock'),start=document.getElementById('tmStart'),msg=document.getElementById('tmMsg');
+    let left=total,t=null;
+    function draw(){clock.textContent=Math.floor(left/60)+':'+String(left%60).padStart(2,'0')}
+    function stop(){clearInterval(t);t=null;start.textContent=left>0&&left<total?'Resume':'Start'}
+    start.onclick=()=>{
+      if(t){stop();msg.textContent='Paused.';return}
+      if(left<=0)left=total;
+      box.classList.remove('done');start.textContent='Pause';msg.textContent='Running.';
+      t=setInterval(()=>{left--;draw();if(left<=0){stop();box.classList.add('done');msg.textContent='Time. Finish your evaluation sentence.';start.textContent='Start'}},1000);
+    };
+    document.getElementById('tmReset').onclick=()=>{stop();left=total;draw();box.classList.remove('done');start.textContent='Start';msg.textContent='7 minutes for all three steps.'};
+    draw();
+  })();
 })();
 </script>
 </body>
